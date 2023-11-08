@@ -1,1 +1,5 @@
-# 42__webserv
+<p align="center">
+  <img src="0_Resources/webserve.png" />
+</p>
+
+# <p align="center">42 Prague: Inception</p>
