@@ -2,4 +2,4 @@
   <img src="0_Resources/webserve.png" />
 </p>
 
-# <p align="center">42 Prague: Inception</p>
+# <p align="center">42 Prague: webserv</p>
