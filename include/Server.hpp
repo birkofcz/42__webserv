@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.cpp                                        :+:      :+:    :+:   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2023/11/16 17:26:20 by sbenes           ###   ########.fr       */
+/*   Created: 2023/11/16 16:12:27 by sbenes            #+#    #+#             */
+/*   Updated: 2023/11/16 17:27:15 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/general.hpp"
+#ifndef SERVER_HPP
+# define SERVER_HPP
 
-int main(int /* argc */, char **/* argv */)
+#include "general.hpp"
+
+class Server
 {
-	string message = "This is where the webserv will hopefully be in a few weeks :) !";
-	
-	cout << endl;
-	print(message, GREEN);
-	print(message, RED, 2);
-	print(message);
-	print(message, NONE, 2);
-	cout << endl;
-	
-	return 0;
-}
+	private:
+		/* data */
+		
+	public:
+		Server();
+		~Server();
+};
+
+
+#endif
