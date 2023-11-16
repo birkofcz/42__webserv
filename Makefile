@@ -6,7 +6,7 @@
 #    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/08 11:05:29 by sbenes            #+#    #+#              #
-#    Updated: 2023/11/08 11:34:29 by sbenes           ###   ########.fr        #
+#    Updated: 2023/11/16 17:33:09 by sbenes           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ INC =	-I ./include/
 
 #sources
 SRC_PATH =	src/
-SRC = 	webserv.cpp
+SRC = 	webserv.cpp utils.cpp
 	
 SRCS =	$(addprefix $(SRC_PATH), $(SRC))
 
