@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:12:27 by sbenes            #+#    #+#             */
-/*   Updated: 2023/11/16 17:27:15 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/11/17 12:59:51 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,18 @@
 class Server
 {
 	private:
-		/* data */
+		int					server_fd;
+		struct sockaddr_in	address;
+		int 				port;
 		
 	public:
-		Server();
+		Server(int port);
 		~Server();
+
+		void initialize();
+		void acceptConnection();
+		void handleRequest(int client_socket);
+		void sendResponse(int client_socket);
 };
 
 

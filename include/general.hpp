@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/11/16 17:30:52 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/11/17 11:58:33 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ I would include this in all adjacent code */
 #include <iostream>
 #include <string>
 // containers and webstuff
+
+//sockets
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 //namespace snippets to use
 using std::cout;
