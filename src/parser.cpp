@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2023/11/27 16:57:31 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/11/28 15:37:43 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,61 @@ int getPort(const string& line)
 	return (atoi(split[1].c_str()));
 }
 
+/* Get server names from a line */
+std::vector<string> getServerNames(const string& line)
+{
+	std::vector<string> split = CppSplit(line, ' ');
+	std::vector<string> server_names;
+	if (split[1].empty())
+	{
+		print("getServerNames: server name not specified", RED, 2);
+		return server_names;
+	}
+	//cleans the string(s) from the semicolon and pushes them to the vector
+	for (size_t i = 1; i < split.size(); i++)
+	{
+		if (split[i].find(';') != string::npos)
+			split[i].erase(split[i].find(';'));
+		server_names.push_back(split[i]);
+	}
+	return server_names;
+}
+
+/* Get root from a line */
+string getRoot(const string& line)
+{
+	std::vector<string> split = CppSplit(line, ' ');
+	if (split[1].empty())
+	{
+		print("getRoot: root not specified", RED, 2);
+		return "";
+	}
+	if (split[1].find(';') != string::npos)
+		split[1].erase(split[1].find(';'));
+	return split[1];
+}
+
+/* Get index from a line */
+std::vector<string> getIndex(const string& line)
+{
+	std::vector<string> split = CppSplit(line, ' ');
+	std::vector<string> index;
+	if (split[1].empty())
+	{
+		print("getIndex: index not specified", RED, 2);
+		return index;
+	}
+	//cleans the string(s) from the semicolon and pushes them to the vector
+	for (size_t i = 1; i < split.size(); i++)
+	{
+		if (split[i].find(';') != string::npos)
+			split[i].erase(split[i].find(';'));
+		index.push_back(split[i]);
+	}
+	return index;
+}
+
+
 void parseFile(const string& path)
 {
 	std::ifstream file(path.c_str());
@@ -84,18 +139,37 @@ void parseFile(const string& path)
 		else if (line.find("listen") != string::npos)
 		{
 			print("config: Found listen directive", GREEN);
-			//parse listen directive
 			int port = getPort(line);
 			//if (port != -1) - here we check and write the listen port to the structure?
-		
-
+			// control print
 			cout << "port: " << port << endl;
 		}
-/* 		else if (line.find("server_name") != string::npos)
+ 		else if (line.find("server_name") != string::npos)
 		{
-			print("Found server_name directive", GREEN);
-			//parse server_name directive
+			print("config: Found server_name directive", GREEN);
+			std::vector<string> server_names = getServerNames(line);
+			cout << "server_names: ";
+			for (size_t i = 0; i < server_names.size(); i++)
+				cout << (i+1) << ": " << server_names[i] << " ";
+			cout << endl;
 		}
+		else if (line.find("root") != string::npos)
+		{
+			print("config: Found root directive", GREEN);
+			string root = getRoot(line);
+			cout << "root: " << root << endl;
+		}
+		else if (line.find("index") != string::npos)
+		{
+			print("Found index directive", GREEN);
+			std::vector<string> index = getIndex(line);
+			cout << "index: ";
+			for (size_t i = 0; i < index.size(); i++)
+				cout << (i+1) << ": " << index[i] << " ";
+			cout << endl;
+		}
+
+/*
 		else if (line.find("error_page") != string::npos)
 		{
 			print("Found error_page directive", GREEN);
@@ -156,11 +230,6 @@ void parseFile(const string& path)
 			print("Found return directive", GREEN);
 			//parse */
 		//}
-		else
-		{
-			print("Unknown directive", RED, 2);
-			print(line, RED, 2);
-		}
 	}
 	file.close();
 }
