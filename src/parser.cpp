@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2023/11/28 15:37:43 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/02 15:58:13 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,12 @@ void parseFile(const string& path)
 	{
 		if (line[0] == '#' || line.empty()) //skips comments and empty lines
 			continue;
+		else if (line.find("server") != string::npos)
+		{
+			print("config: Found server directive", GREEN);
+			//create new server object inside the vector and then passes 
+			//the rest of the data to it. If one alreadz exists, create a new one
+		}
 		else if (line.find("listen") != string::npos)
 		{
 			print("config: Found listen directive", GREEN);
@@ -179,16 +185,6 @@ void parseFile(const string& path)
 		{
 			print("Found location directive", GREEN);
 			//parse location directive
-		}
-		else if (line.find("root") != string::npos)
-		{
-			print("Found root directive", GREEN);
-			//parse root directive
-		}
-		else if (line.find("index") != string::npos)
-		{
-			print("Found index directive", GREEN);
-			//parse index directive
 		}
 		else if (line.find("autoindex") != string::npos)
 		{
