@@ -1,9 +1,15 @@
 server {
 	listen 80;
-        server_name example.com www.example.com;
-        root /var/www/example;
+    server_name example.com www.example.com;
+    root /var/www/example;
 
-        location / {
-            index index.html index.htm;
-        }
+	index index.html index.htm;
+}
+
+server {
+	listen 90;
+    server_name example2.com www.example2.com;
+    root /var/www/example2;
+
+    index index2.html index2.htm
 }
