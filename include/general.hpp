@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/11/17 11:58:33 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/11/27 16:51:00 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,14 @@ I would include this in all adjacent code */
 
 #include <iostream>
 #include <string>
+#include <sstream>
+
+#include <fstream>
 // containers and webstuff
 
+#include <vector>
+
+#include <cstdlib>
 //sockets
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -44,5 +50,8 @@ using std::string;
 /* Standalone utilities */
 
 void print(string message, string color = NONE, int output = 1); //print with optional arguments set to default values
+void parseFile(const string& path); //parse file with path
+std::vector<string>	CppSplit(std::string str, char delimiter);
+
 
 #endif
