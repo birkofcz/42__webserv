@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/11/27 16:51:00 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/06 16:28:01 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ using std::string;
 #define YELLOW	"\033[33m"
 #define BLUE	"\033[34m"
 #define RESET	"\033[0m"
-#define NONE	""
+#define NONECOLOR	""
 
 /* Standalone utilities */
 
-void print(string message, string color = NONE, int output = 1); //print with optional arguments set to default values
+void print(string message, string color = NONECOLOR, int output = 1); //print with optional arguments set to default values
 void parseFile(const string& path); //parse file with path
 std::vector<string>	CppSplit(std::string str, char delimiter);
 

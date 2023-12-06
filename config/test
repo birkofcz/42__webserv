@@ -1,5 +1,5 @@
 server {
-	listen 80;
+	listen 8000;
     server_name example.com www.example.com;
     root /var/www/example;
 
@@ -7,7 +7,7 @@ server {
 }
 
 server {
-	listen 90;
+	listen 9000;
     server_name example2.com www.example2.com;
     root /var/www/example2;
 

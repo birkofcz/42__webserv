@@ -6,35 +6,49 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/02 19:59:54 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/06 16:55:13 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/ServerManager.hpp"
-#include "../inc/Client.hpp"
-#include "../inc/Server.hpp"
+#include "../include/ServerManager.hpp"
+#include "../include/Client.hpp"
+#include "../include/Server.hpp"
+#include <sys/epoll.h>
+#include <fcntl.h>
+#include <arpa/inet.h>
+#include <cstddef> //for size_t
+
 
 using std::vector;
 #define MAX_EVENTS 64
+#define MESSAGE_BUFFER 100000
 
-ServerManager::ServerManager() {}
+ServerManager::ServerManager()
+{
+	_epoll_fd = epoll_create1(0);
+	if (_epoll_fd == -1)
+	{
+		perror("epoll_create1");
+		exit(EXIT_FAILURE);
+	}
+}
 ServerManager::~ServerManager() {}
 
-void ServerManager::initServers(vector<ServerConfig> servers)
+void ServerManager::initServers(vector<Server> servers)
 {
 	cout << endl;
 	print("Initializing  Servers...", GREEN);
 	_servers = servers;
-	char buf[INET_ADDRSTRLEN];
+	// char buf[INET_ADDRSTRLEN];
 	// This constant represents the maximum length, in characters, of the string representation of an IPv4 address
 	// "xxx.xxx.xxx.xxx" plus the null terminator.
 	bool serverDouble; // to track whether a server is a duplicate.
-	for (vector<ServerConfig>::iterator it = _servers.begin(); it != _servers.end(); it++)
+	for (vector<Server>::iterator it = _servers.begin(); it != _servers.end(); it++)
 	{
 		serverDouble = false;
-		for (vector<ServerConfig>::iterator it2 = _servers.begin(); it2 != it; ++it2)
+		for (vector<Server>::iterator it2 = _servers.begin(); it2 != it; ++it2)
 		{
-			if (it2->getHost() == it->getHost() && it2->getPort() == it->getPort())
+			if (it2->getHost() == it->getHost() && it2->getPorts()[0] == it->getPorts()[0])
 			{
 				it->setFd(it2->getFd());
 				serverDouble = true;
@@ -43,7 +57,10 @@ void ServerManager::initServers(vector<ServerConfig> servers)
 			}
 		}
 		if (!serverDouble)
-			it->setupServer();
+		{
+			it->setupServer(); // creates a socket and binds it with servers address
+			std::cout << *it;
+		}
 		// print( "Server Created: ServerName[%s] Host[%s] Port[%d]",it->getServerName().c_str(),
 		//         inet_ntop(AF_INET, &it->getHost(), buf, INET_ADDRSTRLEN), it->getPort());
 	}
@@ -83,16 +100,9 @@ allowing the program to take appropriate actions.
 */
 void ServerManager::runServers()
 {
-	int epoll_fd = epoll_create1(0);
-	if (epoll_fd == -1)
-	{
-		perror("epoll_create1");
-		exit(EXIT_FAILURE);
-	}
-
 	struct epoll_event serverEvent;
-	event.events = EPOLLIN | EPOLLOUT | EPOLLET; // Edge-triggered mode
-	for (vector<ServerConfig>::iterator it = _servers.begin(); it != _servers.end(); ++it)
+	serverEvent.events = EPOLLIN | EPOLLOUT | EPOLLET; // Edge-triggered mode
+	for (vector<Server>::iterator it = _servers.begin(); it != _servers.end(); ++it)
 	{
 		if (listen(it->getFd(), 512) == -1)
 		{
@@ -106,8 +116,8 @@ void ServerManager::runServers()
 			print("webserv: fclt error:", RED);
 			exit(EXIT_FAILURE);
 		}
-		event.data.fd = it->getFd();
-		if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, it->getFd(), &serverEvent) == -1)
+		serverEvent.data.fd = it->getFd();
+		if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, it->getFd(), &serverEvent) == -1)
 		{
 			perror("epoll_ctl");
 			exit(EXIT_FAILURE);
@@ -117,21 +127,21 @@ void ServerManager::runServers()
 
 	while (true)
 	{
-		struct epoll_event clientEvent[MAX_EVENTS];
-		int numEvents = epoll_wait(epoll_fd, events, MAX_EVENTS, 1000); // 1 second timeout
+		struct epoll_event triggeredEvents[MAX_EVENTS];
+		int numEvents = epoll_wait(_epoll_fd, triggeredEvents, MAX_EVENTS, 1000); // 1 second timeout
 		if (numEvents == -1)
 		{
 			perror("epoll_wait");
 			exit(EXIT_FAILURE);
 		}
-
+		cout << "epoll wait iteration" << endl;
 		for (int i = 0; i < numEvents; ++i)
 		{
 			// There is incoming data from a client.
 			// Client sends an HTTP request (e.g., GET, POST)for example.
-			if (clientEvent[i].events & EPOLLIN)
+			if (triggeredEvents[i].events & EPOLLIN)
 			{
-				int fd = clientEvent[i].data.fd;
+				int fd = triggeredEvents[i].data.fd;
 				if (_servers_map.count(fd))
 					acceptNewConnection(_servers_map.find(fd)->second);
 				else if (_clients_map.count(fd))
@@ -140,9 +150,9 @@ void ServerManager::runServers()
 
 			// The socket's send buffer is ready to accept data, and we can write to it without blocking.
 			// Example: After processing the request, the server may generate an HTTP response.
-			if (clientEvent[i].events & EPOLLOUT)
+			if (triggeredEvents[i].events & EPOLLOUT)
 			{
-				int fd = clientEvent[i].data.fd;
+				int fd = triggeredEvents[i].data.fd;
 				if (_clients_map.count(fd))
 				{
 					// int cgi_state = _clients_map[fd].response.getCgiState();
@@ -155,11 +165,11 @@ void ServerManager::runServers()
 				}
 			}
 		}
-		checkTimeout();
+		//checkTimeout();
 	}
 }
 
-void ServerManager::acceptNewConnection(ServerConfig &serv)
+void ServerManager::acceptNewConnection(Server &serv)
 {
 	struct sockaddr_in client_address;
 	socklen_t client_address_size = sizeof(client_address);
@@ -179,8 +189,18 @@ void ServerManager::acceptNewConnection(ServerConfig &serv)
 	}
 
 	// Create and manage the client
-	Client new_client(serv);
+	Client new_client;
 	new_client.setSocket(client_sock);
+
+	// add client to epoll structure
+	struct epoll_event client_event;
+    client_event.events = EPOLLIN | EPOLLOUT | EPOLLET; // Edge-triggered mode
+    client_event.data.fd = client_sock;
+    if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_sock, &client_event) == -1)
+    {
+        perror("client_epoll_ctl");
+        exit(EXIT_FAILURE);
+    }
 
 	// Add the client to the clients map
 	if (_clients_map.count(client_sock) != 0)
@@ -196,11 +216,13 @@ void ServerManager::acceptNewConnection(ServerConfig &serv)
 			inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN), client_sock);
 }
 
-void ServerManager::readRequest(const int fd, Client &c)
+void ServerManager::readRequest(const int& fd, Client& c)
 {
+	
 	char buffer[MESSAGE_BUFFER];
 	int bytes_read = 0;
 	bytes_read = read(fd, buffer, MESSAGE_BUFFER);
+	cout << endl << buffer << endl;
 
 	if (bytes_read == 0)
 	{
@@ -221,6 +243,10 @@ void ServerManager::readRequest(const int fd, Client &c)
 		// memset(buffer, 0, sizeof(buffer));
 	}
 
+	c.request.testFeed(buffer, strlen(buffer));
+	if (c.request.getMethod() == GET)
+		cout << "yes\n";
+
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {
 	// 		assignServer(c);
 	// 		Logger::logMsg(CYAN, CONSOLE_OUTPUT, "Request Received From Socket %d, Method=<%s>  URI=<%s>",
@@ -231,4 +257,5 @@ void ServerManager::readRequest(const int fd, Client &c)
 	// 			// Add logic to wait for pipe events if needed
 	// 		}
 	// 	}
+	
 }

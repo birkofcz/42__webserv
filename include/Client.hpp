@@ -6,16 +6,17 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:00:09 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/02 20:20:16 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:53:28 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
-#define CLIENT_HPP
+# define CLIENT_HPP
 
 // #include "Webserv.hpp"
-// #include "HttpRequest.hpp"
-// #include "Response.hpp"
+#include "HttpRequest.hpp"
+//  #include "Response.hpp"
+# include <netinet/in.h>
 
 /**
 	 Client
@@ -27,30 +28,30 @@ class Client
 	public:
 		Client();
 		Client(const Client& other);
-		Client(ServerConfig& );
+		//Client(ServerConfig& );
 		Client&	operator=(const Client& rhs);
 		~Client();
 
 		const int&					getSocket() const;
 		const struct sockaddr_in&	getAddress() const;
-		const HttpRequest&			getRequest() const;
-		const time_t&				getLastTime() const;
+		//const HttpRequest&			getRequest() const;
+		//const time_t&				getLastTime() const;
 
-		void	setSocket(int &);
-		void	setAddress(sockaddr_in &);
-		void	setServer(ServerConfig &);
-		void	buildResponse();
-		void	updateTime();
+		void	setSocket(int& sock);
+		void	setAddress(sockaddr_in& Add);
+		// void	setServer(ServerConfig &);
+		//void	buildResponse();
+		//void	updateTime();
 
-		void	clearClient();
+		//void	clearClient();
 		// Response response;
-		// HttpRequest request;
+		HttpRequest request;
 		// ServerConfig server;
 
 	private:
 		int		_client_socket;
 		struct	sockaddr_in _client_address;
-		time_t	_last_msg_time;
+	//	time_t	_last_msg_time;
 };
 
 #endif
