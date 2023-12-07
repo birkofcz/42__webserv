@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/06 16:55:13 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/07 16:38:17 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,6 @@ void ServerManager::acceptNewConnection(Server &serv)
 
 void ServerManager::readRequest(const int& fd, Client& c)
 {
-	
 	char buffer[MESSAGE_BUFFER];
 	int bytes_read = 0;
 	bytes_read = read(fd, buffer, MESSAGE_BUFFER);
@@ -245,7 +244,10 @@ void ServerManager::readRequest(const int& fd, Client& c)
 
 	c.request.testFeed(buffer, strlen(buffer));
 	if (c.request.getMethod() == GET)
-		cout << "yes\n";
+		cout << "GET recognized\n";
+	// assignServer(c);
+	// c.buildResponse;
+	
 
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {
 	// 		assignServer(c);
@@ -259,3 +261,18 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	// 	}
 	
 }
+
+/* Assigen server_block configuration to a client based on Host Header in request and server_name*/
+// void	ServerManager::assignServer(Client& c)
+// {
+//     for (vector<Server>::iterator it = _servers.begin(); it != _servers.end(); ++it)
+//     {
+//         if (c.server.getHost() == it->getHost() &&
+//             c.server.getPort() == it->getPort() &&
+//             c.request.getServerName() == it->getServerName())
+//         {
+//             c.setServer(*it);
+//             return ;
+//         }
+//     }
+// }
