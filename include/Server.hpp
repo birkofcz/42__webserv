@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/05 17:38:42 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/03 15:46:51 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Server
 		std::vector<string>	_server_names;
 		string				_root;
 		std::vector<string> _index;
-		
+
 		// string				_error_page;
 		// string				_location;
 		// bool	autoindex;
@@ -43,9 +43,10 @@ class Server
 		Server();
 		~Server();
 
+
 		//methods
 		void	setupServer(void);
-
+  
 		//setters
 		void	setName(string name);
 		void	setPorts(std::vector<int> ports);
@@ -90,5 +91,4 @@ inline std::ostream& operator<<(std::ostream& os, const Server& server) {
 
     return os;
 }
-
 #endif

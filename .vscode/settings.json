@@ -51,5 +51,6 @@
 		"streambuf": "cpp",
 		"typeinfo": "cpp",
 		"map": "cpp"
+		"iostream": "cpp"
 	}
 }

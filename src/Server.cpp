@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/06 16:55:12 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/03 15:42:12 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,33 @@ Server::~Server()
 }
 
 /* SETTERS ------------------------------------------------*/
+
 void Server::setName(string name)
 {
 	_name = name;
 }
 
 void Server::setPorts(std::vector<int> ports)
+
 {
 	_ports = ports;
 }
+
 
 void Server::setServerNames(std::vector<string> server_names)
 {
 	_server_names = server_names;
 }
 
-void Server::setRoot(string root)
+
+void
+Server::setRoot(string root)
 {
 	_root = root;
 }
 
-void Server::setIndex(std::vector<string> index)
+void
+Server::setIndex(std::vector<string> index)
 {
 	_index = index;
 }
@@ -83,6 +89,7 @@ Server::getIndex() const
 	return _index;
 }
 
+
 const in_addr_t&	Server::getHost() const 
 {
 	return (_host);
@@ -92,7 +99,6 @@ int	Server::getFd() const
 { 
 	return _socket_fd; 
 }
-
 
 
 // method

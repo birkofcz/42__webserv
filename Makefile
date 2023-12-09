@@ -33,6 +33,7 @@ INC =	-I ./include/
 
 #sources
 SRC_PATH =	src/
+
 SRC = 	webserv.cpp utils.cpp Parser.cpp Server.cpp ServerManager.cpp Client.cpp HttpRequest.cpp
 	
 SRCS =	$(addprefix $(SRC_PATH), $(SRC))

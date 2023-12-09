@@ -31,5 +31,6 @@ int main(int argc, char **argv)
 	ServerManager	manager;
 	manager.initServers(parser.getServers());
 	manager.runServers();
+  
 	return 0;
 }
