@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/06 16:28:01 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:11:36 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,16 @@ using std::string;
 #define BLUE	"\033[34m"
 #define RESET	"\033[0m"
 #define NONECOLOR	""
+
+enum HttpMethod
+{
+	GET,
+	POST,
+	DELETE,
+	// PUT,
+	//HEAD,
+	NONE
+};
 
 /* Standalone utilities */
 

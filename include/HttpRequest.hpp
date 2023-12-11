@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/06 16:39:55 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/11 17:14:02 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,6 @@
 # include <stdint.h> // uint8_t
 # include <iostream>
 
-enum HttpMethod
-{
-	GET,
-	POST,
-	DELETE,
-	PUT,
-	HEAD,
-	NONE
-};
 
 enum ParsingState
 {
