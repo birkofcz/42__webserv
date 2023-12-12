@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:00:09 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/06 15:53:28 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/11 11:53:42 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define CLIENT_HPP
 
 // #include "Webserv.hpp"
-#include "HttpRequest.hpp"
-//  #include "Response.hpp"
+# include "HttpRequest.hpp"
+# include "Response.hpp"
 # include <netinet/in.h>
 
 /**
@@ -28,7 +28,7 @@ class Client
 	public:
 		Client();
 		Client(const Client& other);
-		//Client(ServerConfig& );
+		Client(Server& serv);
 		Client&	operator=(const Client& rhs);
 		~Client();
 
@@ -39,12 +39,12 @@ class Client
 
 		void	setSocket(int& sock);
 		void	setAddress(sockaddr_in& Add);
-		// void	setServer(ServerConfig &);
+		void	setServer(Server& serv);
 		//void	buildResponse();
 		//void	updateTime();
 
 		//void	clearClient();
-		// Response response;
+		Response response;
 		HttpRequest request;
 		// ServerConfig server;
 

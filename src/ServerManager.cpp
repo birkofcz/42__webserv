@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/07 16:38:17 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/12 15:59:21 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void ServerManager::runServers()
 			perror("epoll_wait");
 			exit(EXIT_FAILURE);
 		}
-		cout << "epoll wait iteration" << endl;
+		// cout << "epoll wait iteration" << endl;
 		for (int i = 0; i < numEvents; ++i)
 		{
 			// There is incoming data from a client.
@@ -189,7 +189,7 @@ void ServerManager::acceptNewConnection(Server &serv)
 	}
 
 	// Create and manage the client
-	Client new_client;
+	Client new_client(serv);
 	new_client.setSocket(client_sock);
 
 	// add client to epoll structure
@@ -221,7 +221,7 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	char buffer[MESSAGE_BUFFER];
 	int bytes_read = 0;
 	bytes_read = read(fd, buffer, MESSAGE_BUFFER);
-	cout << endl << buffer << endl;
+	cout << endl << "BUFFER BEFORE feed: "<< endl << buffer << endl;
 
 	if (bytes_read == 0)
 	{
@@ -242,9 +242,8 @@ void ServerManager::readRequest(const int& fd, Client& c)
 		// memset(buffer, 0, sizeof(buffer));
 	}
 
-	c.request.testFeed(buffer, strlen(buffer));
-	if (c.request.getMethod() == GET)
-		cout << "GET recognized\n";
+	c.request.feed(buffer, strlen(buffer));
+	cout << "\nPRESENTING REQUEST data: \n" << c.request << endl;
 	// assignServer(c);
 	// c.buildResponse;
 	
