@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:04:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/11 11:53:08 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/13 17:30:18 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,11 @@ const struct sockaddr_in &Client::getAddress() const
 //     return (_last_msg_time);
 // }
 
-// // void	Client::buildResponse()
-// // {
-// // 	response.setRequest(this->request);
-// // 	response.buildResponse();
-// // }
+void	Client::clientBuildResponse()
+{
+	response.setRequest(this->request);
+	response.buildResponse();
+}
 
 // void             Client::updateTime()
 // {

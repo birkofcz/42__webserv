@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/12 15:59:21 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/13 17:30:23 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,7 +245,7 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	c.request.feed(buffer, strlen(buffer));
 	cout << "\nPRESENTING REQUEST data: \n" << c.request << endl;
 	// assignServer(c);
-	// c.buildResponse;
+	c.clientBuildResponse;
 	
 
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {

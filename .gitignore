@@ -1,2 +1,6 @@
 # Ignore VSCode settings and workspace files
 .vscode/
+
+# objectfiles
+*.o
+

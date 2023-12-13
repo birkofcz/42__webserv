@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/12 17:07:14 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/13 16:57:45 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ void HttpRequest::feed(char *data, size_t size)
 {
 	uint8_t character;
 	static std::stringstream s;
+	int j = 0;
 
 	for (size_t i = 0; i < size; ++i)
 	{
@@ -678,7 +679,6 @@ void HttpRequest::feed(char *data, size_t size)
 			}
 		} // end of switch
 		_storage += character;
-		// std::cout << "storage: " << _storage << std::endl;
 	}
 	if (_state == Parsing_Done)
 	{
