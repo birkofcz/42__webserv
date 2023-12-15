@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/03 15:46:51 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/15 15:54:27 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 # define SERVER_HPP
 
 # include "general.hpp"
+# include "Location.hpp"
 # include <cstring>
+
+class Location;
 
 class Server
 {
@@ -39,6 +42,7 @@ class Server
 		struct sockaddr_in 	_server_address;
 		in_addr_t			_host; //needs to extract from config
 
+		std::vector<Location>	_locations;	//vector of locations as per config file for a particular server
 	public:
 		Server();
 		~Server();
@@ -54,6 +58,8 @@ class Server
 		void	setRoot(string root);
 		void	setIndex(std::vector<string> index);
 		void	setFd(int fd);
+
+		void	addLocation(Location location);
 		
 		//getters
 		string				getName() const;
@@ -88,7 +94,24 @@ inline std::ostream& operator<<(std::ostream& os, const Server& server) {
     os << "\nHost: " << server.getHost() << "\nSocket FD: " << server.getFd() << "\n";
 
     // You can add more variables as needed
-
+	os << "Locations: \n";
+	std::vector<Location> locations = server._locations;
+	for (size_t i = 0; i < locations.size(); ++i) {
+		os << "Location " << i << ":\n";
+		os << "Root: " << locations[i].getRoot() << "\n";
+		os << "Index: ";
+		std::vector<std::string> index = locations[i].getIndex();
+		for (size_t j = 0; j < index.size(); ++j) {
+			os << index[j] << " ";
+		}
+		os << "\nAllowed Methods: ";
+		std::vector<int> allowedMethods = locations[i].getAllowedMethods();
+		for (size_t j = 0; j < allowedMethods.size(); ++j) {
+			os << allowedMethods[j] << " ";
+		}
+		os << "\n";
+	}
+	
     return os;
 }
 #endif

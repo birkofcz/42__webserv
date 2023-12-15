@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/06 16:55:10 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/15 15:58:46 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/general.hpp"
 #include "../include/Parser.hpp"
+
 
 Parser::Parser(string path)
 {
@@ -103,87 +104,7 @@ Parser::parseIndex(const string& line)
 	return index;
 }
 
-// Parser for a config file
-/* void 
-Parser::parseFile(const string& path)
-{
-	std::ifstream file(path.c_str());
-	string line;
-
-	if (!file.good())
-	{
-		print("Error opening file", RED, 2);
-		file.close();
-		return;
-	}
-	int server_count = 0;
-	while(std::getline(file, line))
-	{
-		if (line[0] == '#' || line.empty()) //skips comments and empty lines
-			continue;
-		else if (line.find("server") != string::npos)
-		{
-			print("config: Found server", GREEN);
-			server_count++;
-			Server server;
-			// cout << "server_count: " << server_count << endl;
-			std::stringstream ss;
-			ss << "server" << server_count;
-			server.setName(ss.str());
-			_servers.push_back(server);
-		}
-		else if (line.find("listen") != string::npos)
-		{
-			print("config: Found listen directive", GREEN);
-			std::vector<int> ports = parsePorts(line);
-			// for (size_t i = 0; i < ports.size(); i++)
-			// 	cout << (i+1) << ": " << ports[i] << " ";
-			if (!_servers.empty()) {
-            _servers.back().setPorts(ports);
-        }
-		}
- 		else if (line.find("server_name") != string::npos)
-		{
-			print("config: Found server_name directive", GREEN);
-			std::vector<string> server_names = parseServerNames(line);
-			cout << "server_names: ";
-			// for (size_t i = 0; i < server_names.size(); i++)
-			// 	cout << (i+1) << ": " << server_names[i] << " ";
-			// cout << endl;
-			if (!_servers.empty()) {
-			_servers.back().setServerNames(server_names);
-		}
-		}
-		else if (line.find("root") != string::npos)
-		{
-			print("config: Found root directive", GREEN);
-			string root = parseRoot(line);
-			// cout << "root: " << root << endl;
-			if (!_servers.empty())
-			_servers.back().setRoot(root);
-		}
-		else if (line.find("index") != string::npos)
-		{
-			print("Found index directive", GREEN);
-			std::vector<string> index = parseIndex(line);
-			cout << "index: ";
-			// for (size_t i = 0; i < index.size(); i++)
-			// 	cout << (i+1) << ": " << index[i] << " ";
-			// cout << endl;
-			if (!_servers.empty())
-				_servers.back().setIndex(index);
-		}
-		else
-		{
-			print("config: Unknown directive", RED, 2);
-			print(line, RED, 2);
-		}
-
-	}
-	file.close();
-} */
-
-//working version using bool for in-server block indication
+/* //working version using bool for in-server block indication
 void
 Parser::parseFile(const string& path) 
 {
@@ -199,7 +120,10 @@ Parser::parseFile(const string& path)
 
 	int server_count = 0;
 	bool inServerBlock = false;
+	bool inLocationBlock = false;
+
 	Server currentServer;
+	Location currentLocation;
 	std::cout << YELLOW << "\n[PARSING FILE ... ]" << RESET << std::endl << std::endl;
 
 	while(std::getline(file, line))
@@ -233,6 +157,14 @@ Parser::parseFile(const string& path)
 		// Process directives within a server block
 		if (inServerBlock)
 		{
+			if (line.find("location") != string::npos)
+			{
+				print("config: Found location directive", GREEN);
+				inLocationBlock = true;
+				currentLocation = Location();
+				continue;
+			}
+			else
 			if (line.find("listen") != string::npos)
 			{
 				print("config: Found listen directive", GREEN);
@@ -271,7 +203,150 @@ Parser::parseFile(const string& path)
 	}
 	file.close();
 }
+ */
 
+void Parser::parseFile(const string& path)
+{
+    std::ifstream file(path.c_str());
+    string line;
+
+    if (!file.good())
+    {
+        print("Error opening file", RED, 2);
+        file.close();
+        return;
+    }
+
+    int server_count = 0;
+    bool inServerBlock = false;
+    bool inLocationBlock = false;
+
+    Server currentServer;
+    Location currentLocation;
+    std::cout << YELLOW << "\n[PARSING FILE ... ]" << RESET << std::endl << std::endl;
+
+    while (std::getline(file, line))
+    {
+        // Trim leading white spaces
+        line.erase(0, line.find_first_not_of(" \t"));
+
+        if (line.empty() || line[0] == '#') // Skips comments and empty lines
+            continue;
+
+        // Start of a server block
+        if (line.find("server {") != string::npos)
+        {
+            inServerBlock = true;
+            server_count++;
+            std::stringstream ss;
+            ss << "server" << server_count;
+            currentServer.setName(ss.str());
+            continue;
+        }
+
+        // End of a server block
+        if (line.find("}") != string::npos && inServerBlock)
+        {
+            inServerBlock = false;
+            _servers.push_back(currentServer);
+            currentServer = Server(); // Reset for the next server block
+            continue;
+        }
+
+        // Process directives within a server block
+        if (inServerBlock)
+        {
+            if (line.find("location") != string::npos)
+            {
+                print("config: Found location directive", GREEN);
+                inLocationBlock = true;
+                currentLocation = Location();
+                continue;
+            }
+            if (inLocationBlock)
+            {
+                if (line.find("}") != string::npos && inLocationBlock)
+                {
+                    inLocationBlock = false;
+                    currentServer.addLocation(currentLocation);
+                    continue;
+                }
+
+                // Process directives within a location block
+                if (line.find("root") != string::npos)
+                {
+                    print("config: Found root directive (location)", GREEN);
+                    string root = parseRoot(line);
+                    currentLocation.setRoot(root);
+                }
+                else if (line.find("index") != string::npos)
+                {
+                    print("config: Found index directive (location)", GREEN);
+                    std::vector<string> index = parseIndex(line);
+                    currentLocation.setIndex(index);
+                }
+				else if (line.find("allowed_methods") != string::npos)
+				{
+					print("config: Found allowed_methods directive (location)", GREEN);
+					std::vector<int> allowed_methods = parsePorts(line);
+					currentLocation.setAllowedMethods(allowed_methods);
+				}
+				else if (line.find("autoindex") != string::npos)
+				{
+					print("config: Found autoindex directive (location)", GREEN);
+					string autoindex = parseRoot(line);
+					currentLocation.setAutoindex(autoindex);
+				}
+                else
+                {
+                    print("config: Unknown directive inside location block", RED, 2);
+                    print(line, RED, 2);
+                }
+            }
+            else
+            {
+                if (line.find("listen") != string::npos)
+                {
+                    print("config: Found listen directive (server)", GREEN);
+                    std::vector<int> ports = parsePorts(line);
+                    currentServer.setPorts(ports);
+                }
+                else if (line.find("server_name") != string::npos)
+                {
+                    print("config: Found server_name directive (server)", GREEN);
+                    std::vector<string> server_names = parseServerNames(line);
+                    currentServer.setServerNames(server_names);
+                }
+				else if (line.find("root") != string::npos)
+				{
+					print("config: Found root directive (server)", GREEN);
+					string root = parseRoot(line);
+					currentServer.setRoot(root);
+				}
+				else if (line.find("index") != string::npos)
+				{
+					print("config: Found index directive (server)", GREEN);
+					std::vector<string> index = parseIndex(line);
+					currentServer.setIndex(index);
+				}
+                else
+                {
+                    print("config: Unknown directive inside server block", RED, 2);
+                    print(line, RED, 2);
+                }
+            }
+        }
+        else
+        {
+            print("config: Directive outside server block", RED, 2);
+            print(line, RED, 2);
+        }
+    }
+    file.close();
+}
+
+
+//////// --- SETTERS --- ////////
 
 //////// --- GETTERS --- ////////
 std::vector<Server>

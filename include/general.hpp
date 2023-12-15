@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/11 17:11:36 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/15 15:02:01 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ enum HttpMethod
 	POST,
 	DELETE,
 	// PUT,
-	//HEAD,
+	HEAD,
 	NONE
 };
 

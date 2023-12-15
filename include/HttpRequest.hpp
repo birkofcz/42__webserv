@@ -6,13 +6,14 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/11 17:14:02 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/15 15:00:51 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HTTPREQUEST_HPP
 # define HTTPREQUEST_HPP
 
+# include "general.hpp"
 # include <cstddef> // size_t
 # include <stdint.h> // uint8_t
 # include <iostream>

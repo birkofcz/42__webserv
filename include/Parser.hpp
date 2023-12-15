@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 14:29:08 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/03 16:23:14 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/15 15:47:49 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,16 @@
 
 # include "../include/general.hpp"
 # include "../include/Server.hpp"
+# include "../include/Location.hpp"
 
 class Server;
 
 class Parser
 {
 	private:
-		string _path;
-		std::vector<Server> _servers;
-		
+		string					_path;
+		std::vector<Server>		_servers;		//vector of servers as per config file
+
 	public:
 		Parser(string path);
 		~Parser();
@@ -42,6 +43,7 @@ class Parser
 
 		//printers
 		void				printServers();
+		void				printLocations();
 
 };
 

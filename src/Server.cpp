@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/03 15:42:12 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/15 15:32:13 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,12 @@ Server::setIndex(std::vector<string> index)
 void	Server::setFd(int fd)
 {
 	_socket_fd = fd;
+}
+
+void	
+Server::addLocation(Location location)
+{
+	_locations.push_back(location);
 }
 
 /* GETTERS ------------------------------------------------*/

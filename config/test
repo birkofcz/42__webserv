@@ -4,6 +4,12 @@ server {
     root /var/www/example;
 
 	index index.html index.htm;
+
+	location /test {
+		allowed_methods GET;
+		root /test/example1;
+		autoindex on;
+	}
 }
 
 server {
@@ -12,6 +18,4 @@ server {
     root /var/www/example2;
 
     index index2.html index2.htm
-}
-=======
 }
