@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/15 15:32:13 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/16 14:24:25 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,11 @@ int	Server::getFd() const
 	return _socket_fd; 
 }
 
+std::vector<Location>
+Server::getLocations() const
+{
+	return _locations;
+}
 
 // method
 void Server::setupServer(void)

@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 14:29:08 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/15 15:47:49 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/16 15:26:07 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,18 @@ class Parser
 		void				parseFile(const string& _path);
 		
 		//parser helper methods - second level
+		string				parseLocationPath(const string& line);
 		std::vector<int>	parsePorts(const string& line);
 		std::vector<string>	parseServerNames(const string& line);
 		string				parseRoot(const string& line);
 		std::vector<string>	parseIndex(const string& line);
-		
+		std::vector<int>	parseAllowedMethods(const string& line);
+
 		//getters
 		std::vector<Server> getServers() const;
 
 		//printers
 		void				printServers();
-		void				printLocations();
 
 };
 

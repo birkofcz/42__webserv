@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/15 15:54:27 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/16 15:30:59 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ class Server
 		void	setRoot(string root);
 		void	setIndex(std::vector<string> index);
 		void	setFd(int fd);
-
 		void	addLocation(Location location);
 		
 		//getters
@@ -69,12 +68,14 @@ class Server
 		std::vector<string>	getIndex() const;
 		const in_addr_t&	getHost() const;
 		int					getFd() const;
+
+		std::vector<Location>	getLocations() const;
 		
     friend std::ostream& operator<<(std::ostream& os, const Server& server);
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Server& server) {
-    os << "Server Information:\n"
+    os << "\nServer Information:\n"
        << "Name: " << server.getName() << "\n"
        << "Ports: ";
     std::vector<int> ports = server.getPorts();
@@ -95,23 +96,27 @@ inline std::ostream& operator<<(std::ostream& os, const Server& server) {
 
     // You can add more variables as needed
 	os << "Locations: \n";
-	std::vector<Location> locations = server._locations;
+	std::vector<Location> locations = server.getLocations();
 	for (size_t i = 0; i < locations.size(); ++i) {
+		//print location
 		os << "Location " << i << ":\n";
-		os << "Root: " << locations[i].getRoot() << "\n";
+		os << "Path: " << locations[i].getPath() << "\n";
+		os << "Allowed Methods: ";
+		std::vector<int> allowedMethods = locations[i].getAllowedMethods();
+		for (size_t j = 0; j < allowedMethods.size(); ++j) {
+			os << allowedMethods[j] << " ";
+		}
+		os << "\nRoot: " << locations[i].getRoot() << "\n";
 		os << "Index: ";
 		std::vector<std::string> index = locations[i].getIndex();
 		for (size_t j = 0; j < index.size(); ++j) {
 			os << index[j] << " ";
 		}
-		os << "\nAllowed Methods: ";
-		std::vector<int> allowedMethods = locations[i].getAllowedMethods();
-		for (size_t j = 0; j < allowedMethods.size(); ++j) {
-			os << allowedMethods[j] << " ";
-		}
-		os << "\n";
+		os << "\nCgi: " << locations[i].getCgi() << "\n";
+		os << "Autoindex: " << locations[i].getAutoindex() << "\n";
+		
 	}
-	
-    return os;
+	return os;
 }
+
 #endif

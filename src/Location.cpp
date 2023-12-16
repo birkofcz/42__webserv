@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 14:57:02 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/15 15:47:29 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/16 14:37:28 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,14 @@ Location::Location()
 
 Location::~Location() {}
 
-// Setters & getters
+
+/// -- SETTERS -- ///
+
+void
+Location::setPath(string path)
+{
+	_path = path;
+}
 
 void
 Location::setAllowedMethods(std::vector<int> allowed_methods)
@@ -53,10 +60,23 @@ Location::setCgi(string cgi)
 void
 Location::setAutoindex(string autoindex)
 {
-	_autoindex = autoindex;
+	if (autoindex == "on")
+		_autoindex = true;
+	else
+		_autoindex = false;
 }
 
-std::vector<int>	
+
+
+/// -- GETTERS -- ///
+
+string
+Location::getPath()
+{
+	return (_path);
+}
+
+std::vector<int>
 Location::getAllowedMethods()
 {
 	return (_allowed_methods);
@@ -80,7 +100,7 @@ Location::getCgi()
 	return (_cgi);
 }
 
-string
+bool
 Location::getAutoindex()
 {
 	return (_autoindex);

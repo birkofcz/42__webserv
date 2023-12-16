@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/15 15:02:01 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/16 15:02:31 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ I would include this in all adjacent code */
 // containers and webstuff
 
 #include <vector>
+#include <stack>
 
 #include <cstdlib>
 //sockets
@@ -44,7 +45,9 @@ using std::string;
 #define GREEN	"\033[32m"
 #define YELLOW	"\033[33m"
 #define BLUE	"\033[34m"
+#define BOLD	"\033[1m"
 #define RESET	"\033[0m"
+
 #define NONECOLOR	""
 
 enum HttpMethod
