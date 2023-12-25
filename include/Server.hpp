@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 13:35:36 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 15:30:33 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ upload_path (server, location)
 allowed_methods (server, location)
 
 cgi directive example:
-cgi .php=/usr/bin/php-cgi (file extension, path to executable)
+cgi .php /usr/bin/php-cgi (file extension, path to executable, can be multiple)
 
 eror_page directive example:
-error_page 404 /404.html (error code, path to error page)
+error_page 404 /404.html (error code, path to error page, can be multiple)
 
 location directive example:
 location /(path) { 
@@ -38,12 +38,11 @@ location /(path) {
 	root /var/www/html (root)
 	index index.html (index)
 	autoindex on (autoindex)
-	cgi .php=/usr/bin/php-cgi (cgi)
+	cgi .php /usr/bin/php-cgi (cgi) - can be multiple
 	upload_path /var/www/html/uploads (upload)
 }
 
  */
-
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
@@ -52,29 +51,31 @@ location /(path) {
 # include "Location.hpp"
 # include <cstring>
 
+/* Server class to include all the directives from config file and a vector of "location"
+blocks - of Location class objects, including their configuration parsed */
+
 class Location;
 
 class Server
 {
 	private:
-		string				_name;
-		std::vector<int>	_ports;
-		std::vector<string>	_server_names;
-		string				_root;
-		std::vector<string> _index;
-
-		std::map<int, string>	_error_page; 
-		bool				_autoindex; 
-		int					_client_max_body_size;
+		string						_name;
+		std::vector<int>			_ports;
+		std::vector<string>			_server_names;
+		string						_root;
+		std::vector<string>			_index;
+		std::map<int, string>		_error_page; 
+		bool						_autoindex; 
+		int							_client_max_body_size;
 		std::map<string, string>	_cgi; 
-		string				_upload_path;
-		std::vector<int>	_allowed_methods;
+		string						_upload_path;
+		std::vector<int>			_allowed_methods;
 
-		int					_socket_fd;
-		struct sockaddr_in 	_server_address;
-		in_addr_t			_host; //needs to extract from config
+		int							_socket_fd;
+		struct sockaddr_in			_server_address;
+		in_addr_t					_host; //needs to extract from config
 
-		std::vector<Location>	_locations;	//vector of locations as per config file for a particular server
+		std::vector<Location>		_locations;	//vector of locations as per config file for a particular server
 		
 	public:
 		Server();
@@ -82,43 +83,42 @@ class Server
 
 
 		//methods
-		void	setupServer(void);
+		void						setupServer(void);
   
 		//setters
-		void	setName(string name);
-		void	setPorts(std::vector<int> ports);
-		void	setServerNames(std::vector<string> server_names);
-		void	setRoot(string root);
-		void	setIndex(std::vector<string> index);
-		void	setFd(int fd);
-		void	addLocation(Location location);
-		void	setErrorPage(std::map<int, string> error_page); //to be done 19/12/2023
-		void	setAutoindex(string autoindex); //to be done 19/12/2023
-		void	setClientMaxBodySize(int client_max_body_size); //to be done 19/12/2023
-		void	setCgi(std::map<string, string> cgi); //to be done 19/12/2023
-		void	setUploadPath(string upload_path);	//to be done 19/12/2023
-		void	setAllowedMethods(std::vector<int> allowed_methods); //to be done 19/12/2023
-		void	setHost(in_addr_t host); //needs to extract from config
+		void						setName(string name);
+		void						setPorts(std::vector<int> ports);
+		void						setServerNames(std::vector<string> server_names);
+		void						setRoot(string root);
+		void						setIndex(std::vector<string> index);
+		void						setFd(int fd);
+		void						addLocation(Location location);
+		void						setErrorPage(std::map<int, string> error_page);
+		void						setAutoindex(string autoindex);
+		void						setClientMaxBodySize(int client_max_body_size);
+		void						setCgi(std::map<string, string> cgi); 
+		void						setUploadPath(string upload_path);
+		void						setAllowedMethods(std::vector<int> allowed_methods);
+		void						setHost(in_addr_t host); //needs to extract from config
 		
 		//getters
-		string				getName() const;
-		std::vector<int>	getPorts() const;
-		std::vector<string>	getServerNames() const;
-		string				getRoot() const;
-		std::vector<string>	getIndex() const;
-		const in_addr_t&	getHost() const;
-		int					getFd() const;
-		std::map<int, string>	getErrorPage() const; //to be done 19/12/2023
-		bool				getAutoindex() const; //to be done 19/12/2023
-		int					getClientMaxBodySize() const; //to be done 19/12/2023
-		std::map<string, string>	getCgi() const; //to be done 19/12/2023
-		string				getUploadPath() const; //to be done 19/12/2023
-		std::vector<int>	getAllowedMethods() const; //to be done 19/12/2023
-		
+		string						getName() const;
+		std::vector<int>			getPorts() const;
+		std::vector<string>			getServerNames() const;
+		string						getRoot() const;
+		std::vector<string>			getIndex() const;
+		const in_addr_t&			getHost() const;
+		int							getFd() const;
+		std::map<int, string>		getErrorPage() const; 
+		bool						getAutoindex() const; 
+		int							getClientMaxBodySize() const; 
+		std::map<string, string>	getCgi() const; 
+		string						getUploadPath() const; 
+		std::vector<int>			getAllowedMethods() const;
 
-		std::vector<Location>	getLocations() const;
+		std::vector<Location>		getLocations() const;
 		
-    friend std::ostream& operator<<(std::ostream& os, const Server& server);
+    friend std::ostream& operator<<(std::ostream& os, const Server& server); ///is this allowed? TEMP for debugging
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Server& server) {

@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 13:55:34 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 15:46:19 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ Parser::~Parser()
 }
 
 
-//////// --- METHODS --- ////////
+//////// --- METHODS - parsing the lines one by one helper parsers (2. level)--- ////////
 
-/* Get port number from a line */
+/* Get port numbers from a line */
 std::vector<int> 
 Parser::parsePorts(const string& line)
 {
@@ -254,6 +254,9 @@ Parser::parseCgi(const string& line)
 	return cgi;
 }
 
+
+
+
 /////////// --- PARSER --- ///////////
 void Parser::parseFile(const string& path)
 {
@@ -461,6 +464,9 @@ void Parser::parseFile(const string& path)
 	file.close();
 }
 
+
+
+
 //////// --- GETTERS --- ////////
 std::vector<Server>
 Parser::getServers() const
@@ -468,71 +474,116 @@ Parser::getServers() const
 	return _servers;
 }
 
+
+
+
 //////// --- PRINTERS --- ////////
 void
 Parser::printServers()
 {
-	cout << endl << YELLOW << "[ CONFIGURATION SUMMARY ]" << RESET << endl << endl;
+cout << endl << YELLOW << "[ CONFIGURATION SUMMARY ]" << RESET << endl << endl;
 
 	cout << "(std::vector<Server> _servers) SIZE: " << _servers.size() << endl << endl;
 	for (size_t i = 0; i < _servers.size(); i++)
 	{
-		cout <<  BOLD << "-------------------------------------" << endl;
+		cout << BOLD << "-------------------------------------" << endl;
 		cout << GREEN << "Name: " << _servers[i].getName() << RESET << endl;
 		cout << BOLD << "-------------------------------------" << RESET << endl << endl;
 		cout << "Ports: ";
-		for (size_t j = 0; j < _servers[i].getPorts().size(); j++)
-			cout << _servers[i].getPorts()[j] << " ";
+		if (_servers[i].getPorts().empty())
+		{
+			cout << "not set";
+		}
+		else
+		{
+			for (size_t j = 0; j < _servers[i].getPorts().size(); j++)
+				cout << _servers[i].getPorts()[j] << " ";
+		}
 		cout << endl;
 		cout << "Server names: ";
-		for (size_t j = 0; j < _servers[i].getServerNames().size(); j++)
-			cout << _servers[i].getServerNames()[j] << " ";
+		if (_servers[i].getServerNames().empty())
+		{
+			cout << "not set";
+		}
+		else
+		{
+			for (size_t j = 0; j < _servers[i].getServerNames().size(); j++)
+				cout << _servers[i].getServerNames()[j] << " ";
+		}
 		cout << endl;
-		cout << "Root: " << _servers[i].getRoot() << endl;
+		cout << "Root: " << (_servers[i].getRoot().empty() ? "not set" : _servers[i].getRoot()) << endl;
 		cout << "Index: ";
-		for (size_t j = 0; j < _servers[i].getIndex().size(); j++)
-			cout << _servers[i].getIndex()[j] << " ";
+		if (_servers[i].getIndex().empty())
+		{
+			cout << "not set";
+		}
+		else
+		{
+			for (size_t j = 0; j < _servers[i].getIndex().size(); j++)
+				cout << _servers[i].getIndex()[j] << " ";
+		}
 		cout << endl;
 		string autoindex = _servers[i].getAutoindex() ? "on" : "off";
 		cout << "Autoindex: " << autoindex << endl;
 		if (_servers[i].getClientMaxBodySize() != -1)
 			cout << "Client max body size: " << _servers[i].getClientMaxBodySize() << endl;
 		else
-			cout << "Client max body size: not specified" << endl;
-		cout << "Upload path: " << _servers[i].getUploadPath() << endl;
+			cout << "Client max body size: not set" << endl;
+		cout << "Upload path: " << (_servers[i].getUploadPath().empty() ? "not set" : _servers[i].getUploadPath()) << endl;
 		cout << "Allowed methods: ";
-		for (size_t j = 0; j < _servers[i].getAllowedMethods().size(); j++)
+		if (_servers[i].getAllowedMethods().empty())
 		{
-			string allowed_methods = "";
-			switch (_servers[i].getAllowedMethods()[j])
+			cout << "not set";
+		}
+		else
+		{
+			for (size_t j = 0; j < _servers[i].getAllowedMethods().size(); j++)
 			{
-				case 0:
-					allowed_methods = "GET";
-					break;
-				case 1:
-					allowed_methods = "POST";
-					break;
-				case 2:
-					allowed_methods = "DELETE";
-					break;
-				case 3:
-					allowed_methods = "NONE";
-					break;
-				default:
-					allowed_methods = "UNKNOWN";
-					break;
+				string allowed_methods = "";
+				switch (_servers[i].getAllowedMethods()[j])
+				{
+					case 0:
+						allowed_methods = "GET";
+						break;
+					case 1:
+						allowed_methods = "POST";
+						break;
+					case 2:
+						allowed_methods = "DELETE";
+						break;
+					case 3:
+						allowed_methods = "NONE";
+						break;
+					default:
+						allowed_methods = "UNKNOWN";
+						break;
+				}
+				cout << allowed_methods << " ";
 			}
-			cout <<  allowed_methods << " ";
 		}
 		cout << endl;
 		cout << "Cgi: " << endl;
 		std::map<string, string> cgi = _servers[i].getCgi();
-		for (std::map<string, string>::iterator it = cgi.begin(); it != cgi.end(); ++it)
-			cout << "\t" << it->first << " " << it->second << endl;
+		if (cgi.empty())
+		{
+			cout << "\tNot specified" << endl;
+		}
+		else
+		{
+			for (std::map<string, string>::iterator it = cgi.begin(); it != cgi.end(); ++it)
+				cout << "\t" << it->first << " " << it->second << endl;
+		}
 		cout << "Error pages: " << endl;
 		std::map<int, string> error_pages = _servers[i].getErrorPage();
-		for (std::map<int, string>::iterator it = error_pages.begin(); it != error_pages.end(); ++it)
-			cout << "\t" << it->first << " " << it->second << endl;
+		if (error_pages.empty())
+		{
+			cout << "\tNot specified" << endl;
+		}
+		else
+		{
+			for (std::map<int, string>::iterator it = error_pages.begin(); it != error_pages.end(); ++it)
+				cout << "\t" << it->first << " " << it->second << endl;
+		}
 		cout << endl;
 		if (_servers[i].getLocations().size() > 0)
 		{
@@ -542,35 +593,48 @@ Parser::printServers()
 			{
 				cout << endl;
 				cout << "\t" << _servers[i].getLocations()[j].getPath() << endl;
-				cout << "\tRoot: " << _servers[i].getLocations()[j].getRoot() << endl;
+				cout << "\tRoot: " << (_servers[i].getLocations()[j].getRoot().empty() ? "not set" : _servers[i].getLocations()[j].getRoot()) << endl;
 				cout << "\tIndex: ";
-				for (size_t k = 0; k < _servers[i].getLocations()[j].getIndex().size(); k++)
-					cout << _servers[i].getLocations()[j].getIndex()[k] << " ";
-				cout << endl;
-				string allowed_methods = "";
-				cout << "\tAllowed methods: ";
-				for (size_t k = 0; k < _servers[i].getLocations()[j].getAllowedMethods().size(); k++)
+				if (_servers[i].getLocations()[j].getIndex().empty())
 				{
-					string allowed_methods = "";
-					switch (_servers[i].getLocations()[j].getAllowedMethods()[k])
+					cout << "not set";
+				}
+				else
+				{
+					for (size_t k = 0; k < _servers[i].getLocations()[j].getIndex().size(); k++)
+						cout << _servers[i].getLocations()[j].getIndex()[k] << " ";
+				}
+				cout << endl;
+				cout << "\tAllowed methods: ";
+				if (_servers[i].getLocations()[j].getAllowedMethods().empty())
+				{
+					cout << "not set";
+				}
+				else
+				{
+					for (size_t k = 0; k < _servers[i].getLocations()[j].getAllowedMethods().size(); k++)
 					{
-						case 0:
-							allowed_methods = "GET";
-							break;
-						case 1:
-							allowed_methods = "POST";
-							break;
-						case 2:
-							allowed_methods = "DELETE";
-							break;
-						case 3:
-							allowed_methods = "NONE";
-							break;
-						default:
-							allowed_methods = "UNKNOWN";
-							break;
+						string allowed_methods = "";
+						switch (_servers[i].getLocations()[j].getAllowedMethods()[k])
+						{
+							case 0:
+								allowed_methods = "GET";
+								break;
+							case 1:
+								allowed_methods = "POST";
+								break;
+							case 2:
+								allowed_methods = "DELETE";
+								break;
+							case 3:
+								allowed_methods = "NONE";
+								break;
+							default:
+								allowed_methods = "UNKNOWN";
+								break;
+						}
+						cout << allowed_methods << " ";
 					}
-					cout <<  allowed_methods << " ";
 				}
 				cout << endl;
 				string autoindex = _servers[i].getLocations()[j].getAutoindex() ? "on" : "off";
@@ -578,32 +642,30 @@ Parser::printServers()
 				if (_servers[i].getLocations()[j].getClientMaxBodySize() != -1)
 					cout << "\tClient max body size: " << _servers[i].getLocations()[j].getClientMaxBodySize() << endl;
 				else
-					cout << "\tClient max body size: not specified" << endl;
-				if (_servers[i].getLocations()[j].getUploadPath() != "")
-					cout << "\tUpload path: " << _servers[i].getLocations()[j].getUploadPath() << endl;
-				else
-					cout << "\tUpload path: not specified" << endl;
+					cout << "\tClient max body size: not set" << endl;
+				cout << "\tUpload path: " << (_servers[i].getLocations()[j].getUploadPath().empty() ? "not set" : _servers[i].getLocations()[j].getUploadPath()) << endl;
 				cout << "\tCgi: " << endl;
-				if (_servers[i].getLocations()[j].getCgi().size() > 0)
+				if (_servers[i].getLocations()[j].getCgi().empty())
+				{
+					cout << "\t\tNot specified" << endl;
+				}
+				else
 				{
 					std::map<string, string> cgi = _servers[i].getLocations()[j].getCgi();
 					for (std::map<string, string>::iterator it = cgi.begin(); it != cgi.end(); ++it)
 						cout << "\t\t" << it->first << " " << it->second << endl;
 				}
-				else
-					cout << "\t\tNot specified" << endl;
 				cout << "\tError pages: " << endl;
-				if (_servers[i].getLocations()[j].getErrorPages().size() > 0)
+				if (_servers[i].getLocations()[j].getErrorPages().empty())
+				{
+					cout << "\t\tNot specified" << endl;
+				}
+				else
 				{
 					std::map<int, string> error_pages = _servers[i].getLocations()[j].getErrorPages();
 					for (std::map<int, string>::iterator it = error_pages.begin(); it != error_pages.end(); ++it)
 						cout << "\t\t" << it->first << " " << it->second << endl;
 				}
-				else
-					cout << "\t\tNot specified" << endl;
-				cout << endl;
-				for (std::map<int, string>::iterator it = error_pages.begin(); it != error_pages.end(); ++it)
-					cout << "\t\t" << it->first << " " << it->second << endl;
 				cout << endl;
 			}
 		}

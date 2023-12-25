@@ -6,15 +6,15 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 13:36:05 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 15:31:15 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
 
+/* Constructor with default values initialization */
 Server::Server()
 {
-	//default values initialization
 	_name = "";
 	_ports = std::vector<int>();
 	_server_names = std::vector<string>();
@@ -31,7 +31,7 @@ Server::~Server()
 {
 }
 
-/* SETTERS ------------------------------------------------*/
+/* SETTERS --------------------------------------------------------------------------------------------------------*/
 
 void Server::setName(string name)
 {
@@ -113,7 +113,9 @@ Server::setUploadPath(string upload_path)
 	_upload_path = upload_path;
 }
 
-/* GETTERS ------------------------------------------------*/
+
+
+/* GETTERS --------------------------------------------------------------------------------------------------------*/
 
 string
 Server::getName() const

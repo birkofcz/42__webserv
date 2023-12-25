@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 14:29:08 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 13:22:55 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 16:04:22 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include "../include/general.hpp"
 # include "../include/Server.hpp"
 # include "../include/Location.hpp"
+
+
+/* Parser class to parse the config file and create a vector of Server objects,
+including their location blocks and their configuration parsed */
 
 class Server;
 

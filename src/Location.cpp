@@ -6,27 +6,31 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 14:57:02 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 13:34:53 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 15:23:03 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Location.hpp"
 
+/* Constructor with defaut values initialized */
 Location::Location()
 {
-	//_allowed_methods = std::vector<int>(); //is this necessary?
+	_path = "";
+	_allowed_methods = std::vector<int>();
 	_root = "";
-	//_index = ""; //is this necessary?
-	//_cgi = ""; //is this necessary?
-	_autoindex = "";
+	_index = std::vector<string>();
+	_autoindex = false;
+	_error_pages = std::map<int, string>();
 	_client_max_body_size = -1;
+	_cgi = std::map<string, string>();
+	_upload_path = "";
 
 }
 
 Location::~Location() {}
 
 
-/// -- SETTERS -- ///
+/// -- SETTERS -- /// ---------------------------------------------------------------------
 
 void
 Location::setPath(string path)
@@ -85,7 +89,10 @@ Location::setUploadPath(string upload_path)
 	_upload_path = upload_path;
 }
 
-/// -- GETTERS -- ///
+
+
+
+/// -- GETTERS -- /// ---------------------------------------------------------------------
 
 string
 Location::getPath()
