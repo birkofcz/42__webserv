@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/16 14:24:25 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 13:36:05 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,17 @@
 
 Server::Server()
 {
+	//default values initialization
+	_name = "";
+	_ports = std::vector<int>();
+	_server_names = std::vector<string>();
+	_root = "";
+	_index = std::vector<string>();
+	_autoindex = false;
+	_client_max_body_size = -1;
+	_allowed_methods = std::vector<int>();
+	_cgi = std::map<string, string>();
+	_upload_path = "";
 }
 
 Server::~Server()
@@ -61,6 +72,45 @@ void
 Server::addLocation(Location location)
 {
 	_locations.push_back(location);
+}
+
+void
+Server::setErrorPage(std::map<int, string> error_page)
+{
+	_error_page = error_page;
+}
+
+void
+Server::setAutoindex(string autoindex)
+{
+	if (autoindex == "on")
+		_autoindex = true;
+	else
+		_autoindex = false;
+}
+
+void
+Server::setClientMaxBodySize(int client_max_body_size)
+{
+	_client_max_body_size = client_max_body_size;
+}
+
+void
+Server::setAllowedMethods(std::vector<int> allowed_methods)
+{
+	_allowed_methods = allowed_methods;
+}
+
+void 
+Server::setCgi(std::map<string, string> cgi)
+{
+	_cgi = cgi;
+}
+
+void
+Server::setUploadPath(string upload_path)
+{
+	_upload_path = upload_path;
 }
 
 /* GETTERS ------------------------------------------------*/
@@ -111,6 +161,31 @@ Server::getLocations() const
 {
 	return _locations;
 }
+
+std::map<int, string>
+Server::getErrorPage() const {return _error_page;}
+
+bool
+Server::getAutoindex() const
+{
+	return _autoindex;
+}
+
+int
+Server::getClientMaxBodySize() const
+{
+	return _client_max_body_size;
+}
+
+std::vector<int>
+Server::getAllowedMethods() const
+{
+	return _allowed_methods;
+}
+
+std::map<string, string>	Server::getCgi() const {return _cgi;}
+string						Server::getUploadPath() const {return _upload_path;}
+
 
 // method
 void Server::setupServer(void)

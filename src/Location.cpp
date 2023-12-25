@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 14:57:02 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/16 14:37:28 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 13:34:53 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ Location::Location()
 	//_allowed_methods = std::vector<int>(); //is this necessary?
 	_root = "";
 	//_index = ""; //is this necessary?
-	_cgi = "";
+	//_cgi = ""; //is this necessary?
 	_autoindex = "";
+	_client_max_body_size = -1;
 
 }
 
@@ -52,7 +53,7 @@ Location::setIndex(std::vector<string> index)
 }
 
 void
-Location::setCgi(string cgi)
+Location::setCgi(std::map<string, string> cgi)
 {
 	_cgi = cgi;
 }
@@ -66,7 +67,23 @@ Location::setAutoindex(string autoindex)
 		_autoindex = false;
 }
 
+void
+Location::setErrorPages(std::map<int, string> error_pages)
+{
+	_error_pages = error_pages;
+}
 
+void
+Location::setClientMaxBodySize(int client_max_body_size)
+{
+	_client_max_body_size = client_max_body_size;
+}
+
+void
+Location::setUploadPath(string upload_path)
+{
+	_upload_path = upload_path;
+}
 
 /// -- GETTERS -- ///
 
@@ -94,7 +111,7 @@ Location::getIndex()
 	return (_index);
 }
 
-string
+std::map<string, string>
 Location::getCgi()
 {
 	return (_cgi);
@@ -104,4 +121,22 @@ bool
 Location::getAutoindex()
 {
 	return (_autoindex);
+}
+
+std::map<int, string>
+Location::getErrorPages()
+{
+	return (_error_pages);
+}
+
+int
+Location::getClientMaxBodySize()
+{
+	return (_client_max_body_size);
+}
+
+string
+Location::getUploadPath()
+{
+	return (_upload_path);
 }

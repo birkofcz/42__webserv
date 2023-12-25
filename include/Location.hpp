@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 17:07:44 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/16 14:36:00 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 13:15:56 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,11 @@ class Location
 		std::vector<int>	_allowed_methods; // GET, POST, DELETE, NONE
 		string				_root;
 		std::vector<string>	_index;
-		string				_cgi;
+		std::map<string, string>				_cgi;
 		bool				_autoindex;
+		std::map<int, string>	_error_pages; // 404, /404.html
+		int					_client_max_body_size;
+		string				_upload_path;
 
 
 	public:
@@ -35,15 +38,22 @@ class Location
 		void				setAllowedMethods(std::vector<int> allowed_methods);
 		void				setRoot(string root);
 		void				setIndex(std::vector<string> index);
-		void				setCgi(string cgi);
+		void				setCgi(std::map<string, string> cgi);
 		void				setAutoindex(string autoindex);
+		void				setErrorPages(std::map<int, string> error_pages);
+		void				setClientMaxBodySize(int client_max_body_size);
+		void				setUploadPath(string upload_path);
+
 
 		string				getPath();
 		std::vector<int>	getAllowedMethods();
 		string				getRoot();
 		std::vector<string>	getIndex();
-		string				getCgi();
+		std::map<string, string>				getCgi();
 		bool				getAutoindex();
+		std::map<int, string>	getErrorPages();
+		int					getClientMaxBodySize();
+		string				getUploadPath();
 };	
 
 

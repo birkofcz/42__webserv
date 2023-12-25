@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/16 15:32:19 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 13:55:34 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,111 @@ Parser::parseAllowedMethods(const string& line)
 	}
 	return allowed_methods;
 }
+
+/* Get error pages from a line - in format ex. 404 path 503 path;*/
+std::map<int, string>
+Parser::parseErrorPages(const string& line)
+{
+	std::vector<string> split = CppSplit(line, ' ');
+	std::map<int, string> error_pages;
+	if (split[1].empty())
+	{
+		print("getErrorPages: error pages not specified", RED, 2);
+		return error_pages;
+	}
+	//cleans the string(s) from the semicolon and pushes them to the map
+	for (size_t i = 1; i < split.size(); i++)
+	{
+		if (split[i].find(';') != string::npos)
+			split[i].erase(split[i].find(';'));
+		if (isNumeric(split[i]))
+		{
+			int error_code = atoi(split[i].c_str());
+			if (error_code < 100 || error_code > 599)
+			{
+				print("getErrorPages: error code out of range", RED, 2);
+				return error_pages;
+			}
+			if (split[i + 1].empty())
+			{
+				print("getErrorPages: error page path not specified", RED, 2);
+				return error_pages;
+			}
+			if (split[i + 1].find(';') != string::npos)
+				split[i + 1].erase(split[i + 1].find(';'));
+			error_pages[error_code] = split[i + 1];
+			i++;
+		}
+		else
+		{
+			print("getErrorPages: error code not numeric", RED, 2);
+			return error_pages;
+		}	
+	}
+	return error_pages;
+	
+}
+
+/* Get client_max_body_size from a line */
+int
+Parser::parseClientMaxBodySize(const string& line)
+{
+	std::vector<string> split = CppSplit(line, ' ');
+	if (split[1].empty())
+	{
+		print("getClientMaxBodySize: client_max_body_size not specified", RED, 2);
+		return -1;
+	}
+	if (split[1].find(';') != string::npos)
+		split[1].erase(split[1].find(';'));
+	if (isNumeric(split[1]))
+		return atoi(split[1].c_str());
+	else
+	{
+		print("getClientMaxBodySize: client_max_body_size not numeric", RED, 2);
+		return -1;
+	}
+}
+
+/* Get cgi from a line - in format ex. cgi .php /usr/bin/php-cgi;*/
+std::map<string, string>
+Parser::parseCgi(const string& line)
+{
+	std::vector<string> split = CppSplit(line, ' ');
+	std::map<string, string> cgi;
+	if (split[1].empty())
+	{
+		print("getCgi: cgi not specified", RED, 2);
+		return cgi;
+	}
+	//cleans the string(s) from the semicolon and pushes them to the map
+	for (size_t i = 1; i < split.size(); i++)
+	{
+		if (split[i].find(';') != string::npos)
+			split[i].erase(split[i].find(';'));
+		if (split[i].find('.') != string::npos)
+		{
+			string extension = split[i];
+			if (split[i + 1].empty())
+			{
+				print("getCgi: cgi path not specified", RED, 2);
+				return cgi;
+			}
+			if (split[i + 1].find(';') != string::npos)
+				split[i + 1].erase(split[i + 1].find(';'));
+			string path = split[i + 1];
+			cgi[extension] = path;
+			i++;
+		}
+		else
+		{
+			print("getCgi: cgi extension not specified", RED, 2);
+			return cgi;
+		}	
+	}
+	return cgi;
+}
+
 /////////// --- PARSER --- ///////////
 void Parser::parseFile(const string& path)
 {
@@ -257,6 +362,42 @@ void Parser::parseFile(const string& path)
 					std::vector<string> index = parseIndex(line);
 					currentServer.setIndex(index);
 				}
+				else if (line.find("error_page") != string::npos)
+				{
+					print("config[server]: Found error_page directive", GREEN);
+					std::map<int, string> error_page = parseErrorPages(line);
+					currentServer.setErrorPage(error_page);
+				}
+				else if (line.find("client_max_body_size") != string::npos)
+				{
+					print("config[server]: Found client_max_body_size directive", GREEN);
+					int client_max_body_size = parseClientMaxBodySize(line);
+					currentServer.setClientMaxBodySize(client_max_body_size);
+				}
+				else if (line.find("allowed_methods") != string::npos)
+				{
+					print("config[server]: Found allowed_methods directive", GREEN);
+					std::vector<int> allowed_methods = parseAllowedMethods(line);
+					currentServer.setAllowedMethods(allowed_methods);
+				}
+				else if (line.find("autoindex") != string::npos)
+				{
+					print("config[server]: Found autoindex directive", GREEN);
+					string autoindex = parseRoot(line);
+					currentServer.setAutoindex(autoindex);
+				}
+				else if (line.find("upload_path") != string::npos)
+				{
+					print("config[server]: Found upload_path directive", GREEN);
+					string upload_path = parseRoot(line);
+					currentServer.setUploadPath(upload_path);
+				}
+				else if (line.find("cgi") != string::npos)
+				{
+					print("config[server]: Found cgi directive", GREEN);
+					std::map<string, string> cgi = parseCgi(line);
+					currentServer.setCgi(cgi);
+				}
 		}
 		else if (inLocationBlock && inServerBlock)
 		{
@@ -283,6 +424,30 @@ void Parser::parseFile(const string& path)
 				print("\tconfig[location]: Found autoindex directive", GREEN);
 				string autoindex = parseRoot(line);
 				currentLocation.setAutoindex(autoindex);
+			}
+			else if (line.find("error_page") != string::npos)
+			{
+				print("\tconfig[location]: Found error_page directive", GREEN);
+				std::map<int, string> error_page = parseErrorPages(line);
+				currentLocation.setErrorPages(error_page);
+			}
+			else if (line.find("client_max_body_size") != string::npos)
+			{
+				print("\tconfig[location]: Found client_max_body_size directive", GREEN);
+				int client_max_body_size = parseClientMaxBodySize(line);
+				currentLocation.setClientMaxBodySize(client_max_body_size);
+			}
+			else if (line.find("upload_path") != string::npos)
+			{
+				print("\tconfig[location]: Found upload_path directive", GREEN);
+				string upload_path = parseRoot(line);
+				currentLocation.setUploadPath(upload_path);
+			}
+			else if (line.find("cgi") != string::npos)
+			{
+				print("\tconfig[location]: Found cgi directive", GREEN);
+				std::map<string, string> cgi = parseCgi(line);
+				currentLocation.setCgi(cgi);
 			}
 		}
 	/* 	else
@@ -327,7 +492,48 @@ Parser::printServers()
 		cout << "Index: ";
 		for (size_t j = 0; j < _servers[i].getIndex().size(); j++)
 			cout << _servers[i].getIndex()[j] << " ";
-		
+		cout << endl;
+		string autoindex = _servers[i].getAutoindex() ? "on" : "off";
+		cout << "Autoindex: " << autoindex << endl;
+		if (_servers[i].getClientMaxBodySize() != -1)
+			cout << "Client max body size: " << _servers[i].getClientMaxBodySize() << endl;
+		else
+			cout << "Client max body size: not specified" << endl;
+		cout << "Upload path: " << _servers[i].getUploadPath() << endl;
+		cout << "Allowed methods: ";
+		for (size_t j = 0; j < _servers[i].getAllowedMethods().size(); j++)
+		{
+			string allowed_methods = "";
+			switch (_servers[i].getAllowedMethods()[j])
+			{
+				case 0:
+					allowed_methods = "GET";
+					break;
+				case 1:
+					allowed_methods = "POST";
+					break;
+				case 2:
+					allowed_methods = "DELETE";
+					break;
+				case 3:
+					allowed_methods = "NONE";
+					break;
+				default:
+					allowed_methods = "UNKNOWN";
+					break;
+			}
+			cout <<  allowed_methods << " ";
+		}
+		cout << endl;
+		cout << "Cgi: " << endl;
+		std::map<string, string> cgi = _servers[i].getCgi();
+		for (std::map<string, string>::iterator it = cgi.begin(); it != cgi.end(); ++it)
+			cout << "\t" << it->first << " " << it->second << endl;
+		cout << "Error pages: " << endl;
+		std::map<int, string> error_pages = _servers[i].getErrorPage();
+		for (std::map<int, string>::iterator it = error_pages.begin(); it != error_pages.end(); ++it)
+			cout << "\t" << it->first << " " << it->second << endl;
+		cout << endl;
 		if (_servers[i].getLocations().size() > 0)
 		{
 			cout << endl << endl;
@@ -369,6 +575,36 @@ Parser::printServers()
 				cout << endl;
 				string autoindex = _servers[i].getLocations()[j].getAutoindex() ? "on" : "off";
 				cout << "\tAutoindex: " << autoindex << endl;
+				if (_servers[i].getLocations()[j].getClientMaxBodySize() != -1)
+					cout << "\tClient max body size: " << _servers[i].getLocations()[j].getClientMaxBodySize() << endl;
+				else
+					cout << "\tClient max body size: not specified" << endl;
+				if (_servers[i].getLocations()[j].getUploadPath() != "")
+					cout << "\tUpload path: " << _servers[i].getLocations()[j].getUploadPath() << endl;
+				else
+					cout << "\tUpload path: not specified" << endl;
+				cout << "\tCgi: " << endl;
+				if (_servers[i].getLocations()[j].getCgi().size() > 0)
+				{
+					std::map<string, string> cgi = _servers[i].getLocations()[j].getCgi();
+					for (std::map<string, string>::iterator it = cgi.begin(); it != cgi.end(); ++it)
+						cout << "\t\t" << it->first << " " << it->second << endl;
+				}
+				else
+					cout << "\t\tNot specified" << endl;
+				cout << "\tError pages: " << endl;
+				if (_servers[i].getLocations()[j].getErrorPages().size() > 0)
+				{
+					std::map<int, string> error_pages = _servers[i].getLocations()[j].getErrorPages();
+					for (std::map<int, string>::iterator it = error_pages.begin(); it != error_pages.end(); ++it)
+						cout << "\t\t" << it->first << " " << it->second << endl;
+				}
+				else
+					cout << "\t\tNot specified" << endl;
+				cout << endl;
+				for (std::map<int, string>::iterator it = error_pages.begin(); it != error_pages.end(); ++it)
+					cout << "\t\t" << it->first << " " << it->second << endl;
+				cout << endl;
 			}
 		}
 		cout << endl << endl;

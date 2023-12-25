@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/16 15:02:31 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 12:44:38 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ I would include this in all adjacent code */
 
 #include <vector>
 #include <stack>
+#include <map>
 
 #include <cstdlib>
 //sockets
@@ -65,6 +66,7 @@ enum HttpMethod
 void print(string message, string color = NONECOLOR, int output = 1); //print with optional arguments set to default values
 void parseFile(const string& path); //parse file with path
 std::vector<string>	CppSplit(std::string str, char delimiter);
+bool isNumeric(string str);
 
 
 #endif

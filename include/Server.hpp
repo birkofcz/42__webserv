@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/19 16:29:16 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 13:35:36 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,12 @@ class Server
 		string				_root;
 		std::vector<string> _index;
 
-		std::map<int, string>	_error_page; //to be done 19/12/202
-		bool				_autoindex; //to be done 19/12/2023
-		int					_client_max_body_size; //to be done 19/12/2023
-		std::map<string, string>	cgi; //to be done 19/12/2023
-		string				_upload_path; //to be done 19/12/2023
-		std::vector<int>	_allowed_methods; //to be done 19/12/2023
+		std::map<int, string>	_error_page; 
+		bool				_autoindex; 
+		int					_client_max_body_size;
+		std::map<string, string>	_cgi; 
+		string				_upload_path;
+		std::vector<int>	_allowed_methods;
 
 		int					_socket_fd;
 		struct sockaddr_in 	_server_address;
@@ -93,7 +93,7 @@ class Server
 		void	setFd(int fd);
 		void	addLocation(Location location);
 		void	setErrorPage(std::map<int, string> error_page); //to be done 19/12/2023
-		void	setAutoindex(bool autoindex); //to be done 19/12/2023
+		void	setAutoindex(string autoindex); //to be done 19/12/2023
 		void	setClientMaxBodySize(int client_max_body_size); //to be done 19/12/2023
 		void	setCgi(std::map<string, string> cgi); //to be done 19/12/2023
 		void	setUploadPath(string upload_path);	//to be done 19/12/2023
@@ -159,7 +159,7 @@ inline std::ostream& operator<<(std::ostream& os, const Server& server) {
 		for (size_t j = 0; j < index.size(); ++j) {
 			os << index[j] << " ";
 		}
-		os << "\nCgi: " << locations[i].getCgi() << "\n";
+		//os << "\nCgi: " << locations[i].getCgi() << "\n";
 		os << "Autoindex: " << locations[i].getAutoindex() << "\n";
 		
 	}
