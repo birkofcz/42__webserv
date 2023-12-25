@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:00:09 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/13 17:31:45 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/25 19:20:42 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ class Client
 		void	setSocket(int& sock);
 		void	setAddress(sockaddr_in& Add);
 		void	setServer(Server& serv);
-		void	clientBuildResponse();
+		// // void	clientBuildResponse();
 		//void	updateTime();
 
 		//void	clearClient();

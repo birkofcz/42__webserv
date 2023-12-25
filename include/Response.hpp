@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/13 18:31:14 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/25 19:28:06 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ class Response
 		void setRequest(HttpRequest&);
 		void setServer(Server&);
 
-		void buildResponse();
+		// // void buildResponse();
 		// void clear();
 		// void handleCgi(HttpRequest &);
 		// void cutRes(size_t);
@@ -57,7 +57,7 @@ class Response
 		std::string _response_body_str; //to store text-based data, such as HTML content, plain text, or other character sequences.
 		std::string _location;
 		short _status_code; //  200(for a successful response).
-		char *_res;
+		// // // char *_res; co to je?
 		std::string _response_content; //proc byl public and ucel
 		int _cgi;
 		// int _cgi_fd[2];

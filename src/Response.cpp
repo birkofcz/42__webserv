@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/13 18:41:17 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/25 19:27:06 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ Response::~Response() {}
 Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
 {
     _target_file = "";
-    _body.clear();
+    _body_bytes.clear();
     _body_length = 0;
     _response_content = "";
     _response_body_str = "";
@@ -266,117 +266,125 @@ Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
 //         }
 //     }
 // }
-// int    Response::handleTarget()
-// {
-//     std::string location_key;
-//     getLocationMatch(request.getPath(), _server.getLocations(), location_key);
-//     if (location_key.length() > 0)
-//     {
-//         Location target_location = *_server.getLocationKey(location_key);
 
-//         if (isAllowedMethod(request.getMethod(), target_location, _code))
-//         {
-//             std::cout << "METHOD NOT ALLOWED \n";
-//             return (1);
-//         }
-//         if (request.getBody().length() > target_location.getMaxBodySize())
-//         {
-//             _code = 413;
-//             return (1);
-//         }
-//         if (checkReturn(target_location, _code, _location))
-//             return (1);
 
-// 		if (target_location.getPath().find("cgi-bin") != std::string::npos)
-// 		{
-//             return (handleCgi(location_key));
-// 		}
 
-//         if (!target_location.getAlias().empty())
-//         {
-//             replaceAlias(target_location, request, _target_file);
-//         }
-//         else
-//             appendRoot(target_location, request, _target_file);
 
-//         if (!target_location.getCgiExtension().empty())
-//         {
 
-//             if (_target_file.rfind(target_location.getCgiExtension()[0]) != std::string::npos)
-//             {
-//                 return (handleCgiTemp(location_key));
-//             }
 
-//         }
-//         if (isDirectory(_target_file))
-//         {
-//             if (_target_file[_target_file.length() - 1] != '/')
-//             {
-//                 _code = 301;
-//                 _location = request.getPath() + "/";
-//                 return (1);
-//             }
-//             if (!target_location.getIndexLocation().empty())
-//                 _target_file += target_location.getIndexLocation();
-//             else
-//                 _target_file += _server.getIndex();
-//             if (!fileExists(_target_file))
-//             {
-//                 if (target_location.getAutoindex())
-//                 {
-//                     _target_file.erase(_target_file.find_last_of('/') + 1);
-//                     _auto_index = true;
-//                     return (0);
-//                 }
-//                 else
-//                 {
-//                     _code = 403;
-//                     return (1);
-//                 }
-//             }
-//             if (isDirectory(_target_file))
-//             {
-//                 _code = 301;
-//                 if (!target_location.getIndexLocation().empty())
-//                     _location = combinePaths(request.getPath(), target_location.getIndexLocation(), "");
-//                 else
-//                     _location = combinePaths(request.getPath(), _server.getIndex(), "");
-//                 if (_location[_location.length() - 1] != '/')
-//                     _location.insert(_location.end(), '/');
 
-//                 return (1);
-//             }
-//         }
-//     }
-//     else
-//     {
-//         _target_file = combinePaths(_server.getRoot(), request.getPath(), "");
-//         if (isDirectory(_target_file))
-//         {
-//             if (_target_file[_target_file.length() - 1] != '/')
-//             {
-//                 _code = 301;
-//                 _location = request.getPath() + "/";
-//                 return (1);
-//             }
-//             _target_file += _server.getIndex();
-//             if (!fileExists(_target_file))
-//             {
-//                 _code = 403;
-//                 return (1);
-//             }
-//             if (isDirectory(_target_file))
-//             {
-//                 _code = 301;
-//                 _location = combinePaths(request.getPath(), _server.getIndex(), "");
-//                 if(_location[_location.length() - 1] != '/')
-//                     _location.insert(_location.end(), '/');
-//                 return (1);
-//             }
-//         }
-//     }
-//     return (0);
-// }
+/*
+int    Response::handleTarget()
+{
+    std::string location_key;
+    getLocationMatch(request.getPath(), _server.getLocations(), location_key);
+    if (location_key.length() > 0)
+    {
+        Location target_location = *_server.getLocationKey(location_key);
+
+        if (isAllowedMethod(request.getMethod(), target_location, _code))
+        {
+            std::cout << "METHOD NOT ALLOWED \n";
+            return (1);
+        }
+        if (request.getBody().length() > target_location.getMaxBodySize())
+        {
+            _code = 413;
+            return (1);
+        }
+        if (checkReturn(target_location, _code, _location))
+            return (1);
+
+		if (target_location.getPath().find("cgi-bin") != std::string::npos)
+		{
+            return (handleCgi(location_key));
+		}
+
+        if (!target_location.getAlias().empty())
+        {
+            replaceAlias(target_location, request, _target_file);
+        }
+        else
+            appendRoot(target_location, request, _target_file);
+
+        if (!target_location.getCgiExtension().empty())
+        {
+
+            if (_target_file.rfind(target_location.getCgiExtension()[0]) != std::string::npos)
+            {
+                return (handleCgiTemp(location_key));
+            }
+
+        }
+        if (isDirectory(_target_file))
+        {
+            if (_target_file[_target_file.length() - 1] != '/')
+            {
+                _code = 301;
+                _location = request.getPath() + "/";
+                return (1);
+            }
+            if (!target_location.getIndexLocation().empty())
+                _target_file += target_location.getIndexLocation();
+            else
+                _target_file += _server.getIndex();
+            if (!fileExists(_target_file))
+            {
+                if (target_location.getAutoindex())
+                {
+                    _target_file.erase(_target_file.find_last_of('/') + 1);
+                    _auto_index = true;
+                    return (0);
+                }
+                else
+                {
+                    _code = 403;
+                    return (1);
+                }
+            }
+            if (isDirectory(_target_file))
+            {
+                _code = 301;
+                if (!target_location.getIndexLocation().empty())
+                    _location = combinePaths(request.getPath(), target_location.getIndexLocation(), "");
+                else
+                    _location = combinePaths(request.getPath(), _server.getIndex(), "");
+                if (_location[_location.length() - 1] != '/')
+                    _location.insert(_location.end(), '/');
+
+                return (1);
+            }
+        }
+    }
+    else
+    {
+        _target_file = combinePaths(_server.getRoot(), request.getPath(), "");
+        if (isDirectory(_target_file))
+        {
+            if (_target_file[_target_file.length() - 1] != '/')
+            {
+                _code = 301;
+                _location = request.getPath() + "/";
+                return (1);
+            }
+            _target_file += _server.getIndex();
+            if (!fileExists(_target_file))
+            {
+                _code = 403;
+                return (1);
+            }
+            if (isDirectory(_target_file))
+            {
+                _code = 301;
+                _location = combinePaths(request.getPath(), _server.getIndex(), "");
+                if(_location[_location.length() - 1] != '/')
+                    _location.insert(_location.end(), '/');
+                return (1);
+            }
+        }
+    }
+    return (0);
+}
 
 // bool Response::reqError()
 // {
@@ -457,19 +465,19 @@ void    Response::buildResponse()
 //     _response_content.append(_response_body);
 // }
 
-// /* Returns the entire reponse ( Headers + Body )*/
+// // Returns the entire reponse ( Headers + Body )
 // std::string Response::getRes()
 // {
 //     return (_response_content);
 // }
 
-// /* Returns the length of entire reponse ( Headers + Body) */
+// // Returns the length of entire reponse ( Headers + Body) 
 // size_t Response::getLen() const
 // {
 // 	return (_response_content.length());
 // }
 
-// /* Constructs Status line based on status code. */
+// // Constructs Status line based on status code. //
 // void        Response::setStatusLine()
 // {
 //     _response_content.append("HTTP/1.1 " + toString(_code) + " ");
@@ -477,18 +485,22 @@ void    Response::buildResponse()
 //     _response_content.append("\r\n");
 // }
 
+
+
+
+
 int    Response::buildBody()
 {
-    if (request.getBody().length() > _server.getClientMaxBodySize())
-    {
-        _code = 413;
-        return (1);
-    }
+    // if (request.getBody().length() > _server.getClientMaxBodySize())
+    // {
+    //     _code = 413;
+    //     return (1);
+    // }
     if ( handleTarget() )
         return (1);
     if (_cgi || _auto_index)
         return (0);
-    if (_code)
+    if (_status_code)
         return (0);
     if (request.getMethod() == GET //|| request.getMethod() == HEAD)
     {
@@ -499,20 +511,20 @@ int    Response::buildBody()
     {
         if (fileExists(_target_file) && request.getMethod() == POST)
         {
-            _code = 204;
+            _status_code = 204;
             return (0);
         }
         std::ofstream file(_target_file.c_str(), std::ios::binary);
         if (file.fail())
         {
-            _code = 404;
+            _status_code = 404;
             return (1);
         }
 
         if (request.getMultiformFlag())
         {
             std::string body = request.getBody();
-            body = removeBoundary(body, request.getBoundary());
+            _statusbody = removeBoundary(body, request.getBoundary());
             file.write(body.c_str(), body.length());
         }
         else
@@ -524,16 +536,16 @@ int    Response::buildBody()
     {
         if (!fileExists(_target_file))
         {
-            _code = 404;
+            _status_code = 404;
             return (1);
         }
         if (remove( _target_file.c_str() ) != 0 )
         {
-            _code = 500;
+            _status_code = 500;
             return (1);
         }
     }
-    _code = 200;
+    _status_code = 200;
     return (0);
 }
 
@@ -551,7 +563,7 @@ int    Response::buildBody()
 //     _response_body = ss.str();
 //     return (0);
 // }
-
+*/
 void 	Response::setServer(Server &server)
 {
 	_server = server;
@@ -561,6 +573,18 @@ void	Response::setRequest(HttpRequest &req)
 {
 	request = req;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 // void        Response::cutRes(size_t i)
 // {

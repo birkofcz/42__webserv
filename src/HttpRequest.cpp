@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/13 16:57:45 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/25 19:24:09 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,54 @@ HttpRequest::HttpRequest()
 
 HttpRequest::~HttpRequest() {}
 
-HttpMethod &HttpRequest::getMethod()
+/* --- GETTERS --- */
+
+HttpMethod&		HttpRequest::getMethod() { return (_method); }
+std::string&	HttpRequest::getPath() { return (_path); }
+std::string&	HttpRequest::getQuery() { return (_query); }
+// std::string&	HttpRequest::getFragment() { return (_fragment); }
+
+std::string		HttpRequest::getHeader(const std::string& name)
 {
-	return (_method);
+    return (_request_headers[name]);
 }
 
-void HttpRequest::setMethod(HttpMethod &method)
+const std::map<std::string, std::string>&	HttpRequest::getHeaders() const
 {
-	_method = method;
+	return (this->_request_headers);
+}
+
+std::string		HttpRequest::getMethodStr() { return (_method_str[_method]); }
+std::string&	HttpRequest::getBody() { return (_body_str); }
+std::string		HttpRequest::getServerName() { return (this->_server_name); }
+bool			HttpRequest::getMultiformFlag() { return (this->_multiform_flag); }
+// std::string&	HttpRequest::getBoundary() { return (this->_boundary); }
+
+/* ---- SETTERS --- */
+
+void	HttpRequest::setMethod(HttpMethod&	method) { _method = method; }
+void	HttpRequest::setMaxBodySize(size_t size) { _max_body_size = size; }
+void	HttpRequest::setBody(std::string body)
+{
+	_body.assign(body.begin(), body.end());
+	_body_str = body;
+}
+
+void	HttpRequest::setHeader(std::string &header_name, std::string &value)
+{
+	static const char* spaces = " \t";
+
+	// Erase leading and trailing spaces
+	size_t first_not_space = value.find_first_not_of(spaces);
+	size_t last_not_space = value.find_last_not_of(spaces);
+	value = value.substr(first_not_space, last_not_space - first_not_space + 1);
+
+	// Convert header_name to lowercase
+	for (size_t i = 0; i < header_name.length(); ++i)
+		header_name[i] = std::tolower(static_cast<unsigned char>(header_name[i]));
+
+		// Set the header
+	_request_headers[header_name] = value;
 }
 
 void        HttpRequest::_handle_headers()
@@ -82,22 +122,7 @@ void        HttpRequest::_handle_headers()
 }
 
 
-void	HttpRequest::setHeader(std::string &header_name, std::string &value)
-{
-	static const char* spaces = " \t";
 
-	// Erase leading and trailing spaces
-	size_t first_not_space = value.find_first_not_of(spaces);
-	size_t last_not_space = value.find_last_not_of(spaces);
-	value = value.substr(first_not_space, last_not_space - first_not_space + 1);
-
-	// Convert header_name to lowercase
-	for (size_t i = 0; i < header_name.length(); ++i)
-		header_name[i] = std::tolower(static_cast<unsigned char>(header_name[i]));
-
-		// Set the header
-	_request_headers[header_name] = value;
-}
 
 bool    isTokenChar(uint8_t ch)
 {
@@ -149,7 +174,7 @@ void HttpRequest::feed(char *data, size_t size)
 {
 	uint8_t character;
 	static std::stringstream s;
-	int j = 0;
+	// int j = 0;
 
 	for (size_t i = 0; i < size; ++i)
 	{

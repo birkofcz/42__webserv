@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/12 17:25:51 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/25 18:47:28 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,23 +81,24 @@ class HttpRequest
 		HttpRequest();
 		~HttpRequest();
 
-		HttpMethod &getMethod();
-		// std::string                                 &getPath();
-		// std::string                                 &getQuery();
-		// std::string                                 &getFragment();
-		// std::string                                 getHeader(std::string const &);
-		// const std::map<std::string, std::string>    &getHeaders() const;
-		// std::string                                 getMethodStr();
-		// std::string                                 &getBody();
-		// std::string                                 getServerName();
-		// std::string                                 &getBoundary();
-		// bool                                        getMultiformFlag();
+		HttpMethod&									getMethod();
+		std::string&								getPath();
+		std::string&								getQuery();
+		// std::string&								getFragment();
+		std::string									getHeader(const std::string &);
+		const std::map<std::string, std::string>&	getHeaders() const;
+		std::string                                 getMethodStr();
+		std::string&								getBody();
+		std::string                                 getServerName();
+		// std::string&								getBoundary();
+		bool										getMultiformFlag();
+
+		void setMethod(HttpMethod&);
+		void setMaxBodySize(size_t);
+		void setBody(std::string name);
+		void setHeader(std::string&, std::string&);
 
 		void feed(char* data, size_t size);
-		void setMethod(HttpMethod&);
-		void setHeader(std::string &, std::string &);
-		// void setMaxBodySize(size_t);
-		// void setBody(std::string name);
 		// bool parsingCompleted();
 		// void printMessage();
 		// void clear();
@@ -115,7 +116,7 @@ class HttpRequest
 		HttpMethod _method;
 		map<uint8_t, std::string> _method_str;
 		ParsingState _state;
-		// size_t _max_body_size;
+		size_t _max_body_size;
 		size_t _body_length;
 		short _error_code;
 		// size_t _chunk_length;
