@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:04:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/04 17:16:19 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/25 19:22:24 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ Client::Client(const Client &src)
 	{
 		this->_client_socket = src._client_socket;
 		this->_client_address = src._client_address;
-		// this->request = src.request;
-		// this->response = src.response;
+		this->request = src.request;
+		this->response = src.response;
 		// this->server = src.server;
 		// this->_last_msg_time = src._last_msg_time;
 	}
@@ -41,42 +41,37 @@ Client &Client::operator=(const Client &rhs)
 	{
 		this->_client_socket = rhs._client_socket;
 		this->_client_address = rhs._client_address;
-		// this->request = rhs.request;
-		// this->response = rhs.response;
+		this->request = rhs.request;
+		this->response = rhs.response;
 		// this->server = rhs.server;
 		// this->_last_msg_time = rhs._last_msg_time;
 	}
 	return (*this);
 }
 
-// Client::Client(ServerConfig& server)
-// {
-//     setServer(server);
-//     request.setMaxBodySize(server.getClientMaxBodySize());
-//     _last_msg_time = time(NULL);
-// }
+Client::Client(Server &server)
+{
+	setServer(server);
+	// // request.setMaxBodySize(server.getClientMaxBodySize());
+	// _last_msg_time = time(NULL);
+}
 
-// void    Client::setServer(ServerConfig &server)
-// {
-//     response.setServer(server);
-// }
-
-void	Client::setSocket(int &sock)
+void Client::setSocket(int &sock)
 {
 	_client_socket = sock;
 }
 
-void	Client::setAddress(sockaddr_in &addr)
+void Client::setAddress(sockaddr_in &addr)
 {
 	_client_address = addr;
 }
 
-// void    Client::setServer(ServerConfig &server)
-// {
-//     response.setServer(server);
-// }
+void Client::setServer(Server &server)
+{
+	response.setServer(server);
+}
 
-const int&	Client::getSocket() const
+const int &Client::getSocket() const
 {
 	return (_client_socket);
 }
@@ -86,7 +81,7 @@ const int&	Client::getSocket() const
 //     return (request);
 // }
 
-const struct sockaddr_in&	Client::getAddress() const
+const struct sockaddr_in &Client::getAddress() const
 {
 	return (_client_address);
 }
@@ -96,11 +91,11 @@ const struct sockaddr_in&	Client::getAddress() const
 //     return (_last_msg_time);
 // }
 
-// void        Client::buildResponse()
-// {
-//     response.setRequest(this->request);
-//     response.buildResponse();
-// }
+// // void	Client::clientBuildResponse()
+// // {
+// // 	response.setRequest(this->request);
+// // 	response.buildResponse();
+// // }
 
 // void             Client::updateTime()
 // {
