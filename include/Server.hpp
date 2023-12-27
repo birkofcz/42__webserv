@@ -6,69 +6,123 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/03 15:46:51 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 15:30:33 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
+/* 
+ --- Directives from the config file to handle: ---
+
+server_name (server, location)
+listen (server)
+root (server, location)
+index (server, location)
+error_page (server, location)
+location (server)
+autoindex (server, location)
+client_max_body_size (server, location)
+cgi (server, location)
+upload_path (server, location)
+allowed_methods (server, location)
+
+cgi directive example:
+cgi .php /usr/bin/php-cgi (file extension, path to executable, can be multiple)
+
+eror_page directive example:
+error_page 404 /404.html (error code, path to error page, can be multiple)
+
+location directive example:
+location /(path) { 
+	allowed_methods GET POST (methods)
+	root /var/www/html (root)
+	index index.html (index)
+	autoindex on (autoindex)
+	cgi .php /usr/bin/php-cgi (cgi) - can be multiple
+	upload_path /var/www/html/uploads (upload)
+}
+
+ */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
 # include "general.hpp"
+# include "Location.hpp"
 # include <cstring>
+
+/* Server class to include all the directives from config file and a vector of "location"
+blocks - of Location class objects, including their configuration parsed */
+
+class Location;
 
 class Server
 {
 	private:
-		string				_name;
-		std::vector<int>	_ports;
-		std::vector<string>	_server_names;
-		string				_root;
-		std::vector<string> _index;
+		string						_name;
+		std::vector<int>			_ports;
+		std::vector<string>			_server_names;
+		string						_root;
+		std::vector<string>			_index;
+		std::map<int, string>		_error_page; 
+		bool						_autoindex; 
+		int							_client_max_body_size;
+		std::map<string, string>	_cgi; 
+		string						_upload_path;
+		std::vector<int>			_allowed_methods;
 
-		// string				_error_page;
-		// string				_location;
-		// bool	autoindex;
-		// int		client_max_body_size;
-		// string	cgi;
-		// string	upload;
-		// string	auth;
-		// string	methods;
-		// string	redirect;
-		// string	return_;
-		int					_socket_fd;
-		struct sockaddr_in 	_server_address;
-		in_addr_t			_host; //needs to extract from config
+		int							_socket_fd;
+		struct sockaddr_in			_server_address;
+		in_addr_t					_host; //needs to extract from config
 
+		std::vector<Location>		_locations;	//vector of locations as per config file for a particular server
+		
 	public:
 		Server();
 		~Server();
 
 
 		//methods
-		void	setupServer(void);
+		void						setupServer(void);
   
 		//setters
-		void	setName(string name);
-		void	setPorts(std::vector<int> ports);
-		void	setServerNames(std::vector<string> server_names);
-		void	setRoot(string root);
-		void	setIndex(std::vector<string> index);
-		void	setFd(int fd);
+		void						setName(string name);
+		void						setPorts(std::vector<int> ports);
+		void						setServerNames(std::vector<string> server_names);
+		void						setRoot(string root);
+		void						setIndex(std::vector<string> index);
+		void						setFd(int fd);
+		void						addLocation(Location location);
+		void						setErrorPage(std::map<int, string> error_page);
+		void						setAutoindex(string autoindex);
+		void						setClientMaxBodySize(int client_max_body_size);
+		void						setCgi(std::map<string, string> cgi); 
+		void						setUploadPath(string upload_path);
+		void						setAllowedMethods(std::vector<int> allowed_methods);
+		void						setHost(in_addr_t host); //needs to extract from config
 		
 		//getters
-		string				getName() const;
-		std::vector<int>	getPorts() const;
-		std::vector<string>	getServerNames() const;
-		string				getRoot() const;
-		std::vector<string>	getIndex() const;
-		const in_addr_t&	getHost() const;
-		int					getFd() const;
+		string						getName() const;
+		std::vector<int>			getPorts() const;
+		std::vector<string>			getServerNames() const;
+		string						getRoot() const;
+		std::vector<string>			getIndex() const;
+		const in_addr_t&			getHost() const;
+		int							getFd() const;
+		std::map<int, string>		getErrorPage() const; 
+		bool						getAutoindex() const; 
+		int							getClientMaxBodySize() const; 
+		std::map<string, string>	getCgi() const; 
+		string						getUploadPath() const; 
+		std::vector<int>			getAllowedMethods() const;
+
+		std::vector<Location>		getLocations() const;
 		
-    friend std::ostream& operator<<(std::ostream& os, const Server& server);
+    friend std::ostream& operator<<(std::ostream& os, const Server& server); ///is this allowed? TEMP for debugging
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Server& server) {
-    os << "Server Information:\n"
+    os << "\nServer Information:\n"
        << "Name: " << server.getName() << "\n"
        << "Ports: ";
     std::vector<int> ports = server.getPorts();
@@ -88,7 +142,28 @@ inline std::ostream& operator<<(std::ostream& os, const Server& server) {
     os << "\nHost: " << server.getHost() << "\nSocket FD: " << server.getFd() << "\n";
 
     // You can add more variables as needed
-
-    return os;
+	os << "Locations: \n";
+	std::vector<Location> locations = server.getLocations();
+	for (size_t i = 0; i < locations.size(); ++i) {
+		//print location
+		os << "Location " << i << ":\n";
+		os << "Path: " << locations[i].getPath() << "\n";
+		os << "Allowed Methods: ";
+		std::vector<int> allowedMethods = locations[i].getAllowedMethods();
+		for (size_t j = 0; j < allowedMethods.size(); ++j) {
+			os << allowedMethods[j] << " ";
+		}
+		os << "\nRoot: " << locations[i].getRoot() << "\n";
+		os << "Index: ";
+		std::vector<std::string> index = locations[i].getIndex();
+		for (size_t j = 0; j < index.size(); ++j) {
+			os << index[j] << " ";
+		}
+		//os << "\nCgi: " << locations[i].getCgi() << "\n";
+		os << "Autoindex: " << locations[i].getAutoindex() << "\n";
+		
+	}
+	return os;
 }
+
 #endif

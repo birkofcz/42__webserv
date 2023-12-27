@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/06 16:28:01 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/25 12:44:38 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ I would include this in all adjacent code */
 // containers and webstuff
 
 #include <vector>
+#include <stack>
+#include <map>
 
 #include <cstdlib>
 //sockets
@@ -44,14 +46,27 @@ using std::string;
 #define GREEN	"\033[32m"
 #define YELLOW	"\033[33m"
 #define BLUE	"\033[34m"
+#define BOLD	"\033[1m"
 #define RESET	"\033[0m"
+
 #define NONECOLOR	""
+
+enum HttpMethod
+{
+	GET,
+	POST,
+	DELETE,
+	// PUT,
+	HEAD,
+	NONE
+};
 
 /* Standalone utilities */
 
 void print(string message, string color = NONECOLOR, int output = 1); //print with optional arguments set to default values
 void parseFile(const string& path); //parse file with path
 std::vector<string>	CppSplit(std::string str, char delimiter);
+bool isNumeric(string str);
 
 
 #endif
