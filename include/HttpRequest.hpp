@@ -6,13 +6,14 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/25 18:47:28 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/27 11:35:29 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HTTPREQUEST_HPP
 # define HTTPREQUEST_HPP
 
+# include "general.hpp"
 # include <cstddef> // size_t
 # include <stdint.h> // uint8_t
 # include <iostream>
@@ -25,16 +26,6 @@
 #define MAX_URI_LENGTH 2048 //domyslet
 
 using std::map;
-
-enum HttpMethod
-{
-	GET,
-	POST,
-	DELETE,
-	// PUT,
-	// HEAD,
-	NONE
-};
 
 enum ParsingState
 {

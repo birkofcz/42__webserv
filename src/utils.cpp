@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:25:51 by sbenes            #+#    #+#             */
-/*   Updated: 2023/11/27 16:50:39 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/25 13:30:12 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,13 @@ std::vector<string>	CppSplit(std::string str, char delimiter)
 		if (!token.empty())
 			result.push_back(token);
 	return (result);
+}
+
+/* isNumeric - checks if input is numeric */
+bool isNumeric(string str)
+{
+	for (unsigned int i = 0; i < str.length(); i++)
+		if (!isdigit(str[i]))
+			return (false);
+	return (true);
 }

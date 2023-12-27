@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/12/25 19:17:39 by tkajanek         ###   ########.fr       */
+=======
+/*   Updated: 2023/12/16 15:31:36 by sbenes           ###   ########.fr       */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +41,7 @@ ServerManager::~ServerManager() {}
 void ServerManager::initServers(vector<Server> servers)
 {
 	cout << endl;
-	print("Initializing  Servers...", GREEN);
+	print("ServerManager -- Initializing  Servers...", GREEN);
 	_servers = servers;
 	// char buf[INET_ADDRSTRLEN];
 	// This constant represents the maximum length, in characters, of the string representation of an IPv4 address
