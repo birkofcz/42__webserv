@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 14:57:02 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 15:23:03 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/28 14:58:27 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ Location::setUploadPath(string upload_path)
 /// -- GETTERS -- /// ---------------------------------------------------------------------
 
 string
-Location::getPath()
+Location::getPath() const
 {
 	return (_path);
 }

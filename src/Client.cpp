@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:04:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/25 19:22:24 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/27 13:46:13 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ Client::Client(const Client &src)
 }
 
 /* Assinment operator */
-Client &Client::operator=(const Client &rhs)
+Client &Client::operator=(const Client& rhs)
 {
 	if (this != &rhs)
 	{
@@ -49,24 +49,25 @@ Client &Client::operator=(const Client &rhs)
 	return (*this);
 }
 
-Client::Client(Server &server)
+Client::Client(Server& server)
 {
 	setServer(server);
-	// // request.setMaxBodySize(server.getClientMaxBodySize());
+	request.setMaxBodySize(server.getClientMaxBodySize());
+	cout << "request object: Max body size setted during a Client construction using server parameter." << std::endl;
 	// _last_msg_time = time(NULL);
 }
 
-void Client::setSocket(int &sock)
+void Client::setSocket(int& sock)
 {
 	_client_socket = sock;
 }
 
-void Client::setAddress(sockaddr_in &addr)
+void Client::setAddress(sockaddr_in& addr)
 {
 	_client_address = addr;
 }
 
-void Client::setServer(Server &server)
+void Client::setServer(Server& server)
 {
 	response.setServer(server);
 }
@@ -76,12 +77,12 @@ const int &Client::getSocket() const
 	return (_client_socket);
 }
 
-// const HttpRequest   &Client::getRequest() const
+// const HttpRequest&	Client::getRequest() const
 // {
 //     return (request);
 // }
 
-const struct sockaddr_in &Client::getAddress() const
+const struct sockaddr_in&	Client::getAddress() const
 {
 	return (_client_address);
 }
@@ -91,11 +92,11 @@ const struct sockaddr_in &Client::getAddress() const
 //     return (_last_msg_time);
 // }
 
-// // void	Client::clientBuildResponse()
-// // {
-// // 	response.setRequest(this->request);
-// // 	response.buildResponse();
-// // }
+void	Client::clientBuildResponse()
+{
+	response.setRequest(this->request);
+	response.buildResponse();
+}
 
 // void             Client::updateTime()
 // {

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:00:09 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/25 19:20:42 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/27 18:12:53 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 /**
 	 Client
    - Stores all information related to the client such as socket and address
-	 along with request and response objects. each Client also have an object of the server it's conntected to.
+	 along with request and response objects.
+	 Each Client also have an object of the server it's conntected to.
 **/
 class Client
 {
@@ -40,13 +41,14 @@ class Client
 		void	setSocket(int& sock);
 		void	setAddress(sockaddr_in& Add);
 		void	setServer(Server& serv);
-		// // void	clientBuildResponse();
+		void	clientBuildResponse();
 		//void	updateTime();
 
 		//void	clearClient();
 		Response response;
 		HttpRequest request;
 		// ServerConfig server;
+		// k cemu, prirazen totiz v response
 
 	private:
 		int		_client_socket;

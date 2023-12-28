@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/12/25 19:17:39 by tkajanek         ###   ########.fr       */
-=======
-/*   Updated: 2023/12/16 15:31:36 by sbenes           ###   ########.fr       */
->>>>>>> main
+/*   Updated: 2023/12/28 14:48:57 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +216,20 @@ void ServerManager::acceptNewConnection(Server &serv)
 			inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN), client_sock);
 }
 
+static void sendResponse(const int& fd, const std::string& response) //only for testing
+{
+    ssize_t bytes_written = write(fd, response.c_str(), response.size());
+    if (bytes_written < 0)
+    {
+        perror("write");
+        // Handle error as needed
+    }
+    else
+    {
+        std::cout << "Successful SEND RESPONSE \n";
+    }
+}
+
 void ServerManager::readRequest(const int& fd, Client& c)
 {
 	char buffer[MESSAGE_BUFFER];
@@ -249,7 +259,8 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	c.request.feed(buffer, strlen(buffer));
 	cout << "\nPRESENTING REQUEST data: \n" << c.request << endl;
 	// assignServer(c);
-	// // c.clientBuildResponse;
+	c.clientBuildResponse();
+	sendResponse(fd, c.response._response_content);
 	
 
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {
@@ -264,6 +275,8 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	// 	}
 	
 }
+
+
 
 /* Assigen server_block configuration to a client based on Host Header in request and server_name*/
 // void	ServerManager::assignServer(Client& c)
