@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/28 14:48:57 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/29 17:42:27 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,7 @@ void ServerManager::acceptNewConnection(Server &serv)
 
 static void sendResponse(const int& fd, const std::string& response) //only for testing
 {
+	std::cout << "TEST: response before sending to client: "<< response << std::endl;
     ssize_t bytes_written = write(fd, response.c_str(), response.size());
     if (bytes_written < 0)
     {
