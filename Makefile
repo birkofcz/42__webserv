@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+         #
+#    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/08 11:05:29 by sbenes            #+#    #+#              #
-#    Updated: 2023/12/27 11:37:17 by tkajanek         ###   ########.fr        #
+#    Updated: 2023/12/29 17:03:23 by sbenes           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ INC =	-I ./include/
 SRC_PATH =	src/
 
 SRC = 	webserv.cpp utils.cpp Parser.cpp Server.cpp ServerManager.cpp \
-		Client.cpp HttpRequest.cpp Response.cpp Location.cpp
+		Client.cpp HttpRequest.cpp Response.cpp Location.cpp Mime.cpp \
 	
 SRCS =	$(addprefix $(SRC_PATH), $(SRC))
 
