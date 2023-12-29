@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 15:30:33 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/28 14:44:08 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ class Server
 		std::vector<int>			getAllowedMethods() const;
 
 		std::vector<Location>		getLocations() const;
+		const std::vector<Location>::iterator	getLocationKey(std::string);
+
 		
     friend std::ostream& operator<<(std::ostream& os, const Server& server); ///is this allowed? TEMP for debugging
 };

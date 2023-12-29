@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 15:31:15 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/28 14:45:37 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,17 @@ Server::getAllowedMethods() const
 std::map<string, string>	Server::getCgi() const {return _cgi;}
 string						Server::getUploadPath() const {return _upload_path;}
 
+const std::vector<Location>::iterator	Server::getLocationKey(std::string key)
+{
+	std::vector<Location>::iterator it;
+	for (it = this->_locations.begin(); it != this->_locations.end(); it++)
+	{
+		if (it->getPath() == key)
+			return (it);
+	}
+	return (it);
+	//throw ErrorException("Error: path to location not found");
+}
 
 // method
 void Server::setupServer(void)

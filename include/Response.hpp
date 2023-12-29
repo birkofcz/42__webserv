@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/25 19:28:06 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:56:45 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # include "HttpRequest.hpp"
 # include "Server.hpp"
+
+# include <sys/stat.h>
+# include <algorithm>
 
 /*
 	Responsible for building and storing the response. when response is ready,
@@ -35,7 +38,9 @@ class Response
 		void setRequest(HttpRequest&);
 		void setServer(Server&);
 
-		// // void buildResponse();
+		void buildResponse();
+		
+
 		// void clear();
 		// void handleCgi(HttpRequest &);
 		// void cutRes(size_t);
@@ -48,6 +53,7 @@ class Response
 		// std::string removeBoundary(std::string &body, std::string &boundary);
 	
 		HttpRequest request;
+		std::string _response_content; //zmenit oznaceni bez _
 
 	private:
 		Server _server;
@@ -58,25 +64,31 @@ class Response
 		std::string _location;
 		short _status_code; //  200(for a successful response).
 		// // // char *_res; co to je?
-		std::string _response_content; //proc byl public and ucel
 		int _cgi;
 		// int _cgi_fd[2];
 		// size_t _cgi_response_length;
 		// bool _auto_index; //automatic generation of directory listings when a client requests a directory that does not contain an index file 
 
-		// int buildBody();
+		// private methods
+		int 	_buildBody();
+		int 	_handleTarget();
+		void	_getLocationMatch(std::string&, std::vector<Location>, std::string&);
+		bool	_isAllowedMethod(HttpMethod&, Location&, short&);
+		void 	_appendRoot(Location&, HttpRequest&);
+		std::string _combinePaths(std::string, std::string, std::string);
+		bool _isDirectory(std::string);
 		// size_t file_size();
-		// void setStatusLine();
-		// void setHeaders();
+		void _setStatusLine();
+		void _setHeaders();
 		// void setServerDefaultErrorPages();
-		// int readFile();
-		// void contentType();
-		// void contentLength();
-		// void connection();
-		// void server();
-		// void location();
-		// void date();
-		// int handleTarget();
+		int _readFile();
+		// void _contentType();
+		// void _contentLength();
+		// void _connection();
+		// void _server();
+		// void _location();
+		// void _date();
+		
 		// void buildErrorBody();
 		// bool reqError();
 		// int handleCgi(std::string &);

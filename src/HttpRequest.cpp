@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/25 19:24:09 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/27 16:59:52 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ HttpRequest::HttpRequest()
 	_method_str[::POST] = "POST";
 	_method_str[::DELETE] = "DELETE";
 	// _method_str[::PUT] = "PUT";
-	// _method_str[::HEAD] = "HEAD";
+	_method_str[::HEAD] = "HEAD";
 	_method = NONE;
 	_path = "";
 	_query = "";

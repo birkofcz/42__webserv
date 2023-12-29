@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 17:07:44 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 15:19:46 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/28 14:58:15 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class Location
 		void						setUploadPath(string upload_path);
 
 
-		string						getPath();
+		string						getPath() const;
 		std::vector<int>			getAllowedMethods();
 		string						getRoot();
 		std::vector<string>			getIndex();
