@@ -6,11 +6,12 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/28 15:07:28 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/29 17:37:53 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Response.hpp"
+#include "../include/general.hpp"
 
 // Mime Response::_mime;
 
@@ -43,35 +44,34 @@ Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
     // _cgi_response_length = 0;
     // _auto_index = 0;
 }
-// void   Response::contentType()
-// {
-//     _response_content.append("Content-Type: ");
-//     if(_target_file.rfind(".", std::string::npos) != std::string::npos && status_code == 200)
-//         _response_content.append(_mime.getMimeType(_target_file.substr(_target_file.rfind(".", std::string::npos))) );
-//     else
-//         _response_content.append(_mime.getMimeType("default"));
-//     _response_content.append("\r\n");
-// }
+void   Response::_contentType()
+{
+    _response_content.append("Content-Type: ");
+	_response_content.append("text/html"); //hardcoded for test purposes
+    // if(_target_file.rfind(".", std::string::npos) != std::string::npos && status_code == 200)
+    //     _response_content.append(_mime.getMimeType(_target_file.substr(_target_file.rfind(".", std::string::npos))) );
+    // else
+    //     _response_content.append(_mime.getMimeType("default"));
+    _response_content.append("\r\n");
+}
 
-// void   Response::contentLength()
-// {
-//     std::stringstream ss;
-//     ss << _response_body.length();
-//     _response_content.append("Content-Length: ");
-//     _response_content.append(ss.str());
-//     _response_content.append("\r\n");
-// }
+void   Response::_contentLength()
+{
+    _response_content.append("Content-Length: ");
+    _response_content.append(toString(_response_body_str.length()));
+    _response_content.append("\r\n");
+}
 
-// void   Response::connection()
-// {
-//     if(request.getHeader("connection") == "keep-alive")
-//         _response_content.append("Connection: keep-alive\r\n");
-// }
+void   Response::_connection()
+{
+    if(request.getHeader("connection") == "keep-alive")
+        _response_content.append("Connection: keep-alive\r\n");
+}
 
-// void   Response::server()
-// {
-//     _response_content.append("Server: AMAnix\r\n");
-// }
+void   Response::_serverHeader()
+{
+    _response_content.append("Server: STerver\r\n");
+}
 
 // void    Response::location()
 // {
@@ -79,39 +79,40 @@ Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
 //         _response_content.append("Location: "+ _location +"\r\n");
 // }
 
-// void    Response::date()
-// {
-//     char date[1000];
-//     time_t now = time(0);
-//     struct tm tm = *gmtime(&now);
-//     strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S %Z", &tm);
-//     _response_content.append("Date: ");
-//     _response_content.append(date);
-//     _response_content.append("\r\n");
+void    Response::_date()
+{
+    char date[1000];
+    time_t now = time(0);
 
-// }
+    struct tm tm;
+    memset(&tm, 0, sizeof(tm));
+    gmtime_r(&now, &tm);
+
+    strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S %Z", &tm);
+	
+    _response_content.append("Date: ");
+    _response_content.append(date);
+    _response_content.append("\r\n");
+}
 
 // uri ecnoding
 void    Response::_setHeaders()
 {
-    // contentType();
-    // contentLength();
-    // connection();
-    // server();
-    // location();
-    // date();
-	_response_content += "Content-Type: text/plain\r\n";
-    _response_content += "Content-Length: 12\r\n";
-    _response_content += "\r\n"; // Add an extra newline to separate headers and body
-    _response_content += "Hello, World!";
+    _contentType();
+    _contentLength();
+    _connection();
+    _serverHeader();
+    //location();
+    _date();
 
     _response_content.append("\r\n");
 }
 
-// static bool fileExists (const std::string& f) {
-//     std::ifstream file(f.c_str());
-//     return (file.good());
-// }
+bool	Response::_fileExists(const std::string& f)
+{
+    std::ifstream file(f.c_str());
+    return (file.good());
+}
 
 /*
 this function checks whether a given path corresponds to a directory
@@ -122,8 +123,7 @@ bool Response::_isDirectory(std::string path)
 {
     struct stat file_stat;
     if (stat(path.c_str(), &file_stat) != 0)
-        return false; // napr. file doesnt exist
-
+		return false; // napr. file doesnt exist
     return (S_ISDIR(file_stat.st_mode));
 }
 
@@ -334,7 +334,7 @@ int    Response::_handleTarget()
 			std::cout << "TEST: _target_file is a directory." << std::endl;
             // if (_target_file[_target_file.length() - 1] != '/')
             // {
-            //     _code = 301;
+            //     _status_code = 301; //moved permanently
             //     _location = request.getPath() + "/";
             //     return (1);
             // }
@@ -352,7 +352,7 @@ int    Response::_handleTarget()
             //     }
             //     else
             //     {
-            //         _code = 403;
+            //         _status_code = 403;
             //         return (1);
             //     }
             // }
@@ -373,29 +373,32 @@ int    Response::_handleTarget()
     else
     {
         _target_file = _combinePaths(_server.getRoot(), request.getPath(), "");
+		std::cout << "TEST of not finding a location, _target_file: " << _target_file << std::endl;
         if (_isDirectory(_target_file))
         {
 			std::cout << "TEST2: _target_file is a directory." << std::endl;
-            // if (_target_file[_target_file.length() - 1] != '/')
-            // {
-            //     _code = 301;
-            //     _location = request.getPath() + "/";
-            //     return (1);
-            // }
-            // _target_file += _server.getIndex();
-            // if (!fileExists(_target_file))
-            // {
-            //     _code = 403;
-            //     return (1);
-            // }
-            // if (isDirectory(_target_file))
-            // {
-            //     _code = 301;
-            //     _location = _combinePaths(request.getPath(), _server.getIndex(), "");
-            //     if(_location[_location.length() - 1] != '/')
-            //         _location.insert(_location.end(), '/');
-            //     return (1);
-            // }
+            if (_target_file[_target_file.length() - 1] != '/')
+            {
+                _status_code = 301; // 301 Moved Permanently
+                _location = request.getPath() + "/";
+                return (1);
+            }
+            _target_file += _server.getIndex()[0]; //upravit vector anebo check
+            if (!_fileExists(_target_file))
+            {
+                _status_code = 403; // 403 Forbidden
+                return (1);
+            }
+			// If the resulting file is still a directory, perform a redirect
+            if (_isDirectory(_target_file))
+            {
+				std::cout << "TEST2: _target_file is a directory." << std::endl; 
+                // _status_code = 301;
+                // _location = _combinePaths(request.getPath(), _server.getIndex(), "");
+                // if(_location[_location.length() - 1] != '/')
+                //     _location.insert(_location.end(), '/');
+                // return (1);
+            }
         }
     }
 	std::cout << "TEST OF HANDLE TARGET RETURN _target_file: " << _target_file << std::endl;
@@ -450,8 +453,8 @@ void    Response::buildResponse()
 	_buildBody();
     // if (reqError() || buildBody())
     //     buildErrorBody();
-    if (_cgi)
-        return ;
+    // if (_cgi)
+    //     return ;
     // else if (_auto_index)
     // {
     //     std::cout << "AUTO index " << std::endl;
@@ -466,8 +469,8 @@ void    Response::buildResponse()
     // }
     _setStatusLine();
     _setHeaders(); // + body test content if it works
-    // if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
-    //     _response_content.append(_response_body);
+    if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
+        _response_content.append(_response_body_str);
 }
 
 // void Response::setErrorResponse(short code)
@@ -492,13 +495,6 @@ void    Response::buildResponse()
 // {
 // 	return (_response_content.length());
 // }
-
-static std::string toString(short value) //make a template out of this?
-{
-    std::stringstream ss;
-    ss << value;
-    return ss.str();
-}
 
 // Constructs Status line based on status code. //
 void	Response::_setStatusLine()
@@ -585,7 +581,6 @@ int Response::_readFile()
     std::ostringstream ss;
 	ss << file.rdbuf();
     _response_body_str = ss.str();
-	std::cout << "TEST _readfile: _response_body_str: " << _response_body_str << std::endl; 
     return (0);
 }
 

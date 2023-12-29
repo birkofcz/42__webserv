@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/27 11:35:29 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/29 17:29:26 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ class HttpRequest
 		std::string&								getPath();
 		std::string&								getQuery();
 		// std::string&								getFragment();
-		std::string									getHeader(const std::string &);
+		std::string									getHeader(const std::string&);
 		const std::map<std::string, std::string>&	getHeaders() const;
 		std::string                                 getMethodStr();
 		std::string&								getBody();
