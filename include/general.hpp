@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
 /*   Updated: 2023/12/29 17:29:04 by sbenes           ###   ########.fr       */
@@ -61,6 +61,14 @@ enum HttpMethod
 	HEAD,
 	NONE
 };
+
+template <typename T>
+std::string toString(const T val)
+{
+    std::stringstream stream;
+    stream << val;
+    return stream.str();
+}
 
 /* Standalone utilities */
 

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/28 14:56:45 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/29 17:35:27 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 
 # include <sys/stat.h>
 # include <algorithm>
+# include <ctime>    // for time, struct tm, and gmtime
+# include <cstring>  // for memset
+
 
 /*
 	Responsible for building and storing the response. when response is ready,
@@ -82,12 +85,13 @@ class Response
 		void _setHeaders();
 		// void setServerDefaultErrorPages();
 		int _readFile();
-		// void _contentType();
-		// void _contentLength();
-		// void _connection();
-		// void _server();
+		bool _fileExists(const std::string&);
+		void _contentType();
+		void _contentLength();
+		void _connection();
+		void _serverHeader();
 		// void _location();
-		// void _date();
+		void _date();
 		
 		// void buildErrorBody();
 		// bool reqError();
