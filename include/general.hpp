@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/29 17:26:11 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/29 17:29:04 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ I would include this in all adjacent code */
 #include <sstream>
 
 #include <fstream>
+#include <istream>
 // containers and webstuff
 
 #include <vector>
