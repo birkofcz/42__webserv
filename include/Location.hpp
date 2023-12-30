@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 17:07:44 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/28 14:58:15 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/30 14:27:36 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Location
 		std::map<string, string>	_cgi;
 		bool						_autoindex;
 		std::map<int, string>		_error_pages; // 404, /404.html
-		int							_client_max_body_size;
+		size_t						_client_max_body_size;
 		string						_upload_path;
 
 
@@ -45,7 +45,7 @@ class Location
 		void						setCgi(std::map<string, string> cgi);
 		void						setAutoindex(string autoindex);
 		void						setErrorPages(std::map<int, string> error_pages);
-		void						setClientMaxBodySize(int client_max_body_size);
+		void						setClientMaxBodySize(size_t client_max_body_size);
 		void						setUploadPath(string upload_path);
 
 
@@ -56,7 +56,7 @@ class Location
 		std::map<string, string>	getCgi();
 		bool						getAutoindex();
 		std::map<int, string>		getErrorPages();
-		int							getClientMaxBodySize();
+		size_t						getClientMaxBodySize();
 		string						getUploadPath();
 };	
 

@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 15:46:19 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 15:08:33 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,14 +195,19 @@ Parser::parseErrorPages(const string& line)
 }
 
 /* Get client_max_body_size from a line */
-int
+size_t
 Parser::parseClientMaxBodySize(const string& line)
 {
 	std::vector<string> split = CppSplit(line, ' ');
 	if (split[1].empty())
 	{
 		print("getClientMaxBodySize: client_max_body_size not specified", RED, 2);
-		return -1;
+		return CLIENT_MAX_BODY_SIZE_LIMIT;
+	}
+	if (atoi(split[1].c_str()) < 0)
+	{
+		print("getClientMaxBodySize: client_max_body_size out of range", RED, 2);
+		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 	if (split[1].find(';') != string::npos)
 		split[1].erase(split[1].find(';'));
@@ -211,7 +216,7 @@ Parser::parseClientMaxBodySize(const string& line)
 	else
 	{
 		print("getClientMaxBodySize: client_max_body_size not numeric", RED, 2);
-		return -1;
+		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 }
 
@@ -374,7 +379,7 @@ void Parser::parseFile(const string& path)
 				else if (line.find("client_max_body_size") != string::npos)
 				{
 					print("config[server]: Found client_max_body_size directive", GREEN);
-					int client_max_body_size = parseClientMaxBodySize(line);
+					size_t client_max_body_size = parseClientMaxBodySize(line);
 					currentServer.setClientMaxBodySize(client_max_body_size);
 				}
 				else if (line.find("allowed_methods") != string::npos)
@@ -437,7 +442,7 @@ void Parser::parseFile(const string& path)
 			else if (line.find("client_max_body_size") != string::npos)
 			{
 				print("\tconfig[location]: Found client_max_body_size directive", GREEN);
-				int client_max_body_size = parseClientMaxBodySize(line);
+				size_t client_max_body_size = parseClientMaxBodySize(line);
 				currentLocation.setClientMaxBodySize(client_max_body_size);
 			}
 			else if (line.find("upload_path") != string::npos)
@@ -525,10 +530,10 @@ cout << endl << YELLOW << "[ CONFIGURATION SUMMARY ]" << RESET << endl << endl;
 		cout << endl;
 		string autoindex = _servers[i].getAutoindex() ? "on" : "off";
 		cout << "Autoindex: " << autoindex << endl;
-		if (_servers[i].getClientMaxBodySize() != -1)
+		if (_servers[i].getClientMaxBodySize() != CLIENT_MAX_BODY_SIZE_LIMIT)
 			cout << "Client max body size: " << _servers[i].getClientMaxBodySize() << endl;
 		else
-			cout << "Client max body size: not set" << endl;
+			cout << "Client max body size: not set, using limit of 10 MB" << endl;
 		cout << "Upload path: " << (_servers[i].getUploadPath().empty() ? "not set" : _servers[i].getUploadPath()) << endl;
 		cout << "Allowed methods: ";
 		if (_servers[i].getAllowedMethods().empty())
@@ -639,10 +644,12 @@ cout << endl << YELLOW << "[ CONFIGURATION SUMMARY ]" << RESET << endl << endl;
 				cout << endl;
 				string autoindex = _servers[i].getLocations()[j].getAutoindex() ? "on" : "off";
 				cout << "\tAutoindex: " << autoindex << endl;
-				if (_servers[i].getLocations()[j].getClientMaxBodySize() != -1)
+				if (_servers[i].getLocations()[j].getClientMaxBodySize() != CLIENT_MAX_BODY_SIZE_LIMIT)
 					cout << "\tClient max body size: " << _servers[i].getLocations()[j].getClientMaxBodySize() << endl;
+				else if (_servers[i].getClientMaxBodySize() != CLIENT_MAX_BODY_SIZE_LIMIT)
+					cout << "\tClient max body size: not set, using server limit of " << _servers[i].getClientMaxBodySize() << " bytes." << endl;
 				else
-					cout << "\tClient max body size: not set" << endl;
+					cout << "\tClient max body size: not set, using limit of 10 MB" << endl;
 				cout << "\tUpload path: " << (_servers[i].getLocations()[j].getUploadPath().empty() ? "not set" : _servers[i].getLocations()[j].getUploadPath()) << endl;
 				cout << "\tCgi: " << endl;
 				if (_servers[i].getLocations()[j].getCgi().empty())

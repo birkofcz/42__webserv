@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/28 14:45:37 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/30 14:44:21 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Server::Server()
 	_root = "";
 	_index = std::vector<string>();
 	_autoindex = false;
-	_client_max_body_size = -1;
+	_client_max_body_size = CLIENT_MAX_BODY_SIZE_LIMIT;
 	_allowed_methods = std::vector<int>();
 	_cgi = std::map<string, string>();
 	_upload_path = "";
@@ -90,7 +90,7 @@ Server::setAutoindex(string autoindex)
 }
 
 void
-Server::setClientMaxBodySize(int client_max_body_size)
+Server::setClientMaxBodySize(size_t client_max_body_size)
 {
 	_client_max_body_size = client_max_body_size;
 }
@@ -173,7 +173,7 @@ Server::getAutoindex() const
 	return _autoindex;
 }
 
-int
+size_t
 Server::getClientMaxBodySize() const
 {
 	return _client_max_body_size;

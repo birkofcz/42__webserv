@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/28 14:44:08 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/30 14:27:21 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ class Server
 		std::vector<string>			_index;
 		std::map<int, string>		_error_page; 
 		bool						_autoindex; 
-		int							_client_max_body_size;
+		size_t						_client_max_body_size;
 		std::map<string, string>	_cgi; 
 		string						_upload_path;
 		std::vector<int>			_allowed_methods;
@@ -95,7 +95,7 @@ class Server
 		void						addLocation(Location location);
 		void						setErrorPage(std::map<int, string> error_page);
 		void						setAutoindex(string autoindex);
-		void						setClientMaxBodySize(int client_max_body_size);
+		void						setClientMaxBodySize(size_t client_max_body_size);
 		void						setCgi(std::map<string, string> cgi); 
 		void						setUploadPath(string upload_path);
 		void						setAllowedMethods(std::vector<int> allowed_methods);
@@ -111,7 +111,7 @@ class Server
 		int							getFd() const;
 		std::map<int, string>		getErrorPage() const; 
 		bool						getAutoindex() const; 
-		int							getClientMaxBodySize() const; 
+		size_t						getClientMaxBodySize() const; 
 		std::map<string, string>	getCgi() const; 
 		string						getUploadPath() const; 
 		std::vector<int>			getAllowedMethods() const;

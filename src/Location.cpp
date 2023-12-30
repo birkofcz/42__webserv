@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 14:57:02 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/28 14:58:27 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/30 14:44:47 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Location::Location()
 	_index = std::vector<string>();
 	_autoindex = false;
 	_error_pages = std::map<int, string>();
-	_client_max_body_size = -1;
+	_client_max_body_size = CLIENT_MAX_BODY_SIZE_LIMIT;
 	_cgi = std::map<string, string>();
 	_upload_path = "";
 
@@ -78,7 +78,7 @@ Location::setErrorPages(std::map<int, string> error_pages)
 }
 
 void
-Location::setClientMaxBodySize(int client_max_body_size)
+Location::setClientMaxBodySize(size_t client_max_body_size)
 {
 	_client_max_body_size = client_max_body_size;
 }
@@ -136,7 +136,7 @@ Location::getErrorPages()
 	return (_error_pages);
 }
 
-int
+size_t
 Location::getClientMaxBodySize()
 {
 	return (_client_max_body_size);

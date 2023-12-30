@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/29 17:29:04 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 15:10:14 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ using std::string;
 #define RESET	"\033[0m"
 
 #define NONECOLOR	""
+
+//macros
+#define CLIENT_MAX_BODY_SIZE_LIMIT 10485760 // 10 megabytes (in bytes) as limit - used in NGINX
 
 enum HttpMethod
 {

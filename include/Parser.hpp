@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 14:29:08 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/25 16:04:22 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 14:33:43 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ class Parser
 		std::vector<string>			parseIndex(const string& line);
 		std::vector<int>			parseAllowedMethods(const string& line);
 		std::map<int, string>		parseErrorPages(const string& line);
-		int							parseClientMaxBodySize(const string& line);
+		size_t						parseClientMaxBodySize(const string& line);
 		std::map<string, string>	parseCgi(const string& line);
 
 		//getters
