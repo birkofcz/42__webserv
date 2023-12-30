@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/30 12:00:11 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 16:36:21 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -447,6 +447,33 @@ int    Response::_handleTarget()
 //             }
 //         }
 // }
+
+// 
+string 
+Response::_buildAutoindex(string &path)
+{
+	struct dirent	*entry;
+	DIR 			*directory;	
+	string			auto_index("");
+
+	directory = opendir(path.c_str());
+	if (directory == NULL)
+	{
+		print("Error opening directory for autoindex", RED, 2);
+		return ("");
+	}
+	auto_index += "<html><body><h1>Directory Listing</h1><ul>";
+
+	
+	while ((entry = readdir(directory)) != NULL)
+	{
+		string dir_name = entry->d_name; //must convert to string
+		auto_index += "<a href=\"" + dir_name + "\">" + dir_name + "</a><br>";
+	}
+	auto_index += "</ul></body></html>";
+	closedir(directory);
+	return (auto_index);
+}
 
 void    Response::buildResponse()
 {

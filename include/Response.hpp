@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/30 11:59:22 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 16:15:31 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ class Response
 		// bool reqError();
 		// int handleCgi(std::string &);
 		// int handleCgiTemp(std::string &);
+
+		string _buildAutoindex(string &path);
 };
 
 #endif
