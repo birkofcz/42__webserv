@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/29 17:37:53 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/30 11:51:28 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,13 @@ Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
 void   Response::_contentType()
 {
     _response_content.append("Content-Type: ");
-	_response_content.append("text/html"); //hardcoded for test purposes
-    // if(_target_file.rfind(".", std::string::npos) != std::string::npos && status_code == 200)
-    //     _response_content.append(_mime.getMimeType(_target_file.substr(_target_file.rfind(".", std::string::npos))) );
-    // else
-    //     _response_content.append(_mime.getMimeType("default"));
+	
+	//Mime class handling the content type
+	Mime mime;
+	mime.parseExtension(_target_file);
+	_response_content.append(mime.getMime());
+
+	// _response_content.append(_mime.getMime()); //suggested by CoPilot
     _response_content.append("\r\n");
 }
 
@@ -70,7 +72,7 @@ void   Response::_connection()
 
 void   Response::_serverHeader()
 {
-    _response_content.append("Server: STerver\r\n");
+    _response_content.append("Server: [TS]erver\r\n");
 }
 
 // void    Response::location()

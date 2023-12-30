@@ -6,16 +6,15 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:55:07 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/29 17:50:06 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 11:33:04 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Mime.hpp"
 
+/* Constructor - loads the mime type data from a file */
 Mime::Mime()
 {
-	//open file in ../data/mime_types.csv and read line by line
-	//
 	string path = "./data/mime_types.csv";
 	std::ifstream file(path.c_str());
 	string line;
@@ -40,6 +39,7 @@ Mime::~Mime()
 
 // METHODS // ------------------------------------------------------------------
 
+/* Parses the extension from the "target_file" (path) */
 string 
 Mime::parseExtension(string path)
 {
@@ -52,6 +52,9 @@ Mime::parseExtension(string path)
 }
 
 // GETTERS // ------------------------------------------------------------------
+
+/* getMime - finds the mime type in the map using the file extension
+and returns it. If no math 0- returns text/plain */
 string
 Mime::getMime() const
 {
@@ -67,6 +70,9 @@ Mime::getMime() const
 }
 
 // TEST // ----------------------------------------------------------------------
+
+/* testPrint - for debugging purposes - prints out the map of mime types 
+and what mime was recognized */
 void
 Mime::testPrint(string path)
 {	

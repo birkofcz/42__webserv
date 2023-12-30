@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:51:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/29 16:58:27 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 11:41:11 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,29 @@
 
 # include "general.hpp"
 
+/* MIME class is used to recognize the content type of the returning content.
+This is used to determine how to process the response.
+
+MIME stands for Multipurpose Internet Mail Extensions. It is a standard 
+that indicates the nature and format of a document, file, or assortment of bytes.
+It is maintained by the Internet Assigned Numbers Authority (IANA).
+More: https://www.iana.org/assignments/media-types/media-types.xhtml
+
+*/
+
 class Mime
 {
 	private:
-		std::string _extension;
-		std::map<std::string, std::string> _mimes;
+		std::string					_extension;
+		std::map<string, string>	_mimes;
 	
 	public:
 		Mime();
 		~Mime();
 
-		std::string parseExtension(std::string path);
-		std::string getMime() const;
-
-		void testPrint(string path);
+		string						parseExtension(string path);
+		string						getMime() const;
+		void						testPrint(string path);
 	
 };
 
