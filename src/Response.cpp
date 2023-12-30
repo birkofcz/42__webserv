@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/30 11:51:28 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 12:00:11 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,8 @@ void   Response::_contentType()
     _response_content.append("Content-Type: ");
 	
 	//Mime class handling the content type
-	Mime mime;
-	mime.parseExtension(_target_file);
-	_response_content.append(mime.getMime());
+	_mime.parseExtension(_target_file);
+	_response_content.append(_mime.getMime());
 
 	// _response_content.append(_mime.getMime()); //suggested by CoPilot
     _response_content.append("\r\n");

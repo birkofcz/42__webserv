@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/30 11:45:42 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 11:59:22 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Response
 		std::string _response_content; //zmenit oznaceni bez _
 
 	private:
+		Mime _mime;
 		Server _server;
 		std::string _target_file; //ex: "/var/www/html/index.html"
 		std::vector<uint8_t> _body_bytes; //A vector of bytes representing the body of the response. may represent non-textual data, such as images, executables, or any raw byte sequence.
