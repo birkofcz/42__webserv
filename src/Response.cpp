@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/30 16:36:21 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/01 15:04:15 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -448,13 +448,24 @@ int    Response::_handleTarget()
 //         }
 // }
 
-// 
+
+/*
+_buildAutoindex() function is used to generate the HTML for the autoindex page.
+It takes the path of the directory to be listed as an argument and returns 
+the HTML string.
+It uses the dirent.h header file to read the directory entries and the stat() 
+function to get the file information (is directory or file).
+It feeds the directory entries into two vectors, one for directories and one for files,
+and then lists them, directories first, followed by files.
+ */
 string 
 Response::_buildAutoindex(string &path)
 {
-	struct dirent	*entry;
-	DIR 			*directory;	
-	string			auto_index("");
+	struct dirent *entry;
+	DIR *directory;
+	struct stat fileInfo;
+	string auto_index("");
+	std::vector<string> dirList, fileList;
 
 	directory = opendir(path.c_str());
 	if (directory == NULL)
@@ -462,20 +473,35 @@ Response::_buildAutoindex(string &path)
 		print("Error opening directory for autoindex", RED, 2);
 		return ("");
 	}
-	auto_index += "<html><body><h1>Directory Listing</h1><ul>";
-
-	
 	while ((entry = readdir(directory)) != NULL)
 	{
-		string dir_name = entry->d_name; //must convert to string
-		auto_index += "<a href=\"" + dir_name + "\">" + dir_name + "</a><br>";
+		string dir_name = entry->d_name;
+		if (dir_name == "." || dir_name == "..")
+			continue;
+		string fullPath = path + "/" + dir_name;
+		if (stat(fullPath.c_str(), &fileInfo) != 0)
+		{
+			cerr << "Error getting file info for " << dir_name << endl;
+			continue;
+		}
+		if (S_ISDIR(fileInfo.st_mode))
+			dirList.push_back("<a href=\"" + dir_name + "/\">" + dir_name + "/</a><br>");
+		else
+			fileList.push_back("<a href=\"" + dir_name + "\">" + dir_name + "</a><br>");
 	}
-	auto_index += "</ul></body></html>";
 	closedir(directory);
-	return (auto_index);
+
+	auto_index += "<html><body><h1>Directory Listing</h1><ul>";
+	for (std::vector<string>::const_iterator it = dirList.begin(); it != dirList.end(); ++it)
+		auto_index += *it;
+	for (std::vector<string>::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
+		auto_index += *it;
+	auto_index += "</ul></body></html>";
+
+	return auto_index;
 }
 
-void    Response::buildResponse()
+void	Response::buildResponse()
 {
 
 	_buildBody();
