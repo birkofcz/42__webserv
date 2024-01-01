@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 16:08:04 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 17:36:55 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,21 @@ void ServerManager::initServers(vector<Server> servers)
 		// print( "Server Created: ServerName[%s] Host[%s] Port[%d]",it->getServerName().c_str(),
 		//         inet_ntop(AF_INET, &it->getHost(), buf, INET_ADDRSTRLEN), it->getPort());
 	}
+}
+
+void sendResponse(const int& fd, Client& c)
+{
+    ssize_t bytes_written = write(fd, c.response._response_content.c_str(), c.response._response_content.size());
+    if (bytes_written < 0)
+    {
+        perror("write");
+        // Handle error as needed
+    }
+    else
+    {
+		c.clearClient();
+        std::cout << "Successful SEND RESPONSE \n";
+    }
 }
 
 /*
@@ -162,6 +177,7 @@ void ServerManager::runServers()
 					// 	readCgiResponse(_clients_map[fd], _clients_map[fd].response._cgi_obj);
 					// else if ((cgi_state == 0 || cgi_state == 2) && FD_ISSET(fd, &_write_fd_pool))
 					// 	sendResponse(fd, _clients_map[fd]);
+					sendResponse(fd, _clients_map[fd]);
 				}
 			}
 		}
@@ -216,20 +232,7 @@ void ServerManager::acceptNewConnection(Server &serv)
 			inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN), client_sock);
 }
 
-static void sendResponse(const int& fd, const std::string& response, Client& c) //only for testing
-{
-    ssize_t bytes_written = write(fd, response.c_str(), response.size());
-    if (bytes_written < 0)
-    {
-        perror("write");
-        // Handle error as needed
-    }
-    else
-    {
-		c.clearClient();
-        std::cout << "Successful SEND RESPONSE \n";
-    }
-}
+
 
 void ServerManager::readRequest(const int& fd, Client& c)
 {
@@ -260,7 +263,7 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	cout << "\nPRESENTING REQUEST data: \n" << c.request << endl;
 	// assignServer(c);
 	c.clientBuildResponse();
-	sendResponse(fd, c.response._response_content, c);
+
 	
 
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {
@@ -292,3 +295,5 @@ void ServerManager::readRequest(const int& fd, Client& c)
 //         }
 //     }
 // }
+
+	//

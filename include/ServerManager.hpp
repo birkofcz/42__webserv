@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:09:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/06 16:55:17 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 17:38:09 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,16 @@ class ServerManager
 
 		void acceptNewConnection(Server &);
 		//void checkTimeout();
-		//void initializeSets();
-		void readRequest(const int &, Client &);
+		//void initializeSets(); spojene se select() -> vymazat
+		void readRequest(const int&, Client &);
 		//void handleReqBody(Client &);
-		//void sendResponse(const int &, Client &);
+		void sendResponse(const int&, Client&)
 		//void sendCgiBody(Client &, CgiHandler &);
 		//void readCgiResponse(Client &, CgiHandler &);
 		//void closeConnection(const int);
 		//void assignServer(Client &);
-		//void addToSet(const int , fd_set &);
-		//void removeFromSet(const int , fd_set &);
+		//void addToSet(const int , fd_set &); spojene se select() -> vymazat
+		//void removeFromSet(const int , fd_set &); spojene se select() -> vymazat
 };
 
 #endif
