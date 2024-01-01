@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/29 17:42:27 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 16:08:04 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,17 +208,16 @@ void ServerManager::acceptNewConnection(Server &serv)
 	// to handle scenarios where a client disconnects and then reconnects
 	// with the same socket. If the socket is reused, it ensures that the old entry
 	// in the _clients_map is removed before adding a new entry for the reconnected client.
-	_clients_map.insert(std::make_pair(client_sock, new_client));
-
+	_clients_map.insert(std::pair<int, Client>(client_sock, new_client));
 	// Output information about the new connection
 	char buf[INET_ADDRSTRLEN];
+	
 	fprintf(stderr, "New Connection From %s, Assigned Socket %d\n",
 			inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN), client_sock);
 }
 
-static void sendResponse(const int& fd, const std::string& response) //only for testing
+static void sendResponse(const int& fd, const std::string& response, Client& c) //only for testing
 {
-	std::cout << "TEST: response before sending to client: "<< response << std::endl;
     ssize_t bytes_written = write(fd, response.c_str(), response.size());
     if (bytes_written < 0)
     {
@@ -227,6 +226,7 @@ static void sendResponse(const int& fd, const std::string& response) //only for 
     }
     else
     {
+		c.clearClient();
         std::cout << "Successful SEND RESPONSE \n";
     }
 }
@@ -256,12 +256,11 @@ void ServerManager::readRequest(const int& fd, Client& c)
 		// c.request.feed(buffer, bytes_read);
 		// memset(buffer, 0, sizeof(buffer));
 	}
-
 	c.request.feed(buffer, strlen(buffer));
 	cout << "\nPRESENTING REQUEST data: \n" << c.request << endl;
 	// assignServer(c);
 	c.clientBuildResponse();
-	sendResponse(fd, c.response._response_content);
+	sendResponse(fd, c.response._response_content, c);
 	
 
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {

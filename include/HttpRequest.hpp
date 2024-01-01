@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/29 17:29:26 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 15:37:23 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ class HttpRequest
 		void feed(char* data, size_t size);
 		// bool parsingCompleted();
 		// void printMessage();
-		// void clear();
+		void clear();
 		// short errorCode();
 		// bool keepAlive();
 		// void cutReqBody(int bytes);
@@ -123,7 +123,7 @@ class HttpRequest
 		bool _body_flag;
 		bool _body_done_flag;
 		// bool _complete_flag; // k cemu?
-		bool _chunked_flag;
+		// bool _chunked_flag;
 		bool _multiform_flag;
 
 		void _handle_headers();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/30 11:59:22 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/01 15:45:26 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ class Response
 		void setServer(Server&);
 
 		void buildResponse();
-		
+		void clear();
 
-		// void clear();
+		
 		// void handleCgi(HttpRequest &);
 		// void cutRes(size_t);
 		// int getCgiState();
@@ -60,19 +60,19 @@ class Response
 		std::string _response_content; //zmenit oznaceni bez _
 
 	private:
-		Mime _mime;
+		std::string _mime;
 		Server _server;
 		std::string _target_file; //ex: "/var/www/html/index.html"
 		std::vector<uint8_t> _body_bytes; //A vector of bytes representing the body of the response. may represent non-textual data, such as images, executables, or any raw byte sequence.
 		size_t _body_length;
 		std::string _response_body_str; //to store text-based data, such as HTML content, plain text, or other character sequences.
-		std::string _location;
+		std::string _location; //for Header
 		short _status_code; //  200(for a successful response).
 		// // // char *_res; co to je?
 		int _cgi;
 		// int _cgi_fd[2];
 		// size_t _cgi_response_length;
-		// bool _auto_index; //automatic generation of directory listings when a client requests a directory that does not contain an index file 
+		bool _auto_index; //automatic generation of directory listings when a client requests a directory that does not contain an index file 
 
 		// private methods
 		int 	_buildBody();
@@ -92,7 +92,7 @@ class Response
 		void _contentLength();
 		void _connection();
 		void _serverHeader();
-		// void _location();
+		void _locationHeader();
 		void _date();
 		
 		// void buildErrorBody();
