@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/30 15:10:14 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/12/30 15:46:18 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@ I would include this in all adjacent code */
 
 #include <fstream>
 #include <istream>
+
+//file system - opendir, readdir, closedir
+#include <dirent.h>
+
 // containers and webstuff
 
 #include <vector>

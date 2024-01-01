@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 15:45:26 by tkajanek         ###   ########.fr       */
+/*   Updated: 2023/12/30 16:15:31 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ class Response
 		// bool reqError();
 		// int handleCgi(std::string &);
 		// int handleCgiTemp(std::string &);
+
+		string _buildAutoindex(string &path);
 };
 
 #endif
