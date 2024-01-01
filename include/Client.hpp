@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:00:09 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/27 18:12:53 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 15:49:09 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ class Client
 		void	clientBuildResponse();
 		//void	updateTime();
 
-		//void	clearClient();
+		void	clearClient();
 		Response response;
 		HttpRequest request;
 		// ServerConfig server;
