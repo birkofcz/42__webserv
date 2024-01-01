@@ -143,5 +143,4 @@ Error::buildErrorPage(int error_code)
 	error_page += "</h1></center>\r\n";
 
 	return error_page;
-
 }
