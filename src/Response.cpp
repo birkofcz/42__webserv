@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 15:04:15 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/01 16:01:36 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -475,7 +475,7 @@ Response::_buildAutoindex(string &path)
 	}
 	while ((entry = readdir(directory)) != NULL)
 	{
-		string dir_name = entry->d_name;
+		string dir_name = entry->d_name; //must convert to string, d_name is char d_name[256]
 		if (dir_name == "." || dir_name == "..")
 			continue;
 		string fullPath = path + "/" + dir_name;
