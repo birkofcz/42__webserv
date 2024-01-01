@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:04:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/27 13:46:13 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 15:49:50 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 Client::Client()
 {
 	// _last_msg_time = time(NULL);
+	std::cout << "CLIENT was constructed" << std::endl;
 }
 
 Client::~Client() {}
@@ -24,6 +25,7 @@ Client::Client(const Client &src)
 {
 	if (this != &src)
 	{
+		std::cout << "CLIENT was copied" << std::endl;
 		this->_client_socket = src._client_socket;
 		this->_client_address = src._client_address;
 		this->request = src.request;
@@ -39,6 +41,7 @@ Client &Client::operator=(const Client& rhs)
 {
 	if (this != &rhs)
 	{
+		std::cout << "CLIENT was = assigned" << std::endl;
 		this->_client_socket = rhs._client_socket;
 		this->_client_address = rhs._client_address;
 		this->request = rhs.request;
@@ -51,6 +54,7 @@ Client &Client::operator=(const Client& rhs)
 
 Client::Client(Server& server)
 {
+	std::cout << "CLIENT was constructed with server parametr: " << server.getName() << std::endl;
 	setServer(server);
 	request.setMaxBodySize(server.getClientMaxBodySize());
 	cout << "request object: Max body size setted during a Client construction using server parameter." << std::endl;
@@ -103,8 +107,8 @@ void	Client::clientBuildResponse()
 //     _last_msg_time = time(NULL);
 // }
 
-// void             Client::clearClient()
-// {
-//     response.clear();
-//     request.clear();
-// }
+void             Client::clearClient()
+{
+    response.clear();
+    request.clear();
+}

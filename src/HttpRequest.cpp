@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/27 16:59:52 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 16:06:19 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,14 @@ HttpRequest::HttpRequest()
 	_fields_done_flag = false;
 	_body_flag = false;
 	_body_done_flag = false;
-	_chunked_flag = false;
+	// _complete_flag = false;
+	// _chunked_flag = false;
 	_body_length = 0;
 	_storage = "";
 	_key_storage = "";
 	_multiform_flag = false;
+	_ver_major = 0;
+	_ver_minor = 0;
 	// _boundary = "";
 }
 
@@ -174,6 +177,7 @@ void HttpRequest::feed(char *data, size_t size)
 {
 	uint8_t character;
 	static std::stringstream s;
+	_state = Request_Line;
 	// int j = 0;
 
 	for (size_t i = 0; i < size; ++i)
@@ -710,4 +714,33 @@ void HttpRequest::feed(char *data, size_t size)
 		_body_str.append((char *)_body.data(), _body.size());
 		// vypada ze nikdy nenastane, zceknout a pripadne dat do case
 	}
+}
+
+void    HttpRequest::clear()
+{
+	_path.clear();
+	_query.clear();
+	_request_headers.clear();
+	_body.clear();
+	// _fragment.clear();
+	// _boundary.clear();
+	_method = NONE;
+	_state = Request_Line;
+	_body_length = 0;
+	_error_code = 0;
+	// _chunk_length = 0x0;
+	_storage.clear();
+	_key_storage.clear();
+	_method_index = 1;
+	_ver_major = 0;
+	_ver_minor = 0;
+	_server_name.clear();
+	_body_str = "";
+
+	_fields_done_flag = false;
+	_body_flag = false;
+	_body_done_flag = false;
+	// _complete_flag = false;
+	// _chunked_flag = false;
+	_multiform_flag = false;
 }

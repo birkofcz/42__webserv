@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
 /*   Updated: 2024/01/01 16:01:36 by sbenes           ###   ########.fr       */
@@ -17,6 +17,7 @@
 
 Response::Response()
 {
+	std::cout << "RESPONSE was defaultly constructed" << std::endl;
 	_target_file = "";
 	_body_bytes.clear();
 	_body_length = 0;
@@ -26,13 +27,14 @@ Response::Response()
 	_status_code = 0;
 	_cgi = 0;
 	// _cgi_response_length = 0;
-	// _auto_index = 0;
+	_auto_index = false;
 }
 
 Response::~Response() {}
 
 Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
 {
+	std::cout << "RESPONSE was constructed from a response" << std::endl;
     _target_file = "";
     _body_bytes.clear();
     _body_length = 0;
@@ -42,15 +44,17 @@ Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
     _status_code = 0;
     _cgi = 0;
     // _cgi_response_length = 0;
-    // _auto_index = 0;
+    _auto_index = false;
 }
 void   Response::_contentType()
 {
     _response_content.append("Content-Type: ");
 	
+	Mime mime;
 	//Mime class handling the content type
-	_mime.parseExtension(_target_file);
-	_response_content.append(_mime.getMime());
+	mime.parseExtension(_target_file);
+	_response_content.append(mime.getMime());
+	_mime = mime.getMime();
 
 	// _response_content.append(_mime.getMime()); //suggested by CoPilot
     _response_content.append("\r\n");
@@ -74,11 +78,17 @@ void   Response::_serverHeader()
     _response_content.append("Server: [TS]erver\r\n");
 }
 
-// void    Response::location()
-// {
-//     if (_location.length())
-//         _response_content.append("Location: "+ _location +"\r\n");
-// }
+/*
+	When a server sends an HTTP response with a "Location" header,
+	it instructs the client (usually a web browser) to navigate to the specified URL.
+	This is commonly used for handling HTTP redirects,
+	such as when a resource has moved permanently (301 Moved Permanently) or temporarily (302 Found).
+*/
+void    Response::_locationHeader()
+{
+    if (_location.length())
+        _response_content.append("Location: "+ _location +"\r\n");
+}
 
 void    Response::_date()
 {
@@ -103,7 +113,7 @@ void    Response::_setHeaders()
     _contentLength();
     _connection();
     _serverHeader();
-    //location();
+    _locationHeader();
     _date();
 
     _response_content.append("\r\n");
@@ -116,8 +126,8 @@ bool	Response::_fileExists(const std::string& f)
 }
 
 /*
-this function checks whether a given path corresponds to a directory
-using low-level file system information. It uses the stat() from the <sys/stat.h> 
+checks whether a given path corresponds to a directory using
+low-level file system information. It uses the stat() from the <sys/stat.h> 
 to retrieve information about the file specified by the given path.
 */
 bool Response::_isDirectory(std::string path)
@@ -293,17 +303,18 @@ int    Response::_handleTarget()
     if (location_key.length() > 0)
     {
         Location target_location = *_server.getLocationKey(location_key);
+		std::cout << "TARGET LOCATION FOUND" << target_location.getPath() << std::endl;
 
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
         {
             std::cout << "METHOD NOT ALLOWED \n";
             return (1);
         }
-        // if (request.getBody().length() > target_location.getMaxBodySize())
-        // {
-        //     _code = 413;
-        //     return (1);
-        // } Does location have their own maxbodysize?
+        if (request.getBody().length() > static_cast<size_t>(target_location.getClientMaxBodySize()))
+        {
+            _status_code = 413;
+            return (1);
+        }
         // if (checkReturn(target_location, _code, _location))
         //     return (1);
 
@@ -318,7 +329,7 @@ int    Response::_handleTarget()
         // }
         // else
         //     appendRoot(target_location, request, _target_file);
-		_appendRoot(target_location, request);
+		_appendRoot(target_location, request); //assignes _target_file
 
         // if (!target_location.getCgiExtension().empty())
         // {
@@ -332,43 +343,43 @@ int    Response::_handleTarget()
 
         if (_isDirectory(_target_file))
         {
-			std::cout << "TEST: _target_file is a directory." << std::endl;
-            // if (_target_file[_target_file.length() - 1] != '/')
-            // {
-            //     _status_code = 301; //moved permanently
-            //     _location = request.getPath() + "/";
-            //     return (1);
-            // }
-            // if (!target_location.getIndexLocation().empty())
-            //     _target_file += target_location.getIndexLocation();
-            // else
-            //     _target_file += _server.getIndex();
-            // if (!fileExists(_target_file))
-            // {
-            //     if (target_location.getAutoindex())
-            //     {
-            //         _target_file.erase(_target_file.find_last_of('/') + 1);
-            //         _auto_index = true;
-            //         return (0);
-            //     }
-            //     else
-            //     {
-            //         _status_code = 403;
-            //         return (1);
-            //     }
-            // }
-            // if (isDirectory(_target_file))
-            // {
-            //     _code = 301;
-            //     if (!target_location.getIndexLocation().empty())
-            //         _location = combinePaths(request.getPath(), target_location.getIndexLocation(), "");
-            //     else
-            //         _location = combinePaths(request.getPath(), _server.getIndex(), "");
-            //     if (_location[_location.length() - 1] != '/')
-            //         _location.insert(_location.end(), '/');
+			std::cout << "TEST: LOCATION _target_file is a directory." << std::endl;
+            if (_target_file[_target_file.length() - 1] != '/')
+            {
+                _status_code = 301; //moved permanently
+                _location = request.getPath() + "/";
+                return (1);
+            }
+            if (!target_location.getIndex().empty())
+                _target_file += target_location.getIndex()[0];
+            else
+                _target_file += _server.getIndex()[0];
+            if (!_fileExists(_target_file))
+            {
+                if (target_location.getAutoindex())
+                {
+                    _target_file.erase(_target_file.find_last_of('/') + 1);
+                    _auto_index = true;
+                    return (0);
+                }
+                else
+                {
+                    _status_code = 403;
+                    return (1);
+                }
+            }
+            if (_isDirectory(_target_file))
+            {
+                _status_code = 301; // 301 Moved Permanently
+                if (!target_location.getIndex().empty())
+                    _location = _combinePaths(request.getPath(), target_location.getIndex()[0], "");
+                else
+                    _location = _combinePaths(request.getPath(), _server.getIndex()[0], "");
+                if (_location[_location.length() - 1] != '/')
+                    _location.insert(_location.end(), '/');
 
-            //     return (1);
-            // }
+                return (1);
+            }
         }
     }
     else
@@ -665,19 +676,19 @@ void	Response::setRequest(HttpRequest& req)
 //     _response_content = _response_content.substr(i);
 // }
 
-// void   Response::clear()
-// {
-//     _target_file.clear();
-//     _body.clear();
-//     _body_length = 0;
-//     _response_content.clear();
-//     _response_body.clear();
-//     _location.clear();
-//     _code = 0;
-//     _cgi = 0;
-//     _cgi_response_length = 0;
-//     _auto_index = 0;
-// }
+void   Response::clear()
+{
+    _target_file.clear();
+    _body_bytes.clear();
+    _body_length = 0;
+    _response_content.clear();
+    _response_body_str.clear();
+    _location.clear();
+    _status_code = 0;
+    _cgi = 0;
+    // _cgi_response_length = 0;
+    _auto_index = 0;
+}
 
 // int      Response::getCode() const
 // {
