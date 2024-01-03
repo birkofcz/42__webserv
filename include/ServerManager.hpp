@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:09:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 17:38:09 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 18:23:24 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ class ServerManager
 		map<int, Client>	_clients_map;
 		int 				_epoll_fd;
 
-		// fd_set     _recv_fd_pool;
-		// fd_set     _write_fd_pool;
-		// int        _biggest_fd;
+		// fd_set     _recv_fd_pool; spojene se select() -> vymazat
+		// fd_set     _write_fd_pool; spojene se select() -> vymazat
+		// int        _biggest_fd; spojene se select() -> vymazat
 
 		void acceptNewConnection(Server &);
 		//void checkTimeout();
 		//void initializeSets(); spojene se select() -> vymazat
 		void readRequest(const int&, Client &);
 		//void handleReqBody(Client &);
-		void sendResponse(const int&, Client&)
+		void sendResponse(const int&, Client&);
 		//void sendCgiBody(Client &, CgiHandler &);
 		//void readCgiResponse(Client &, CgiHandler &);
 		//void closeConnection(const int);

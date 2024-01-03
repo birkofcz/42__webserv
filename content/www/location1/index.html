@@ -21,12 +21,23 @@
 			margin-top: 20px;
 			font-style: italic;
 		}
+
+		form {
+            margin-top: 20px;
+        }
 	</style>
 </head>
 <body>
 	<div class="content">
 		<h1>/location1/index.html</h1>
 		<div class="path">./content/www/location1/index.html</div>
+		
+		 <!-- Form for POST request -->
+		<form action="/submit" method="post">
+            <label for="data">Data:</label>
+            <input type="text" id="data" name="data" required>
+            <button type="submit">Submit POST</button>
+        </form>
     </div>
 </body>
 </html>

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 17:36:55 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/01 17:58:08 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,7 @@ void ServerManager::initServers(vector<Server> servers)
 	}
 }
 
-void sendResponse(const int& fd, Client& c)
-{
-    ssize_t bytes_written = write(fd, c.response._response_content.c_str(), c.response._response_content.size());
-    if (bytes_written < 0)
-    {
-        perror("write");
-        // Handle error as needed
-    }
-    else
-    {
-		c.clearClient();
-        std::cout << "Successful SEND RESPONSE \n";
-    }
-}
+
 
 /*
 Traditional mechanisms like select and poll suffer from performance
@@ -183,6 +170,21 @@ void ServerManager::runServers()
 		}
 		//checkTimeout();
 	}
+}
+
+void ServerManager::sendResponse(const int& fd, Client& c)
+{
+    ssize_t bytes_written = write(fd, c.response._response_content.c_str(), c.response._response_content.size());
+    if (bytes_written < 0)
+    {
+        perror("write");
+        // Handle error as needed
+    }
+    else
+    {
+		c.clearClient();
+        std::cout << "Successful SEND RESPONSE \n";
+    }
 }
 
 void ServerManager::acceptNewConnection(Server &serv)

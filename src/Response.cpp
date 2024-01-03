@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 16:01:36 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/03 15:02:48 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,6 +360,7 @@ int    Response::_handleTarget()
                 {
                     _target_file.erase(_target_file.find_last_of('/') + 1);
                     _auto_index = true;
+					std::cout << "TEST: LOCATION autoindex turned on in RESPOND." << std::endl;
                     return (0);
                 }
                 else
@@ -402,14 +403,16 @@ int    Response::_handleTarget()
                 return (1);
             }
 			// If the resulting file is still a directory, perform a redirect
+			// which I dont understand can happen. example of _target_file at that moment
+			// "/var/www/html/example/index.html" .
             if (_isDirectory(_target_file))
             {
-				std::cout << "TEST2: _target_file is a directory." << std::endl; 
-                // _status_code = 301;
-                // _location = _combinePaths(request.getPath(), _server.getIndex(), "");
-                // if(_location[_location.length() - 1] != '/')
-                //     _location.insert(_location.end(), '/');
-                // return (1);
+				std::cout << "TEST22: _target_file is a directory." << std::endl; 
+                _status_code = 301;
+                _location = _combinePaths(request.getPath(), _server.getIndex()[0], "");
+                if(_location[_location.length() - 1] != '/')
+                    _location.insert(_location.end(), '/');
+                return (1);	
             }
         }
     }
@@ -508,6 +511,8 @@ Response::_buildAutoindex(string &path)
 	for (std::vector<string>::const_iterator it = fileList.begin(); it != fileList.end(); ++it)
 		auto_index += *it;
 	auto_index += "</ul></body></html>";
+	
+	_response_body_str += auto_index;
 
 	return auto_index;
 }
@@ -521,16 +526,20 @@ void	Response::buildResponse()
     // if (_cgi)
     //     return ;
     // else if (_auto_index)
+	// if (_auto_index)
     // {
     //     std::cout << "AUTO index " << std::endl;
-    //     if (buildHtmlIndex(_target_file, _body, _body_length))
-    //     {
-    //         _code = 500;
-    //         buildErrorBody();
-    //     }
-    //     else
-    //         _code = 200;
-    //     _response_body.insert(_response_body.begin(), _body.begin(), _body.end());
+    //     // if (buildHtmlIndex(_target_file, _body, _body_length))
+	// 	// if (!_buildAutoindex(_target_file))
+    //     // {
+    //     //     _status_code = 500;
+    //     //    // buildErrorBody();
+    //     // }
+    //     // else
+    //     //     _status_code = 200;
+	// 	_buildAutoindex(_target_file);
+	// 	_status_code = 200;
+    //     // _response_body_str.insert(_response_body.begin(), _body.begin(), _body.end());
     // }
     _setStatusLine();
     _setHeaders(); // + body test content if it works
@@ -583,8 +592,8 @@ int    Response::_buildBody()
     }
     if ( _handleTarget() )
         return (1);
-    // if (_cgi || _auto_index)
-    //     return (0);
+    if (_cgi || _auto_index)
+        return (0);
     if (_status_code)
         return (0);
     if (request.getMethod() == GET || request.getMethod() == HEAD)
@@ -658,17 +667,6 @@ void	Response::setRequest(HttpRequest& req)
 {
 	request = req;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 // void        Response::cutRes(size_t i)
