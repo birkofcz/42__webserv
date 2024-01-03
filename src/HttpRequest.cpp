@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 16:06:19 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/03 15:44:25 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -744,3 +744,5 @@ void    HttpRequest::clear()
 	// _chunked_flag = false;
 	_multiform_flag = false;
 }
+
+short HttpRequest::errorCode() { return (_error_code); }

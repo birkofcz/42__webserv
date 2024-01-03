@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2023/12/30 16:15:31 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/03 15:27:43 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "HttpRequest.hpp"
 # include "Server.hpp"
 # include "Mime.hpp"
+# include "Error.hpp"
 
 # include <sys/stat.h>
 # include <algorithm>
@@ -96,7 +97,7 @@ class Response
 		void _date();
 		
 		// void buildErrorBody();
-		// bool reqError();
+		bool _reqError();
 		// int handleCgi(std::string &);
 		// int handleCgiTemp(std::string &);
 

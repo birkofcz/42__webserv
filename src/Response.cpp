@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/03 15:02:48 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:46:10 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -420,15 +420,15 @@ int    Response::_handleTarget()
     return (0);
 }
 
-// bool Response::reqError()
-// {
-//     if(request.errorCode())
-//     {
-//         _code = request.errorCode();
-//         return (1);
-//     }
-//     return (0);
-// }
+bool Response::_reqError()
+{
+    if(request.errorCode())
+	{
+		_status_code = request.errorCode();
+		return (1);
+	}
+	return (0);
+}
 
 // void Response::setServerDefaultErrorPages()
 // {
@@ -520,27 +520,23 @@ Response::_buildAutoindex(string &path)
 void	Response::buildResponse()
 {
 
-	_buildBody();
-    // if (reqError() || buildBody())
-    //     buildErrorBody();
-    // if (_cgi)
-    //     return ;
-    // else if (_auto_index)
-	// if (_auto_index)
-    // {
-    //     std::cout << "AUTO index " << std::endl;
-    //     // if (buildHtmlIndex(_target_file, _body, _body_length))
-	// 	// if (!_buildAutoindex(_target_file))
-    //     // {
-    //     //     _status_code = 500;
-    //     //    // buildErrorBody();
-    //     // }
-    //     // else
-    //     //     _status_code = 200;
-	// 	_buildAutoindex(_target_file);
-	// 	_status_code = 200;
-    //     // _response_body_str.insert(_response_body.begin(), _body.begin(), _body.end());
-    // }
+	//_buildBody();
+    if (_reqError() || _buildBody())
+        _response_body_str = Error::buildErrorPage(_status_code);
+    /* if (_cgi)
+       return ; */
+	else if (_auto_index)
+    {
+		if (_buildAutoindex(_target_file) == "")
+        {
+        	_status_code = 500;
+        	_response_body_str = Error::buildErrorPage(_status_code);
+        }
+        else
+            _status_code = 200;
+		_response_body_str = _buildAutoindex(_target_file);
+		_status_code = 200;
+    }
     _setStatusLine();
     _setHeaders(); // + body test content if it works
     if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
@@ -575,7 +571,7 @@ void	Response::_setStatusLine()
 {
     _response_content.append("HTTP/1.1 " + toString(_status_code) + " ");
     // _response_content.append(statusCodeString(_status_code));
-	_response_content.append("OK");
+	_response_content.append(Error::getErrorDescription(_status_code));
     _response_content.append("\r\n");
 }
 

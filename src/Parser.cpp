@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/30 15:08:33 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/03 16:22:58 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,6 +364,12 @@ void Parser::parseFile(const string& path)
 					string root = parseRoot(line);
 					currentServer.setRoot(root);
 				}
+				else if (line.find("autoindex") != string::npos)
+				{
+					print("config[server]: Found autoindex directive", GREEN);
+					string autoindex = parseRoot(line);
+					currentServer.setAutoindex(autoindex);
+				}
 				else if (line.find("index") != string::npos)
 				{
 					print("config[server]: Found index directive", GREEN);
@@ -388,12 +394,6 @@ void Parser::parseFile(const string& path)
 					std::vector<int> allowed_methods = parseAllowedMethods(line);
 					currentServer.setAllowedMethods(allowed_methods);
 				}
-				else if (line.find("autoindex") != string::npos)
-				{
-					print("config[server]: Found autoindex directive", GREEN);
-					string autoindex = parseRoot(line);
-					currentServer.setAutoindex(autoindex);
-				}
 				else if (line.find("upload_path") != string::npos)
 				{
 					print("config[server]: Found upload_path directive", GREEN);
@@ -415,6 +415,12 @@ void Parser::parseFile(const string& path)
 				string root = parseRoot(line);
 				currentLocation.setRoot(root);
 			}
+			else if (line.find("autoindex") != string::npos)
+			{
+				print("\tconfig[location]: Found autoindex directive", GREEN);
+				string autoindex = parseRoot(line);
+				currentLocation.setAutoindex(autoindex);
+			}
 			else if (line.find("index") != string::npos)
 			{
 				print("\tconfig[location]: Found index directive", GREEN);
@@ -426,12 +432,6 @@ void Parser::parseFile(const string& path)
 				print("\tconfig[location]: Found allowed_methods directive", GREEN);
 				std::vector<int> allowed_methods = parseAllowedMethods(line);
 				currentLocation.setAllowedMethods(allowed_methods);
-			}
-			else if (line.find("autoindex") != string::npos)
-			{
-				print("\tconfig[location]: Found autoindex directive", GREEN);
-				string autoindex = parseRoot(line);
-				currentLocation.setAutoindex(autoindex);
 			}
 			else if (line.find("error_page") != string::npos)
 			{

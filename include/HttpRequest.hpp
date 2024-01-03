@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 15:37:23 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/03 15:28:38 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ class HttpRequest
 		// bool parsingCompleted();
 		// void printMessage();
 		void clear();
-		// short errorCode();
+		short errorCode();
 		// bool keepAlive();
 		// void cutReqBody(int bytes);
 

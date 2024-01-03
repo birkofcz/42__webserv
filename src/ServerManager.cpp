@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 17:58:08 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/03 16:32:59 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,7 @@ void ServerManager::runServers()
 
 void ServerManager::sendResponse(const int& fd, Client& c)
 {
+	cout << endl << "SENDING RESPONSE data: \n" << c.response._response_content << endl;
     ssize_t bytes_written = write(fd, c.response._response_content.c_str(), c.response._response_content.size());
     if (bytes_written < 0)
     {

@@ -6,7 +6,7 @@
 #    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/08 11:05:29 by sbenes            #+#    #+#              #
-#    Updated: 2023/12/29 17:03:23 by sbenes           ###   ########.fr        #
+#    Updated: 2024/01/03 15:36:47 by sbenes           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ INC =	-I ./include/
 SRC_PATH =	src/
 
 SRC = 	webserv.cpp utils.cpp Parser.cpp Server.cpp ServerManager.cpp \
-		Client.cpp HttpRequest.cpp Response.cpp Location.cpp Mime.cpp \
+		Client.cpp HttpRequest.cpp Response.cpp Location.cpp Mime.cpp Error.cpp\
 	
 SRCS =	$(addprefix $(SRC_PATH), $(SRC))
 
