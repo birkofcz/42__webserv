@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 17:58:08 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/04 15:39:35 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 using std::vector;
 #define MAX_EVENTS 64
-#define MESSAGE_BUFFER 100000
+#define MESSAGE_BUFFER 1000000
 
 ServerManager::ServerManager()
 {
@@ -59,7 +59,7 @@ void ServerManager::initServers(vector<Server> servers)
 		if (!serverDouble)
 		{
 			it->setupServer(); // creates a socket and binds it with servers address
-			std::cout << *it;
+			// std::cout << *it;
 		}
 		// print( "Server Created: ServerName[%s] Host[%s] Port[%d]",it->getServerName().c_str(),
 		//         inet_ntop(AF_INET, &it->getHost(), buf, INET_ADDRSTRLEN), it->getPort());
@@ -246,7 +246,7 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	if (bytes_read == 0)
 	{
 		// Logger::logMsg(YELLOW, CONSOLE_OUTPUT, "webserv: Client %d Closed Connection", fd);
-		// closeConnection(fd);
+		////////// closeConnection(fd);
 		return;
 	}
 	else if (bytes_read < 0)

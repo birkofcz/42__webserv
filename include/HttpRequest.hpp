@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 15:37:23 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/04 15:39:40 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ class HttpRequest
 		std::string                                 getMethodStr();
 		std::string&								getBody();
 		std::string                                 getServerName();
-		// std::string&								getBoundary();
+		std::string&								getBoundary();
 		bool										getMultiformFlag();
 
 		void setMethod(HttpMethod&);
@@ -103,7 +103,7 @@ class HttpRequest
 		// // std::string _fragment; //on the client side
 		map<std::string, std::string> _request_headers;
 		std::vector<uint8_t> _body; //message stored in bytes, usually not part of GET
-		// std::string _boundary; //associated with multipart/form-data requests. MIMe, POST method
+		std::string _boundary; //associated with multipart/form-data requests. MIMe, POST method
 		HttpMethod _method;
 		map<uint8_t, std::string> _method_str;
 		ParsingState _state;
@@ -120,7 +120,7 @@ class HttpRequest
 		std::string _body_str;
 		/* flags */
 		bool _fields_done_flag; //all headers done
-		bool _body_flag;
+		bool _body_flag; //the request contains body
 		bool _body_done_flag;
 		// bool _complete_flag; // k cemu?
 		// bool _chunked_flag;
@@ -160,6 +160,7 @@ inline std::ostream& operator<<(std::ostream& os, const HttpRequest& request) {
     for (map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
         os << it->first << ": " << it->second << std::endl;
     }
+	os << "_boundary:" << request._boundary << std::endl;
     os << "Body: " << request._body_str << std::endl;
 
     return os;
