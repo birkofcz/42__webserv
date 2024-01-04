@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/03 16:46:10 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/04 16:57:56 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void   Response::_contentType()
 {
     _response_content.append("Content-Type: ");
 	
-	Mime mime;
+	Mime mime(_status_code);
 	//Mime class handling the content type
 	mime.parseExtension(_target_file);
 	_response_content.append(mime.getMime());
@@ -299,6 +299,7 @@ void    Response::_getLocationMatch(std::string& path, std::vector<Location> loc
 int    Response::_handleTarget()
 {
     std::string location_key = "";
+
     _getLocationMatch(request.getPath(), _server.getLocations(), location_key);
     if (location_key.length() > 0)
     {
