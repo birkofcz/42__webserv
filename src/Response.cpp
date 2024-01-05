@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/04 16:57:56 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/05 15:52:39 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,8 +179,11 @@ std::string Response::_combinePaths(std::string p1, std::string p2, std::string 
 
 void Response::_appendRoot(Location &location, HttpRequest &request)
 {
-    _target_file = _combinePaths(location.getRoot(), request.getPath(), "");
-	std::cout << "TEST _target_file: " << _target_file << std::endl;
+   string _target_file2 = _combinePaths(location.getRoot(), request.getPath(), "");
+	_target_file = location.getRoot();
+	if (_target_file[0] != '/')
+		_target_file.insert(_target_file.begin(), '/');
+	//std::cout << "TEST _target_file: " << _target_file << std::endl;
 }
 
 // int Response::handleCgiTemp(std::string &location_key)
@@ -301,6 +304,9 @@ int    Response::_handleTarget()
     std::string location_key = "";
 
     _getLocationMatch(request.getPath(), _server.getLocations(), location_key);
+	std::cout << GREEN << "TEST: LOCATION KEY: " << location_key << RESET << std::endl;
+	string path = request.getPath();
+	std::cout << GREEN << "TEST: PATH: " << path << RESET << std::endl;
     if (location_key.length() > 0)
     {
         Location target_location = *_server.getLocationKey(location_key);
@@ -330,7 +336,10 @@ int    Response::_handleTarget()
         // }
         // else
         //     appendRoot(target_location, request, _target_file);
+		cout << GREEN << "TEST: _target_file before appendRoot: " << _target_file << RESET << endl;
 		_appendRoot(target_location, request); //assignes _target_file
+		cout << GREEN << "TEST: _target_file after appendRoot: " << _target_file << RESET << endl;
+
 
         // if (!target_location.getCgiExtension().empty())
         // {
