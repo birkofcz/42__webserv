@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 13:11:48 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 16:20:48 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -498,6 +498,8 @@ bool Response::_reqError()
 //         }
 // }
 
+/* string checkDefaulErrorPage(short error_code, string location_key) */
+
 
 /*
 _buildAutoindex() function is used to generate the HTML for the autoindex page.
@@ -555,10 +557,12 @@ Response::_buildAutoindex(string &path)
 
 void	Response::buildResponse()
 {
+	string location_key = "";
+    _getLocationMatch(request.getPath(), _server.getLocations(), location_key);
 
 	//_buildBody();
     if (_reqError() || _buildBody())
-        _response_body_str = Error::buildErrorPage(_status_code);
+        _response_body_str = Error::buildErrorPage(_status_code, location_key, _server, *_server.getLocationKey(request.getPath()));
     /* if (_cgi)
        return ; */
 	else if (_auto_index)
@@ -566,7 +570,7 @@ void	Response::buildResponse()
 		if (_buildAutoindex(_target_file) == "")
         {
         	_status_code = 500;
-        	_response_body_str = Error::buildErrorPage(_status_code);
+        	_response_body_str = Error::buildErrorPage(_status_code, location_key, _server, *_server.getLocationKey(request.getPath()));
         }
         else
             _status_code = 200;
