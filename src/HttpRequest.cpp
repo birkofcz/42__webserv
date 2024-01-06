@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/03 15:44:25 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 16:31:20 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ HttpRequest::HttpRequest()
 	_query = "";
 	// _fragment = "";
 	_body_str = "";
+	_boundary = "";
 	_error_code = 0;
 	// _chunk_length = 0;
 	_method_index = 1;
@@ -39,7 +40,7 @@ HttpRequest::HttpRequest()
 	_multiform_flag = false;
 	_ver_major = 0;
 	_ver_minor = 0;
-	// _boundary = "";
+	
 }
 
 HttpRequest::~HttpRequest() {}
@@ -65,7 +66,7 @@ std::string		HttpRequest::getMethodStr() { return (_method_str[_method]); }
 std::string&	HttpRequest::getBody() { return (_body_str); }
 std::string		HttpRequest::getServerName() { return (this->_server_name); }
 bool			HttpRequest::getMultiformFlag() { return (this->_multiform_flag); }
-// std::string&	HttpRequest::getBoundary() { return (this->_boundary); }
+std::string&	HttpRequest::getBoundary() { return (this->_boundary); }
 
 /* ---- SETTERS --- */
 
@@ -115,13 +116,16 @@ void        HttpRequest::_handle_headers()
         size_t pos = _request_headers["host"].find_first_of(':');
         _server_name = _request_headers["host"].substr(0, pos);
     }
-    // if (_request_headers.count("content-type") && _request_headers["content-type"].find("multipart/form-data") != std::string::npos)
-    // {
-    //     size_t pos = _request_headers["content-type"].find("boundary=", 0);
-    //     if (pos != std::string::npos)
-    //         this->_boundary = _request_headers["content-type"].substr(pos + 9, _request_headers["content-type"].size());
-    //     this->_multiform_flag = true;
-    // }
+    if (_request_headers.count("content-type") && _request_headers["content-type"].find("multipart/form-data") != std::string::npos)
+    {
+        size_t pos = _request_headers["content-type"].find("boundary=", 0);
+        if (pos != std::string::npos)
+        {
+			this->_boundary = _request_headers["content-type"].substr(pos + 9, _request_headers["content-type"].size());
+			std::cout << "TEST _boundary has been setted : " << _boundary << std::endl;
+		}		
+		this->_multiform_flag = true;
+    }
 }
 
 
@@ -196,8 +200,8 @@ void HttpRequest::feed(char *data, size_t size)
 				}
 				else if (character == 'D')
 					_method = DELETE;
-				// else if (character == 'H')
-				// 	_method = HEAD;
+				else if (character == 'H')
+				 	_method = HEAD;
 				else
 				{
 					_error_code = 501;
@@ -496,7 +500,7 @@ void HttpRequest::feed(char *data, size_t size)
 					_fields_done_flag = true;
 					_handle_headers();
 					// if no body then parsing is completed.
-					if (_body_flag == 1)
+					if (_body_flag == true)
 					{
 						// if (_chunked_flag == true)
 						// 	_state = Chunked_Length_Begin;
@@ -711,6 +715,8 @@ void HttpRequest::feed(char *data, size_t size)
 	}
 	if (_state == Parsing_Done)
 	{
+
+		std::cout << "TEST:FOR LOOP of request parser is done _bodz in bytes are appended." << std::endl;
 		_body_str.append((char *)_body.data(), _body.size());
 		// vypada ze nikdy nenastane, zceknout a pripadne dat do case
 	}
@@ -723,7 +729,7 @@ void    HttpRequest::clear()
 	_request_headers.clear();
 	_body.clear();
 	// _fragment.clear();
-	// _boundary.clear();
+	_boundary.clear();
 	_method = NONE;
 	_state = Request_Line;
 	_body_length = 0;

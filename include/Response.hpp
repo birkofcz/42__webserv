@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/03 15:27:43 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 16:32:04 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <algorithm>
 # include <ctime>    // for time, struct tm, and gmtime
 # include <cstring>  // for memset
+# include <fstream>
 
 
 /*
@@ -55,7 +56,7 @@ class Response
 
 		// CgiHandler _cgi_obj;
 
-		// std::string removeBoundary(std::string &body, std::string &boundary);
+		std::string removeBoundary(std::string& body, std::string& boundary, std::string& filename); //proc public
 	
 		HttpRequest request;
 		std::string _response_content; //zmenit oznaceni bez _
