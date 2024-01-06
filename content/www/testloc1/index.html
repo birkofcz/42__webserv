@@ -38,6 +38,14 @@
 			<input type="file" id="file" name="file" required>
 			<button type="submit">Submit POST</button>
 		</form>
+
+		<form method="post" action="/delete-resource" onsubmit="return confirm('Are you sure you want to delete?');">
+            <label for="filename">Enter Filename:</label>
+            <input type="text" id="filename" name="filename" required>
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit">Delete</button>
+        </form>
+		
     </div>
 </body>
 </html>

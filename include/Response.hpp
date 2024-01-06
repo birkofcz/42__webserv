@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 16:32:04 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 17:15:04 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class Response
 		std::string _response_content; //zmenit oznaceni bez _
 
 	private:
+		std::string	_location_key;
 		std::string _mime;
 		Server _server;
 		std::string _target_file; //ex: "/var/www/html/index.html"
