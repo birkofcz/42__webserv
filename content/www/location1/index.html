@@ -32,12 +32,12 @@
 		<h1>/location1/index.html</h1>
 		<div class="path">./content/www/location1/index.html</div>
 		
-		 <!-- Form for POST request -->
-		<form action="/submit" method="post">
-            <label for="data">Data:</label>
-            <input type="text" id="data" name="data" required>
-            <button type="submit">Submit POST</button>
-        </form>
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
     </div>
 </body>
 </html>
