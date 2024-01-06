@@ -19,21 +19,33 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 	string l_dep_path("");
 	string s_dep_path("");
 
+	cout << YELLOW << "Error::buildErrorPage" << RESET << endl;
+	cout << YELLOW << "\tlocation_key: " << location_key << endl;
+
+
 	if (location_key != "")
 	{
 		if (location.getErrorPages().find(error_code) != location.getErrorPages().end())
+		{
 			l_dep_path = location.getErrorPages()[error_code];
+			if (l_dep_path[0] == '/')
+				l_dep_path = l_dep_path.substr(1); 
+			cout << YELLOW << "\tlocation error page: " << l_dep_path << RESET << endl;
+		}
 	}
 	else if (location_key == "")
 	{
 		if (server.getErrorPages().find(error_code) != server.getErrorPages().end())
+		{
 			s_dep_path = server.getErrorPages()[error_code];
+			if (s_dep_path[0] == '/')
+				s_dep_path = s_dep_path.substr(1);
+			cout << YELLOW << "\tserver error page: " << s_dep_path << RESET << endl;
+		}
 	}
 	if (l_dep_path != "")
 	{
-		//check if path is absolute or relative
-		if (l_dep_path[0] != '/')
-			l_dep_path = "/" + l_dep_path;
+		cout << YELLOW << "\tinside location error page reader " << RESET << endl;
 		//open file on the path, read it and write it to the string to return
 		std::ifstream file(l_dep_path.c_str());
 		string line;
@@ -42,6 +54,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 			std::cerr << "Error opening file for location error pages: " << l_dep_path << std::endl;
 			return ("");
 		}
+		cout << YELLOW << "\tfile opened" << RESET << endl;
 		string default_error_page("");
 		while (std::getline(file, line))
 		{
@@ -49,13 +62,12 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 			default_error_page += "\r\n";
 		}
 		file.close();
+		cout << YELLOW << "\tfile closed and response build" << RESET << endl;
 		return (default_error_page);
 	}
 	else if (l_dep_path == "" && s_dep_path != "")
 	{
-		//check if path is absolute or relative
-		// if (s_dep_path[0] == '/')
-		// 	s_dep_path = "/" + s_dep_path;
+		cout << YELLOW << "\tinside server error page reader " << RESET << endl;
 		//open file on the path, read it and write it to the string to return
 		std::ifstream file(s_dep_path.c_str());
 		string line;
@@ -64,17 +76,20 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 			std::cerr << "Error opening file for server error pages: " << s_dep_path << std::endl;
 			return ("");
 		}
+		cout << YELLOW << "\tfile opened" << RESET << endl;
 		string default_error_page("");
-		while (std::getline(file, line))
+		while (std::getline(file, line) != NULL)
 		{
 			default_error_page += line;
 			default_error_page += "\r\n";
 		}
 		file.close();
+		cout << YELLOW << "\tfile closed and response build" << RESET << endl;
 		return (default_error_page);
 	}
 	else if (l_dep_path == "" && s_dep_path == "")
 	{
+		cout << YELLOW << "\tinside default error page creator " << RESET << endl;
 		//Build default error page
 		std::stringstream ss;
 		ss << error_code;
@@ -149,6 +164,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 		error_page += description;
 		error_page += "</h1></center>\r\n";
 
+		cout << YELLOW << "\tdefault error page created" << RESET << endl;
 		return error_page;
 	}
 	return ("");

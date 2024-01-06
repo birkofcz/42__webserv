@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 16:20:48 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 17:11:14 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 Response::Response()
 {
 	std::cout << "RESPONSE was defaultly constructed" << std::endl;
+	_location_key = "";
 	_target_file = "";
 	_body_bytes.clear();
 	_body_length = 0;
@@ -35,6 +36,7 @@ Response::~Response() {}
 Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
 {
 	std::cout << "RESPONSE was constructed from a response" << std::endl;
+	_location_key = "";
     _target_file = "";
     _body_bytes.clear();
     _body_length = 0;
@@ -313,15 +315,13 @@ void    Response::_getLocationMatch(std::string& path, std::vector<Location> loc
 
 int    Response::_handleTarget()
 {
-    std::string location_key = "";
-
-    _getLocationMatch(request.getPath(), _server.getLocations(), location_key);
-	std::cout << GREEN << "TEST: LOCATION KEY: " << location_key << RESET << std::endl;
+    _getLocationMatch(request.getPath(), _server.getLocations(), _location_key);
+	std::cout << GREEN << "TEST: LOCATION KEY: " << _location_key << RESET << std::endl;
 	string path = request.getPath();
 	std::cout << GREEN << "TEST: PATH: " << path << RESET << std::endl;
-    if (location_key.length() > 0)
+    if (_location_key.length() > 0)
     {
-        Location target_location = *_server.getLocationKey(location_key);
+        Location target_location = *_server.getLocationKey(_location_key);
 		std::cout << "TARGET LOCATION FOUND: " << target_location.getPath() << std::endl;
 
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
@@ -557,12 +557,9 @@ Response::_buildAutoindex(string &path)
 
 void	Response::buildResponse()
 {
-	string location_key = "";
-    _getLocationMatch(request.getPath(), _server.getLocations(), location_key);
-
 	//_buildBody();
     if (_reqError() || _buildBody())
-        _response_body_str = Error::buildErrorPage(_status_code, location_key, _server, *_server.getLocationKey(request.getPath()));
+        _response_body_str = Error::buildErrorPage(_status_code, _location_key, _server, *_server.getLocationKey(request.getPath()));
     /* if (_cgi)
        return ; */
 	else if (_auto_index)
@@ -570,7 +567,7 @@ void	Response::buildResponse()
 		if (_buildAutoindex(_target_file) == "")
         {
         	_status_code = 500;
-        	_response_body_str = Error::buildErrorPage(_status_code, location_key, _server, *_server.getLocationKey(request.getPath()));
+        	_response_body_str = Error::buildErrorPage(_status_code, _location_key, _server, *_server.getLocationKey(request.getPath()));
         }
         else
             _status_code = 200;

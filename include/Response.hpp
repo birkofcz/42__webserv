@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/03 15:27:43 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 17:09:36 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ class Response
 		std::string _response_content; //zmenit oznaceni bez _
 
 	private:
+		string _location_key;
 		std::string _mime;
 		Server _server;
 		std::string _target_file; //ex: "/var/www/html/index.html"
