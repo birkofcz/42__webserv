@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/04 15:39:35 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 15:22:31 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,7 @@ void ServerManager::runServers()
 
 void ServerManager::sendResponse(const int& fd, Client& c)
 {
+	std::cout << "RESPOND content: \n" << c.response._response_content << endl;
     ssize_t bytes_written = write(fd, c.response._response_content.c_str(), c.response._response_content.size());
     if (bytes_written < 0)
     {
@@ -186,6 +187,8 @@ void ServerManager::sendResponse(const int& fd, Client& c)
         std::cout << "Successful SEND RESPONSE \n";
     }
 }
+
+
 
 void ServerManager::acceptNewConnection(Server &serv)
 {
@@ -234,7 +237,20 @@ void ServerManager::acceptNewConnection(Server &serv)
 			inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN), client_sock);
 }
 
+void    ServerManager::_closeConnection(const int fd)
+{
+    struct epoll_event event;
+    event.events = 0; // Clear all events
+    event.data.fd = fd;
 
+    if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &event) == -1)
+	{
+        // Handle error if epoll_ctl fails
+        perror("Error removing fd from epoll");
+    }
+	close(fd);
+    _clients_map.erase(fd);
+}
 
 void ServerManager::readRequest(const int& fd, Client& c)
 {
@@ -245,28 +261,29 @@ void ServerManager::readRequest(const int& fd, Client& c)
 
 	if (bytes_read == 0)
 	{
+		// Client closed the connection
 		// Logger::logMsg(YELLOW, CONSOLE_OUTPUT, "webserv: Client %d Closed Connection", fd);
-		////////// closeConnection(fd);
+		_closeConnection(fd);
 		return;
 	}
 	else if (bytes_read < 0)
 	{
+		// Read error occurred
 		// Logger::logMsg(RED, CONSOLE_OUTPUT, "webserv: fd %d read error %s", fd, strerror(errno));
-		// closeConnection(fd);
+		_closeConnection(fd);
 		return;
 	}
 	else if (bytes_read != 0)
 	{
+		// data were successfully read.
 		// c.updateTime();
-		// c.request.feed(buffer, bytes_read);
-		// memset(buffer, 0, sizeof(buffer));
+		c.request.feed(buffer, bytes_read);
+		memset(buffer, 0, sizeof(buffer));
 	}
-	c.request.feed(buffer, strlen(buffer));
 	cout << "\nPRESENTING REQUEST data: \n" << c.request << endl;
 	// assignServer(c);
 	c.clientBuildResponse();
 
-	
 
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {
 	// 		assignServer(c);

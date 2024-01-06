@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:09:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 18:23:24 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 14:37:34 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ class ServerManager
 		void sendResponse(const int&, Client&);
 		//void sendCgiBody(Client &, CgiHandler &);
 		//void readCgiResponse(Client &, CgiHandler &);
-		//void closeConnection(const int);
+		void _closeConnection(const int);
 		//void assignServer(Client &);
 		//void addToSet(const int , fd_set &); spojene se select() -> vymazat
 		//void removeFromSet(const int , fd_set &); spojene se select() -> vymazat

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/04 16:49:28 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 16:17:46 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -603,31 +603,46 @@ int    Response::_buildBody()
     else if (request.getMethod() == POST )//|| request.getMethod() == PUT)
     {
 		cout << "TEST POST method detected." << endl;
-        if (_fileExists(_target_file) && request.getMethod() == POST)
+		string	upload_file_path = "";
+		std::string location_key = "";
+		cout << "TEST METHOD request_path = " << request.getPath() << endl;
+		_getLocationMatch(request.getPath(), _server.getLocations(), location_key); //zceknout getPath jestli sedi
+    	cout << "TEST METHOD location_key:" << location_key << endl;
+		if (location_key.length() > 0)
+			upload_file_path = _server.getLocationKey(location_key)->getUploadPath();
+		if (upload_file_path.empty())
+			upload_file_path = _server.getUploadPath();
+		cout << "TEST METHOD upload_file_path:" << upload_file_path << endl;
+		std::ofstream file;
+		if (request.getMultiformFlag())
         {
-            _status_code = 204;
-			cout << "TEST POST there is no content to send in the response body." << _fileExists(_target_file) << _target_file <<  endl;
-			//Server has successfully processed the request,
-			//and there is no content to send in the response body.
-            return (0);
-        }
-        std::ofstream file(_target_file.c_str(), std::ios::binary);
-		// Treat the file as a binary file
-		// (disable newline translation, used with file streams).
-        if (file.fail())
-        {
-            _status_code = 404;
-			std::cerr << "Error opening file for writing." << std::endl;
-            return (1);
-        }
-		cout << "TEST multiform flag: " << request.getMultiformFlag() << endl;
-        if (request.getMultiformFlag())
-        {
-            std::string body = request.getBody();
-            body = removeBoundary(body, request.getBoundary());
-            file.write(body.c_str(), body.length());
-        }
-        else
+			std::string body = request.getBody();
+			std::string filename = "";
+			body = removeBoundary(body, request.getBoundary(), filename); //upr
+			if (!filename.empty())
+			{
+				upload_file_path += filename;
+				if (_fileExists(upload_file_path) && request.getMethod() == POST)
+				{
+				_status_code = 204;
+				cout << "TEST POST there is no content to send in the response body." <<  endl;
+				//Server has successfully processed the request,
+				//and there is no content to send in the response body.
+				return (0);
+				}
+
+				cout << "TEST METHOD upload_file_path with filename:" << upload_file_path << endl;
+				file.open(upload_file_path.c_str(), std::ios::binary);
+				if (file.fail())
+				{
+					_status_code = 404;
+					std::cerr << "Error opening file for writing." << std::endl;
+					return (1);
+				}
+			}
+			file.write(body.c_str(), body.length());
+		}
+		else
         {
             file.write(request.getBody().c_str(), request.getBody().length());
 				std::cout << "Not Multiform: File successfully uploaded." << std::endl;
@@ -711,11 +726,10 @@ Process a body of data containing a multipart/form-data payload
 and remove the boundary lines, leaving only the actual content.
 It also extracts the filename associated with each part of the payload.
 */
-std::string Response::removeBoundary(std::string &body, std::string &boundary) //proc je public??
+std::string Response::removeBoundary(std::string& body, std::string& boundary, std::string& filename) //proc je public??
 {
     std::string buffer;
     std::string new_body;
-    std::string filename;
     bool is_boundary = false;
     bool is_content = false;
 
@@ -730,21 +744,21 @@ std::string Response::removeBoundary(std::string &body, std::string &boundary) /
                 i++;
 				
             }
-			cout << "0: buffer: " <<  buffer << endl;
+			// cout << "0: buffer: " <<  buffer << endl;
             if (!buffer.compare(("--" + boundary + "--\r"))) // end of boundary
             {
-				cout << "1: end of boundary." << endl;
+				// cout << "1: end of boundary." << endl;
                 is_content = true;
                 is_boundary = false;
             }
             if (!buffer.compare(("--" + boundary + "\r"))) // beginning of boundary
             {
                 is_boundary = true;
-				cout << "2: beginning of boundary." << endl;
+				// cout << "2: beginning of boundary." << endl;
             }
             if (is_boundary) // we are inside a boundary, after beginning bound was found
             {
-				cout << "3a: we are inside a boundary,." << endl;
+				// cout << "3a: we are inside a boundary,." << endl;
                 if (!buffer.compare(0, 31, "Content-Disposition: form-data;"))
                 {
 					
@@ -754,14 +768,14 @@ std::string Response::removeBoundary(std::string &body, std::string &boundary) /
                         size_t end = buffer.find("\"", start + 10);
                         if (end != std::string::npos)
                             filename = buffer.substr(start + 10, end); /// what to do with it??
-						cout << "3aa: filename setted: " <<  filename << endl;
+						// cout << "3aa: filename setted: " <<  filename << endl;
 
                     }
 					
                 }
                 else if (!buffer.compare(0, 1, "\r") && !filename.empty())
                 {
-					cout << "3ab: an empty line (r) is encountered, and a filename is already set, it sets is_boundary to false and is_content to true. "<< endl;
+					//cout << "3ab: an empty line (r) is encountered, and a filename is already set, it sets is_boundary to false and is_content to true. "<< endl;
                     is_content = true;
 					is_boundary = false;
                 }
@@ -769,22 +783,22 @@ std::string Response::removeBoundary(std::string &body, std::string &boundary) /
             }
             else if (is_content)
             {
-				cout << "3b: ontent is true." << endl;
+				// cout << "3b: ontent is true." << endl;
                 if (!buffer.compare(("--" + boundary + "\r")))
                 {
                     is_boundary = true;
-					cout << "3ba: content is true and first boundary." << endl;
+					// cout << "3ba: content is true and first boundary." << endl;
                 }
                 else if (!buffer.compare(("--" + boundary + "--\r")))
                 {
-					cout << "3bb: content is true and last boundary boundary." << endl;
+					// cout << "3bb: content is true and last boundary boundary." << endl;
                     new_body.erase(new_body.end() - 1);
                     break ;
                 }
                 else
                     {
 						new_body += (buffer + "\n");
-						cout << "3bc: new body: " << new_body << endl;
+						// cout << "3bc: new body: " << new_body << endl;
 					}
             }
 

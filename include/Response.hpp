@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/04 15:39:38 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 15:13:19 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ class Response
 
 		// CgiHandler _cgi_obj;
 
-		std::string removeBoundary(std::string &body, std::string &boundary); //proc public
+		std::string removeBoundary(std::string& body, std::string& boundary, std::string& filename); //proc public
 	
 		HttpRequest request;
 		std::string _response_content; //zmenit oznaceni bez _
