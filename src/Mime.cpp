@@ -6,14 +6,14 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:55:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/04 16:16:23 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 13:07:09 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Mime.hpp"
 
 /* Constructor - loads the mime type data from a file */
-Mime::Mime(const short &status_code)
+Mime::Mime(const short &status_code, const bool &autoindex)
 {
 	string path = "./data/mime_types.csv";
 	std::ifstream file(path.c_str());
@@ -33,6 +33,7 @@ Mime::Mime(const short &status_code)
 	file.close();
 
 	_status_code = status_code;
+	_autoindex = autoindex;
 }
 
 Mime::~Mime()
@@ -71,7 +72,7 @@ Mime::getMime() const
 	code is not 200 - so there is an error and we need the content-type to be set to text/html 
 	to properly encode errorbody to html format. The is no risk as in case of error, there is no content 
 	read, only error response body is internally constructed*/
-	if (_status_code != 200)
+	if (_status_code != 200 || (_status_code == 200 && _autoindex == true))
 		return "text/html";
 	return "text/plain";
 }

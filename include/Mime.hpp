@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:51:31 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/04 16:13:50 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 13:04:28 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,10 @@ class Mime
 		std::string					_extension;
 		std::map<string, string>	_mimes;
 		short						_status_code;
+		bool						_autoindex;
 	
 	public:
-		Mime(const short &status_code);
+		Mime(const short &status_code, const bool &autoindex);
 		~Mime();
 
 		string						parseExtension(string path);

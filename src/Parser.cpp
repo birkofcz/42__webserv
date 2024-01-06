@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/04 16:56:59 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 15:01:09 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,8 +379,8 @@ void Parser::parseFile(const string& path)
 				else if (line.find("error_page") != string::npos)
 				{
 					print("config[server]: Found error_page directive", GREEN);
-					std::map<int, string> error_page = parseErrorPages(line);
-					currentServer.setErrorPage(error_page);
+					std::map<int, string> error_pages = parseErrorPages(line);
+					currentServer.setErrorPages(error_pages);
 				}
 				else if (line.find("client_max_body_size") != string::npos)
 				{
@@ -436,8 +436,8 @@ void Parser::parseFile(const string& path)
 			else if (line.find("error_page") != string::npos)
 			{
 				print("\tconfig[location]: Found error_page directive", GREEN);
-				std::map<int, string> error_page = parseErrorPages(line);
-				currentLocation.setErrorPages(error_page);
+				std::map<int, string> error_pages = parseErrorPages(line);
+				currentLocation.setErrorPages(error_pages);
 			}
 			else if (line.find("client_max_body_size") != string::npos)
 			{
@@ -579,7 +579,7 @@ cout << endl << YELLOW << "[ CONFIGURATION SUMMARY ]" << RESET << endl << endl;
 				cout << "\t" << it->first << " " << it->second << endl;
 		}
 		cout << "Error pages: " << endl;
-		std::map<int, string> error_pages = _servers[i].getErrorPage();
+		std::map<int, string> error_pages = _servers[i].getErrorPages();
 		if (error_pages.empty())
 		{
 			cout << "\tNot specified" << endl;

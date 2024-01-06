@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/05 15:52:39 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 13:11:48 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void   Response::_contentType()
 {
     _response_content.append("Content-Type: ");
 	
-	Mime mime(_status_code);
+	Mime mime(_status_code, _auto_index);
 	//Mime class handling the content type
 	mime.parseExtension(_target_file);
 	_response_content.append(mime.getMime());
@@ -132,7 +132,12 @@ to retrieve information about the file specified by the given path.
 */
 bool Response::_isDirectory(std::string path)
 {
+	cout << GREEN << "TEST: inside _isDirectory" << RESET << endl;
     struct stat file_stat;
+ 	// if (path[path.length() - 1] != '/')
+	// 	path += '/';
+	// if (path[0] != '.')
+	// 	path.insert(path.begin(), '.');
     if (stat(path.c_str(), &file_stat) != 0)
 		return false; // napr. file doesnt exist
     return (S_ISDIR(file_stat.st_mode));
@@ -179,11 +184,18 @@ std::string Response::_combinePaths(std::string p1, std::string p2, std::string 
 
 void Response::_appendRoot(Location &location, HttpRequest &request)
 {
-   string _target_file2 = _combinePaths(location.getRoot(), request.getPath(), "");
-	_target_file = location.getRoot();
-	if (_target_file[0] != '/')
-		_target_file.insert(_target_file.begin(), '/');
-	//std::cout << "TEST _target_file: " << _target_file << std::endl;
+	cout << GREEN << "TEST: _appendRoot" << RESET << endl;
+	cout << GREEN << "TEST: location.getRoot(): " << location.getRoot() << RESET << endl;
+	cout << GREEN << "TEST: _server.getRoot(): " << _server.getRoot() << RESET << endl;
+	cout << GREEN << "TEST: request.getPath(): " << request.getPath() << RESET << endl;
+	cout << GREEN << "TEST: _target_file before appendRoot: " << _target_file << RESET << endl;
+
+	string root("");
+	if (location.getRoot().empty())
+		root = _server.getRoot();
+	else
+		root = location.getRoot();
+   _target_file = _combinePaths(root, request.getPath(), "");
 }
 
 // int Response::handleCgiTemp(std::string &location_key)
@@ -310,18 +322,20 @@ int    Response::_handleTarget()
     if (location_key.length() > 0)
     {
         Location target_location = *_server.getLocationKey(location_key);
-		std::cout << "TARGET LOCATION FOUND" << target_location.getPath() << std::endl;
+		std::cout << "TARGET LOCATION FOUND: " << target_location.getPath() << std::endl;
 
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
         {
             std::cout << "METHOD NOT ALLOWED \n";
             return (1);
         }
+		cout << GREEN << "TEST: method allowed" << RESET << endl;
         if (request.getBody().length() > static_cast<size_t>(target_location.getClientMaxBodySize()))
         {
             _status_code = 413;
             return (1);
         }
+		cout << GREEN << "TEST: body length ok" << RESET << endl;
         // if (checkReturn(target_location, _code, _location))
         //     return (1);
 
@@ -336,9 +350,9 @@ int    Response::_handleTarget()
         // }
         // else
         //     appendRoot(target_location, request, _target_file);
-		cout << GREEN << "TEST: _target_file before appendRoot: " << _target_file << RESET << endl;
-		_appendRoot(target_location, request); //assignes _target_file
-		cout << GREEN << "TEST: _target_file after appendRoot: " << _target_file << RESET << endl;
+		// cout << GREEN << "TEST: _target_file before appendRoot: " << _target_file << RESET << endl;
+		 _appendRoot(target_location, request); //assignes _target_file
+		// cout << GREEN << "TEST: _target_file after appendRoot: " << _target_file << RESET << endl;
 
 
         // if (!target_location.getCgiExtension().empty())
@@ -350,27 +364,39 @@ int    Response::_handleTarget()
         //     }
 
         // }
-
+		cout << GREEN << "TEST: check before directory check - target file is: " << _target_file << RESET << endl;
         if (_isDirectory(_target_file))
         {
-			std::cout << "TEST: LOCATION _target_file is a directory." << std::endl;
+			std::cout << YELLOW << "TEST: _target_file is a directory." << RESET << std::endl;
             if (_target_file[_target_file.length() - 1] != '/')
             {
+				cout << YELLOW << "TEST: _target_file does not end with /" << std::endl;
                 _status_code = 301; //moved permanently
                 _location = request.getPath() + "/";
                 return (1);
             }
             if (!target_location.getIndex().empty())
-                _target_file += target_location.getIndex()[0];
+			{
+				cout << YELLOW << "TEST: LOCATION has index definded." << RESET << endl;
+                _target_file += target_location.getIndex()[0]; //hardcoded index index.html
+				cout << "TEST: LOCATION _target_file after index: " << _target_file << endl;
+			}
             else
-                _target_file += _server.getIndex()[0];
+             {
+				cout << YELLOW << "TEST: LOCATION has no index definded, using server index " << RESET << endl;
+				_target_file += _server.getIndex()[0]; //hardcoded index index.html 
+				cout << YELLOW << "TEST: LOCATION _target_file after index: " << _target_file << RESET<< endl;
+			}
+			//Index appended, now check if the file exists
             if (!_fileExists(_target_file))
             {
+				cout << RED << "TEST: LOCATION _target_file does not exist." << RESET << endl;
                 if (target_location.getAutoindex())
                 {
+					cout << RED << "TEST: LOCATION autoindex directive found." << RESET << endl;
                     _target_file.erase(_target_file.find_last_of('/') + 1);
                     _auto_index = true;
-					std::cout << "TEST: LOCATION autoindex turned on in RESPOND." << std::endl;
+					std::cout << RED << "TEST: LOCATION autoindex turned on in RESPOND: " << _auto_index << RESET << endl;
                     return (0);
                 }
                 else
@@ -546,6 +572,7 @@ void	Response::buildResponse()
             _status_code = 200;
 		_response_body_str = _buildAutoindex(_target_file);
 		_status_code = 200;
+		cout << RED << "Autoindex build as a response." << RESET << endl;
     }
     _setStatusLine();
     _setHeaders(); // + body test content if it works
