@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/30 14:27:21 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 14:59:42 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ class Server
 		std::vector<string>			_server_names;
 		string						_root;
 		std::vector<string>			_index;
-		std::map<int, string>		_error_page; 
+		std::map<int, string>		_error_pages; 
 		bool						_autoindex; 
 		size_t						_client_max_body_size;
 		std::map<string, string>	_cgi; 
@@ -93,7 +93,7 @@ class Server
 		void						setIndex(std::vector<string> index);
 		void						setFd(int fd);
 		void						addLocation(Location location);
-		void						setErrorPage(std::map<int, string> error_page);
+		void						setErrorPages(std::map<int, string> error_page);
 		void						setAutoindex(string autoindex);
 		void						setClientMaxBodySize(size_t client_max_body_size);
 		void						setCgi(std::map<string, string> cgi); 
@@ -109,7 +109,7 @@ class Server
 		std::vector<string>			getIndex() const;
 		const in_addr_t&			getHost() const;
 		int							getFd() const;
-		std::map<int, string>		getErrorPage() const; 
+		std::map<int, string>		getErrorPages() const; 
 		bool						getAutoindex() const; 
 		size_t						getClientMaxBodySize() const; 
 		std::map<string, string>	getCgi() const; 

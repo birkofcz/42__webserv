@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 15:13:19 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 16:32:04 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "HttpRequest.hpp"
 # include "Server.hpp"
 # include "Mime.hpp"
+# include "Error.hpp"
 
 # include <sys/stat.h>
 # include <algorithm>
@@ -97,7 +98,7 @@ class Response
 		void _date();
 		
 		// void buildErrorBody();
-		// bool reqError();
+		bool _reqError();
 		// int handleCgi(std::string &);
 		// int handleCgiTemp(std::string &);
 

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/04 15:39:40 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 16:32:05 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ class HttpRequest
 		// bool parsingCompleted();
 		// void printMessage();
 		void clear();
-		// short errorCode();
+		short errorCode();
 		// bool keepAlive();
 		// void cutReqBody(int bytes);
 

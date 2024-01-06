@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 16:17:46 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 16:31:18 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void   Response::_contentType()
 {
     _response_content.append("Content-Type: ");
 	
-	Mime mime;
+	Mime mime(_status_code, _auto_index);
 	//Mime class handling the content type
 	mime.parseExtension(_target_file);
 	_response_content.append(mime.getMime());
@@ -132,7 +132,12 @@ to retrieve information about the file specified by the given path.
 */
 bool Response::_isDirectory(std::string path)
 {
+	cout << GREEN << "TEST: inside _isDirectory" << RESET << endl;
     struct stat file_stat;
+ 	// if (path[path.length() - 1] != '/')
+	// 	path += '/';
+	// if (path[0] != '.')
+	// 	path.insert(path.begin(), '.');
     if (stat(path.c_str(), &file_stat) != 0)
 		return false; // napr. file doesnt exist
     return (S_ISDIR(file_stat.st_mode));
@@ -179,8 +184,18 @@ std::string Response::_combinePaths(std::string p1, std::string p2, std::string 
 
 void Response::_appendRoot(Location &location, HttpRequest &request)
 {
-    _target_file = _combinePaths(location.getRoot(), request.getPath(), "");
-	std::cout << "TEST _target_file: " << _target_file << std::endl;
+	cout << GREEN << "TEST: _appendRoot" << RESET << endl;
+	cout << GREEN << "TEST: location.getRoot(): " << location.getRoot() << RESET << endl;
+	cout << GREEN << "TEST: _server.getRoot(): " << _server.getRoot() << RESET << endl;
+	cout << GREEN << "TEST: request.getPath(): " << request.getPath() << RESET << endl;
+	cout << GREEN << "TEST: _target_file before appendRoot: " << _target_file << RESET << endl;
+
+	string root("");
+	if (location.getRoot().empty())
+		root = _server.getRoot();
+	else
+		root = location.getRoot();
+   _target_file = _combinePaths(root, request.getPath(), "");
 }
 
 // int Response::handleCgiTemp(std::string &location_key)
@@ -299,22 +314,28 @@ void    Response::_getLocationMatch(std::string& path, std::vector<Location> loc
 int    Response::_handleTarget()
 {
     std::string location_key = "";
+
     _getLocationMatch(request.getPath(), _server.getLocations(), location_key);
+	std::cout << GREEN << "TEST: LOCATION KEY: " << location_key << RESET << std::endl;
+	string path = request.getPath();
+	std::cout << GREEN << "TEST: PATH: " << path << RESET << std::endl;
     if (location_key.length() > 0)
     {
         Location target_location = *_server.getLocationKey(location_key);
-		std::cout << "TARGET LOCATION FOUND" << target_location.getPath() << std::endl;
+		std::cout << "TARGET LOCATION FOUND: " << target_location.getPath() << std::endl;
 
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
         {
             std::cout << "METHOD NOT ALLOWED \n";
             return (1);
         }
+		cout << GREEN << "TEST: method allowed" << RESET << endl;
         if (request.getBody().length() > static_cast<size_t>(target_location.getClientMaxBodySize()))
         {
             _status_code = 413;
             return (1);
         }
+		cout << GREEN << "TEST: body length ok" << RESET << endl;
         // if (checkReturn(target_location, _code, _location))
         //     return (1);
 
@@ -329,7 +350,10 @@ int    Response::_handleTarget()
         // }
         // else
         //     appendRoot(target_location, request, _target_file);
-		_appendRoot(target_location, request); //assignes _target_file
+		// cout << GREEN << "TEST: _target_file before appendRoot: " << _target_file << RESET << endl;
+		 _appendRoot(target_location, request); //assignes _target_file
+		// cout << GREEN << "TEST: _target_file after appendRoot: " << _target_file << RESET << endl;
+
 
         // if (!target_location.getCgiExtension().empty())
         // {
@@ -340,27 +364,39 @@ int    Response::_handleTarget()
         //     }
 
         // }
-
+		cout << GREEN << "TEST: check before directory check - target file is: " << _target_file << RESET << endl;
         if (_isDirectory(_target_file))
         {
-			std::cout << "TEST: LOCATION _target_file is a directory." << std::endl;
+			std::cout << YELLOW << "TEST: _target_file is a directory." << RESET << std::endl;
             if (_target_file[_target_file.length() - 1] != '/')
             {
+				cout << YELLOW << "TEST: _target_file does not end with /" << std::endl;
                 _status_code = 301; //moved permanently
                 _location = request.getPath() + "/";
                 return (1);
             }
             if (!target_location.getIndex().empty())
-                _target_file += target_location.getIndex()[0];
+			{
+				cout << YELLOW << "TEST: LOCATION has index definded." << RESET << endl;
+                _target_file += target_location.getIndex()[0]; //hardcoded index index.html
+				cout << "TEST: LOCATION _target_file after index: " << _target_file << endl;
+			}
             else
-                _target_file += _server.getIndex()[0];
+             {
+				cout << YELLOW << "TEST: LOCATION has no index definded, using server index " << RESET << endl;
+				_target_file += _server.getIndex()[0]; //hardcoded index index.html 
+				cout << YELLOW << "TEST: LOCATION _target_file after index: " << _target_file << RESET<< endl;
+			}
+			//Index appended, now check if the file exists
             if (!_fileExists(_target_file))
             {
+				cout << RED << "TEST: LOCATION _target_file does not exist." << RESET << endl;
                 if (target_location.getAutoindex())
                 {
+					cout << RED << "TEST: LOCATION autoindex directive found." << RESET << endl;
                     _target_file.erase(_target_file.find_last_of('/') + 1);
                     _auto_index = true;
-					std::cout << "TEST: LOCATION autoindex turned on in RESPOND." << std::endl;
+					std::cout << RED << "TEST: LOCATION autoindex turned on in RESPOND: " << _auto_index << RESET << endl;
                     return (0);
                 }
                 else
@@ -420,15 +456,15 @@ int    Response::_handleTarget()
     return (0);
 }
 
-// bool Response::reqError()
-// {
-//     if(request.errorCode())
-//     {
-//         _code = request.errorCode();
-//         return (1);
-//     }
-//     return (0);
-// }
+bool Response::_reqError()
+{
+    if(request.errorCode())
+	{
+		_status_code = request.errorCode();
+		return (1);
+	}
+	return (0);
+}
 
 // void Response::setServerDefaultErrorPages()
 // {
@@ -520,26 +556,24 @@ Response::_buildAutoindex(string &path)
 void	Response::buildResponse()
 {
 
-	_buildBody();
-    // if (reqError() || buildBody())
-    //     buildErrorBody();
-    // if (_cgi)
-    //     return ;
-    // else if (_auto_index)
-    // {
-    //     std::cout << "AUTO index " << std::endl;
-    //     // if (buildHtmlIndex(_target_file, _body, _body_length))
-	// 	// if (!_buildAutoindex(_target_file))
-    //     // {
-    //     //     _status_code = 500;
-    //     //    // buildErrorBody();
-    //     // }
-    //     // else
-    //     //     _status_code = 200;
-	// 	_buildAutoindex(_target_file);
-	// 	_status_code = 200;
-    //     // _response_body_str.insert(_response_body.begin(), _body.begin(), _body.end());
-    // }
+	//_buildBody();
+    if (_reqError() || _buildBody())
+        _response_body_str = Error::buildErrorPage(_status_code);
+    /* if (_cgi)
+       return ; */
+	else if (_auto_index)
+    {
+		if (_buildAutoindex(_target_file) == "")
+        {
+        	_status_code = 500;
+        	_response_body_str = Error::buildErrorPage(_status_code);
+        }
+        else
+            _status_code = 200;
+		_response_body_str = _buildAutoindex(_target_file);
+		_status_code = 200;
+		cout << RED << "Autoindex build as a response." << RESET << endl;
+    }
     _setStatusLine();
     _setHeaders(); // + body test content if it works
     if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
@@ -574,7 +608,7 @@ void	Response::_setStatusLine()
 {
     _response_content.append("HTTP/1.1 " + toString(_status_code) + " ");
     // _response_content.append(statusCodeString(_status_code));
-	_response_content.append("OK");
+	_response_content.append(Error::getErrorDescription(_status_code));
     _response_content.append("\r\n");
 }
 

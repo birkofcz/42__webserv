@@ -6,7 +6,7 @@
 #    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/08 11:05:29 by sbenes            #+#    #+#              #
-#    Updated: 2023/12/29 17:03:23 by sbenes           ###   ########.fr        #
+#    Updated: 2024/01/06 13:33:35 by sbenes           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ INC =	-I ./include/
 SRC_PATH =	src/
 
 SRC = 	webserv.cpp utils.cpp Parser.cpp Server.cpp ServerManager.cpp \
-		Client.cpp HttpRequest.cpp Response.cpp Location.cpp Mime.cpp \
+		Client.cpp HttpRequest.cpp Response.cpp Location.cpp Mime.cpp Error.cpp\
 	
 SRCS =	$(addprefix $(SRC_PATH), $(SRC))
 
@@ -59,17 +59,15 @@ $(NAME): $(OBJS)
 	@echo "$(BOLD)$(GREEN)[ 🙊 Compiling ... ]$(NC)"
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(INC)
 	@echo "$(BOLD)$(GREEN)[ 🪄 Program ready! ]$(NC)"
-	@echo "$(BOLD)$(GREEN)                        "
-	@echo "              _                         "
-	@echo "             | |                        "
-	@echo "__      _____| |__  ___  ___ _ ____   __"
-	@echo "\ \ /\ / / _ \ '_ \/ __|/ _ \ '__\ \ / /"
-	@echo " \ V  V /  __/ |_| \__ \  __/ |   \ V / "
-	@echo "  \_/\_/ \___|_.__/|___/\___|_|    \_/  "
-	@echo "                                        "
-	@echo "                                        "
-	@echo " run ./webserv <config_file>            "
-	@echo "                                   $(NC)"
+	@echo "$(BOLD)$(GREEN)                      "
+	@echo " __ _____ ___ __                     "
+	@echo "| _|_   _/ __|_ |___ _ ___ _____ _ _ "
+	@echo "| |  | | \__ \| / -_| '_\ V / -_| '_|"
+	@echo "| |  |_| |___/| \___|_|  \_/\___|_|  "
+	@echo "|__|         |__|                    "
+	@echo "									    "
+	@echo " run ./webserv <config_file>         "
+	@echo "                                $(NC)"
  
 
 bonus: all

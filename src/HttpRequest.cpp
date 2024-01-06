@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/04 15:39:36 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 16:31:20 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -750,3 +750,5 @@ void    HttpRequest::clear()
 	// _chunked_flag = false;
 	_multiform_flag = false;
 }
+
+short HttpRequest::errorCode() { return (_error_code); }

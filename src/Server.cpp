@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/30 14:44:21 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 15:00:04 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ Server::addLocation(Location location)
 }
 
 void
-Server::setErrorPage(std::map<int, string> error_page)
+Server::setErrorPages(std::map<int, string> error_pages)
 {
-	_error_page = error_page;
+	_error_pages = error_pages;
 }
 
 void
@@ -165,7 +165,7 @@ Server::getLocations() const
 }
 
 std::map<int, string>
-Server::getErrorPage() const {return _error_page;}
+Server::getErrorPages() const {return _error_pages;}
 
 bool
 Server::getAutoindex() const
