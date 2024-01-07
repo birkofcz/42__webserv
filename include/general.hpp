@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/30 15:46:18 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/07 16:04:13 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@ I would include this in all adjacent code */
 #ifndef GENERAL_HPP
 # define GENERAL_HPP
 
+
+//global variable to switch on or off the debug mode test prints
+extern bool debug;
+
+
+//basic includes
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -59,6 +65,16 @@ using std::string;
 //macros
 #define CLIENT_MAX_BODY_SIZE_LIMIT 10485760 // 10 megabytes (in bytes) as limit - used in NGINX
 
+//templates
+
+template <typename T>
+string toString(const T& value) {
+    std::stringstream ss;
+    ss << value;
+    return ss.str();
+}
+
+//enums
 enum HttpMethod
 {
 	GET,
@@ -69,13 +85,6 @@ enum HttpMethod
 	NONE
 };
 
-template <typename T>
-std::string toString(const T val)
-{
-    std::stringstream stream;
-    stream << val;
-    return stream.str();
-}
 
 /* Standalone utilities */
 
@@ -84,5 +93,7 @@ void parseFile(const string& path); //parse file with path
 std::vector<string>	CppSplit(std::string str, char delimiter);
 bool isNumeric(string str);
 
+/* For printing debug messages using a global "debug" switch */
+void debugPrint(string message, string color = NONECOLOR);
 
 #endif

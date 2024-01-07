@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:25:51 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/29 17:26:01 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/07 15:45:33 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,11 @@ bool isNumeric(string str)
 		if (!isdigit(str[i]))
 			return (false);
 	return (true);
+}
+
+void debugPrint(string message, string color)
+{
+	if (debug)
+		print(message, color);
 }
 

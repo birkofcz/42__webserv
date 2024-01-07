@@ -6,7 +6,7 @@
 #    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/08 11:05:29 by sbenes            #+#    #+#              #
-#    Updated: 2024/01/06 13:33:35 by sbenes           ###   ########.fr        #
+#    Updated: 2024/01/07 16:39:54 by sbenes           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ NAME = 		webserv
 
 # compiler
 CC =		c++
-CFLAGS =	-Wall -Wextra -Werror -std=c++98
+CFLAGS =	-Wall -Wextra -Werror -std=c++98 -g
 
 #Includes
 INC =	-I ./include/
@@ -64,10 +64,12 @@ $(NAME): $(OBJS)
 	@echo "| _|_   _/ __|_ |___ _ ___ _____ _ _ "
 	@echo "| |  | | \__ \| / -_| '_\ V / -_| '_|"
 	@echo "| |  |_| |___/| \___|_|  \_/\___|_|  "
-	@echo "|__|         |__|                    "
-	@echo "									    "
-	@echo " run ./webserv <config_file>         "
-	@echo "                                $(NC)"
+	@echo "|__|         |__|                    			"
+	@echo "									    			"
+	@echo " run ./webserv <config_file>          "
+	@echo " run ./webserv <config_file> -d for debug_prints     	"
+
+	@echo "                             				   $(NC)"
  
 
 bonus: all

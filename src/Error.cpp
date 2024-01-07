@@ -1,51 +1,99 @@
 /* ************************************************************************** */
-/*		                                                                    */
+/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   Error.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 16:20:36 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/01 16:41:00 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/07 16:06:02 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Error.hpp"
 
+/* 
+buildErrorPage
+This function is responsible for building error page. It will check if there 
+is custom error page defined in location, if not, it will check if there is a custom error page
+defined in server, if not, it will build [TS]erver default error page based on error code.*/
 string
-Error::buildErrorPage(short error_code, string location_key,  Server &server, Location &location)
+Error::buildErrorPage(short error_code, string location_key,  Server &server)
 {
-	//check for error page in location and server
-	string l_dep_path("");
-	string s_dep_path("");
 
-	cout << YELLOW << "Error::buildErrorPage" << RESET << endl;
-	cout << YELLOW << "\tlocation_key: " << location_key << endl;
+	debugPrint("[Error::buildErrorPage()] location_key: " + location_key, YELLOW);
+	debugPrint("[Error::buildErrorPage()] error_code: " + toString(error_code), YELLOW);
+	
+	string l_dep_path(""); 										//location error page path
+	string s_dep_path("");										//server error page path
+	std::vector<Location> locations = server.getLocations();	//locations on server
+	Location *location = NULL;									//location to be used
+	std::map<int, string> loc_error_pages;						//location error pages
+	std::map<int, string> ser_error_pages;						//server error pages
 
-
-	if (location_key != "")
+	//check if location exists
+	for (std::vector<Location>::iterator it = locations.begin(); it != locations.end(); it++)
 	{
-		if (location.getErrorPages().find(error_code) != location.getErrorPages().end())
+		if (it->getPath() == location_key)
 		{
-			l_dep_path = location.getErrorPages()[error_code];
-			if (l_dep_path[0] == '/')
-				l_dep_path = l_dep_path.substr(1); 
-			cout << YELLOW << "\tlocation error page: " << l_dep_path << RESET << endl;
+			location = &(*it);
+			debugPrint("[Error::buildErrorPage()] location found on a server", YELLOW);
+			break;
 		}
 	}
-	else if (location_key == "")
+
+	//if location exists, check if error page exists in location, if not, check if is defined in server
+	if (location)
 	{
-		if (server.getErrorPages().find(error_code) != server.getErrorPages().end())
+		loc_error_pages = location->getErrorPages();
+		if (!loc_error_pages.empty() && loc_error_pages.find(error_code) != loc_error_pages.end())
 		{
-			s_dep_path = server.getErrorPages()[error_code];
+			l_dep_path = loc_error_pages[error_code];
+			if (l_dep_path[0] == '/')
+				l_dep_path = l_dep_path.substr(1);
+			debugPrint("[Error::buildErrorPage()] location error page: " + l_dep_path, YELLOW);
+		}
+		else
+		{
+			debugPrint("[Error::buildErrorPage()] location found, location error pages not found - > switching to server check", YELLOW);
+			ser_error_pages = server.getErrorPages();
+			if (!ser_error_pages.empty() && ser_error_pages.find(error_code) != ser_error_pages.end())
+			{
+				s_dep_path = ser_error_pages[error_code];
+				if (s_dep_path[0] == '/')
+					s_dep_path = s_dep_path.substr(1);
+				debugPrint("[Error::buildErrorPage()] server error page: " + s_dep_path, YELLOW);
+			}
+			else
+				debugPrint("[Error::buildErrorPage()] server error pages not found - > switching to [TS]erver default error page", YELLOW);
+		}
+	}
+	//if location does not exist, check if there is error page defined in server
+	else
+	{
+		debugPrint("[Error::buildErrorPage()] location not found -> swithcing to server check", YELLOW);
+		ser_error_pages = server.getErrorPages();
+		if (!ser_error_pages.empty() && ser_error_pages.find(error_code) != ser_error_pages.end())
+		{
+			s_dep_path = ser_error_pages[error_code];
 			if (s_dep_path[0] == '/')
 				s_dep_path = s_dep_path.substr(1);
-			cout << YELLOW << "\tserver error page: " << s_dep_path << RESET << endl;
+			debugPrint("[Error::buildErrorPage()] server error page: " + s_dep_path, YELLOW);
 		}
+		//if there is no error page defined in server, opt for default error page
+		else
+			debugPrint("[Error::buildErrorPage()] server error pages not found - > switching to [TS]erver default error page", YELLOW);
+			
 	}
-	if (l_dep_path != "")
+
+
+
+	/* 	This part is checking if there is path defined for error page in location or server, if not, 
+	it will build default error page */
+	if (!l_dep_path.empty())
 	{
-		cout << YELLOW << "\tinside location error page reader " << RESET << endl;
+		debugPrint("[Error::buildErrorPage()] inside location error page reader", YELLOW);
+
 		//open file on the path, read it and write it to the string to return
 		std::ifstream file(l_dep_path.c_str());
 		string line;
@@ -54,7 +102,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 			std::cerr << "Error opening file for location error pages: " << l_dep_path << std::endl;
 			return ("");
 		}
-		cout << YELLOW << "\tfile opened" << RESET << endl;
+		debugPrint("[Error::buildErrorPage()] file opened", YELLOW);
 		string default_error_page("");
 		while (std::getline(file, line))
 		{
@@ -62,12 +110,14 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 			default_error_page += "\r\n";
 		}
 		file.close();
-		cout << YELLOW << "\tfile closed and response build" << RESET << endl;
+
+		debugPrint("[Error::buildErrorPage()] file closed, response build", YELLOW);
+		
 		return (default_error_page);
 	}
-	else if (l_dep_path == "" && s_dep_path != "")
+	else if (l_dep_path.empty() && !s_dep_path.empty())
 	{
-		cout << YELLOW << "\tinside server error page reader " << RESET << endl;
+		debugPrint("[Error::buildErrorPage()] iside server error page reader", YELLOW);
 		//open file on the path, read it and write it to the string to return
 		std::ifstream file(s_dep_path.c_str());
 		string line;
@@ -76,7 +126,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 			std::cerr << "Error opening file for server error pages: " << s_dep_path << std::endl;
 			return ("");
 		}
-		cout << YELLOW << "\tfile opened" << RESET << endl;
+		debugPrint("[Error::buildErrorPage()] file opened", YELLOW);
 		string default_error_page("");
 		while (std::getline(file, line) != NULL)
 		{
@@ -84,12 +134,14 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 			default_error_page += "\r\n";
 		}
 		file.close();
-		cout << YELLOW << "\tfile closed and response build" << RESET << endl;
+		
+		debugPrint("[Error::buildErrorPage] file closed, response build", YELLOW);
+		
 		return (default_error_page);
 	}
-	else if (l_dep_path == "" && s_dep_path == "")
+	else if (s_dep_path.empty() && s_dep_path.empty())
 	{
-		cout << YELLOW << "\tinside default error page creator " << RESET << endl;
+		debugPrint("[Error::buildErrorPage] inside [TS]erver default error page creator", YELLOW);
 		//Build default error page
 		std::stringstream ss;
 		ss << error_code;
@@ -164,12 +216,15 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server, Lo
 		error_page += description;
 		error_page += "</h1></center>\r\n";
 
-		cout << YELLOW << "\tdefault error page created" << RESET << endl;
+		debugPrint("[Error::buildErrorPage] [TS]erver default error page created", YELLOW);
 		return error_page;
 	}
 	return ("");
 }
 
+/* getErrorDescription
+This function is responsible for returning error description based on error code.
+It is used mostly to fill header in response with error description.*/
 string
 Error::getErrorDescription(short error_code)
 {

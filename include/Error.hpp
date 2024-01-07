@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 16:20:16 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/06 16:05:07 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/07 14:20:10 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,17 @@
 # include "Server.hpp"
 # include "Location.hpp"
 
+/* 
+Error class is responsible for building error pages and error descriptions.
+It is defined as static class, so it can be used without creating an instance, 
+just by calling Error::function()
+ */
+
 class Error
 {
 	public:
 		static string	getErrorDescription(short error_code);
-		static string	buildErrorPage(short error_code, string location_key, Server &server, Location &location);
+		static string	buildErrorPage(short error_code, string location_key, Server &server);
 };
 
 #endif 
