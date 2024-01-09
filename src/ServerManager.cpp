@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/03 16:32:59 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 16:31:49 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 using std::vector;
 #define MAX_EVENTS 64
-#define MESSAGE_BUFFER 100000
+#define MESSAGE_BUFFER 1000000
 
 ServerManager::ServerManager()
 {
@@ -59,7 +59,7 @@ void ServerManager::initServers(vector<Server> servers)
 		if (!serverDouble)
 		{
 			it->setupServer(); // creates a socket and binds it with servers address
-			std::cout << *it;
+			// std::cout << *it;
 		}
 		// print( "Server Created: ServerName[%s] Host[%s] Port[%d]",it->getServerName().c_str(),
 		//         inet_ntop(AF_INET, &it->getHost(), buf, INET_ADDRSTRLEN), it->getPort());
@@ -188,6 +188,8 @@ void ServerManager::sendResponse(const int& fd, Client& c)
     }
 }
 
+
+
 void ServerManager::acceptNewConnection(Server &serv)
 {
 	struct sockaddr_in client_address;
@@ -235,7 +237,20 @@ void ServerManager::acceptNewConnection(Server &serv)
 			inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN), client_sock);
 }
 
+void    ServerManager::_closeConnection(const int fd)
+{
+    struct epoll_event event;
+    event.events = 0; // Clear all events
+    event.data.fd = fd;
 
+    if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &event) == -1)
+	{
+        // Handle error if epoll_ctl fails
+        perror("Error removing fd from epoll");
+    }
+	close(fd);
+    _clients_map.erase(fd);
+}
 
 void ServerManager::readRequest(const int& fd, Client& c)
 {
@@ -246,28 +261,29 @@ void ServerManager::readRequest(const int& fd, Client& c)
 
 	if (bytes_read == 0)
 	{
+		// Client closed the connection
 		// Logger::logMsg(YELLOW, CONSOLE_OUTPUT, "webserv: Client %d Closed Connection", fd);
-		// closeConnection(fd);
+		_closeConnection(fd);
 		return;
 	}
 	else if (bytes_read < 0)
 	{
+		// Read error occurred
 		// Logger::logMsg(RED, CONSOLE_OUTPUT, "webserv: fd %d read error %s", fd, strerror(errno));
-		// closeConnection(fd);
+		_closeConnection(fd);
 		return;
 	}
 	else if (bytes_read != 0)
 	{
+		// data were successfully read.
 		// c.updateTime();
-		// c.request.feed(buffer, bytes_read);
-		// memset(buffer, 0, sizeof(buffer));
+		c.request.feed(buffer, bytes_read);
+		memset(buffer, 0, sizeof(buffer));
 	}
-	c.request.feed(buffer, strlen(buffer));
 	cout << "\nPRESENTING REQUEST data: \n" << c.request << endl;
 	// assignServer(c);
 	c.clientBuildResponse();
 
-	
 
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {
 	// 		assignServer(c);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 17:09:36 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/06 17:15:04 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <algorithm>
 # include <ctime>    // for time, struct tm, and gmtime
 # include <cstring>  // for memset
+# include <fstream>
 
 
 /*
@@ -55,13 +56,13 @@ class Response
 
 		// CgiHandler _cgi_obj;
 
-		// std::string removeBoundary(std::string &body, std::string &boundary);
+		std::string removeBoundary(std::string& body, std::string& boundary, std::string& filename); //proc public
 	
 		HttpRequest request;
 		std::string _response_content; //zmenit oznaceni bez _
 
 	private:
-		string _location_key;
+		std::string	_location_key;
 		std::string _mime;
 		Server _server;
 		std::string _target_file; //ex: "/var/www/html/index.html"
