@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 16:31:18 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/06 17:57:52 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 Response::Response()
 {
 	std::cout << "RESPONSE was defaultly constructed" << std::endl;
+	_location_key = "";
 	_target_file = "";
 	_body_bytes.clear();
 	_body_length = 0;
@@ -35,6 +36,7 @@ Response::~Response() {}
 Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
 {
 	std::cout << "RESPONSE was constructed from a response" << std::endl;
+	_location_key = "";
     _target_file = "";
     _body_bytes.clear();
     _body_length = 0;
@@ -87,7 +89,10 @@ void   Response::_serverHeader()
 void    Response::_locationHeader()
 {
     if (_location.length())
+	{
+		cout << "_location exists: " << _location << endl;
         _response_content.append("Location: "+ _location +"\r\n");
+	}
 }
 
 void    Response::_date()
@@ -313,15 +318,13 @@ void    Response::_getLocationMatch(std::string& path, std::vector<Location> loc
 
 int    Response::_handleTarget()
 {
-    std::string location_key = "";
-
-    _getLocationMatch(request.getPath(), _server.getLocations(), location_key);
-	std::cout << GREEN << "TEST: LOCATION KEY: " << location_key << RESET << std::endl;
+    _getLocationMatch(request.getPath(), _server.getLocations(), _location_key);
+	std::cout << GREEN << "TEST: LOCATION KEY: " << _location_key << RESET << std::endl;
 	string path = request.getPath();
 	std::cout << GREEN << "TEST: PATH: " << path << RESET << std::endl;
-    if (location_key.length() > 0)
+    if (_location_key.length() > 0)
     {
-        Location target_location = *_server.getLocationKey(location_key);
+        Location target_location = *_server.getLocationKey(_location_key);
 		std::cout << "TARGET LOCATION FOUND: " << target_location.getPath() << std::endl;
 
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
@@ -574,6 +577,8 @@ void	Response::buildResponse()
 		_status_code = 200;
 		cout << RED << "Autoindex build as a response." << RESET << endl;
     }
+
+	cout << RED << "_location: " << _location << RESET << endl;
     _setStatusLine();
     _setHeaders(); // + body test content if it works
     if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
@@ -638,21 +643,20 @@ int    Response::_buildBody()
     {
 		cout << "TEST POST method detected." << endl;
 		string	upload_file_path = "";
-		std::string location_key = "";
 		cout << "TEST METHOD request_path = " << request.getPath() << endl;
-		_getLocationMatch(request.getPath(), _server.getLocations(), location_key); //zceknout getPath jestli sedi
-    	cout << "TEST METHOD location_key:" << location_key << endl;
-		if (location_key.length() > 0)
-			upload_file_path = _server.getLocationKey(location_key)->getUploadPath();
+    	cout << "TEST METHOD location_key:" << _location_key << endl;
+		if (_location_key.length() > 0)
+			upload_file_path = _server.getLocationKey(_location_key)->getUploadPath();
 		if (upload_file_path.empty())
 			upload_file_path = _server.getUploadPath();
+		upload_file_path += "/";
 		cout << "TEST METHOD upload_file_path:" << upload_file_path << endl;
 		std::ofstream file;
 		if (request.getMultiformFlag())
         {
 			std::string body = request.getBody();
 			std::string filename = "";
-			body = removeBoundary(body, request.getBoundary(), filename); //upr
+			body = removeBoundary(body, request.getBoundary(), filename);
 			if (!filename.empty())
 			{
 				upload_file_path += filename;
@@ -669,17 +673,19 @@ int    Response::_buildBody()
 				file.open(upload_file_path.c_str(), std::ios::binary);
 				if (file.fail())
 				{
-					_status_code = 404;
+					_status_code = 500;
 					std::cerr << "Error opening file for writing." << std::endl;
 					return (1);
 				}
 			}
 			file.write(body.c_str(), body.length());
+			return (0);
 		}
 		else
         {
             file.write(request.getBody().c_str(), request.getBody().length());
-				std::cout << "Not Multiform: File successfully uploaded." << std::endl;
+			std::cout << "Not Multiform: File successfully uploaded." << std::endl;
+			return (0);
         }
     }
     // else if (request.getMethod() == DELETE)
@@ -801,8 +807,8 @@ std::string Response::removeBoundary(std::string& body, std::string& boundary, s
                     {
                         size_t end = buffer.find("\"", start + 10);
                         if (end != std::string::npos)
-                            filename = buffer.substr(start + 10, end); /// what to do with it??
-						// cout << "3aa: filename setted: " <<  filename << endl;
+                            filename = buffer.substr(start + 10, end - start - 10);
+						cout << "3aa: filename setted: " <<  filename << endl;
 
                     }
 					
