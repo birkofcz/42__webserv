@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:55:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/06 13:07:09 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/07 15:47:51 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,22 @@ and returns it. If no math 0- returns text/plain */
 string
 Mime::getMime() const
 {
-	for (std::map<string, string>::const_iterator it = _mimes.begin(); it != _mimes.end(); ++it)
+
+	if (_status_code != 200 || (_status_code == 200 && _autoindex == true))
 	{
-		if (it->first == _extension)
-			return it->second;
+		debugPrint("[Mime::getMime()] status code is not 200 or autoindex is true, setting text/html.", YELLOW);
+		return "text/html";
+	}
+	else
+	{
+		for (std::map<string, string>::const_iterator it = _mimes.begin(); it != _mimes.end(); ++it)
+		{
+			if (it->first == _extension)
+			{
+				debugPrint("[Mime::getMime()] recognized MIME: " + it->second, YELLOW);
+				return it->second;
+			}
+		}
 	}
 	/* if no match, return text/plain - this is considered safest option,
 	as it will be displayed as text in browser, but not executed. 
@@ -72,8 +84,7 @@ Mime::getMime() const
 	code is not 200 - so there is an error and we need the content-type to be set to text/html 
 	to properly encode errorbody to html format. The is no risk as in case of error, there is no content 
 	read, only error response body is internally constructed*/
-	if (_status_code != 200 || (_status_code == 200 && _autoindex == true))
-		return "text/html";
+	debugPrint("[Mime::getMime()] no match, setting text/plain.", YELLOW);
 	return "text/plain";
 }
 
