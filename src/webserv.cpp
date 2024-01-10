@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/07 16:37:00 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/10 16:33:49 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <cstdlib>
 
 bool debug = false;
+bool debugFile = false;
 
 int main(int argc, char **argv)
 {
@@ -28,7 +29,16 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	if (argv[2] && !strcmp(argv[2], "-d"))
+	{	
 		debug = true;
+		cout << RED << "Debug mode on" << RESET << endl;
+	}
+
+	if (argv[2] && !strcmp(argv[2], "-df"))
+	{
+		debugFile = true;
+		cout << RED << "Debug file mode on" << RESET << endl;
+	}
 	Parser	parser(argv[1]);
 	parser.parseFile(argv[1]);
 	parser.printServers();

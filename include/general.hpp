@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/07 16:04:13 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/10 15:53:57 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ I would include this in all adjacent code */
 
 //global variable to switch on or off the debug mode test prints
 extern bool debug;
+extern bool debugFile;
 
 
 //basic includes
