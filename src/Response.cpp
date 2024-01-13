@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 17:57:52 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/13 16:54:00 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -578,7 +578,9 @@ void	Response::buildResponse()
 		_status_code = 200;
 		debugPrint("[Response::buildResponse()] Autoindex build as response", RED);
     }
-	debugPrint("[Response::buildResponse()] setting status line and headers.", GREEN);
+	
+	Log::Msg(DEBUG, "[Response::buildResponse()] setting status line and headers." + toString(__FUNCTION__));
+	//debugPrint("[Response::buildResponse()] setting status line and headers.", GREEN);
     _setStatusLine();
     _setHeaders(); // + body test content if it works
     if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
@@ -688,19 +690,19 @@ int    Response::_buildBody()
 			return (0);
         }
     }
-    // else if (request.getMethod() == DELETE)
-    // {
-    //     if (!fileExists(_target_file))
-    //     {
-    //         _status_code = 404;
-    //         return (1);
-    //     }
-    //     if (remove( _target_file.c_str() ) != 0 )
-    //     {
-    //         _status_code = 500;
-    //         return (1);
-    //     }
-    // }
+    else if (request.getMethod() == DELETE)
+    {
+        if (!_fileExists(_target_file))
+        {
+            _status_code = 404;
+            return (1);
+        }
+        if (remove( _target_file.c_str() ) != 0 )
+        {
+            _status_code = 500;
+            return (1);
+        }
+    }
     _status_code = 200;
     return (0);
 }

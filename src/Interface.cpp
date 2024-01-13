@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:19:58 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/13 13:30:39 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/13 14:46:51 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ Interface::start()
     while (true) 
 	{
 		if (_isRunning)
-    		std::cout << GREEN << "(Servers running) " << RESET << "Enter command (shutdown/config): ";
+    		std::cout << GREEN << "(Servers running) " << RESET << "Enter command (shutdown/config) > ";
 		else
-			std::cout << RED << "(Servers stopped) " << RESET << "Enter command (run/shutdown/config): ";
+			std::cout << RED << "(Servers stopped) " << RESET << "Enter command (run/shutdown/config) > ";
         std::cin >> command;
 		if (command == "run")
 		{
@@ -99,7 +99,6 @@ void
 Interface::shutdownServers()
 {
     cout << "Shutting down servers." << endl;
-    // Implement server shutdown logic here
 	raise(SIGINT);
 /* 	for (std::vector<Server>::iterator it = _servers.begin(); it != _servers.end(); ++it)
 	{
@@ -111,7 +110,6 @@ Interface::shutdownServers()
 void
 Interface::printServers()
 {
-    cout << "Server configurations:" << endl;
 	_parser.printServers();
 }
 

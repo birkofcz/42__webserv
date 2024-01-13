@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 16:32:05 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/13 15:32:39 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,8 @@ class HttpRequest
 		bool _multiform_flag;
 
 		void _handle_headers();
+
+		std::map<std::string, std::string> parseFormData(const std::string& body); //added for delete, 13.1.2024
 
 		friend std::ostream& operator<<(std::ostream& os, const HttpRequest& request);
 };

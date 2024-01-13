@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 16:31:20 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/13 15:33:26 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,46 @@ void	HttpRequest::setHeader(std::string &header_name, std::string &value)
 	_request_headers[header_name] = value;
 }
 
+std::map<std::string, std::string> HttpRequest::parseFormData(const std::string& body)
+{
+    std::map<std::string, std::string> formData;
+    std::istringstream stream(body);
+    std::string keyValuePair;
+
+    while (std::getline(stream, keyValuePair, '&'))
+    {
+        std::string key, value;
+        std::istringstream keyValuePairStream(keyValuePair);
+        std::getline(keyValuePairStream, key, '=');
+        std::getline(keyValuePairStream, value, '=');
+
+        // URL decode key and value if needed
+        // Implement URL decoding function if necessary
+
+        formData[key] = value;
+    }
+
+    return formData;
+}
+
 void        HttpRequest::_handle_headers()
 {
     std::stringstream ss;
 
+	// added for delete, 13.1.2024
+	  if (_method == POST && _request_headers["content-type"] == "application/x-www-form-urlencoded")
+    {
+        // Parse the body for form data
+        std::map<std::string, std::string> formData = parseFormData(_body_str);
+
+        // Check if there's a special "_method" field with value "delete"
+        if (formData.find("_method") != formData.end() && formData["_method"] == "delete")
+        {
+            _method = DELETE;
+        }
+    }
+	//end of added for delete, 13.1.2024
+	
     if (_request_headers.count("content-length"))
     {
         _body_flag = true;
@@ -126,6 +162,7 @@ void        HttpRequest::_handle_headers()
 		}		
 		this->_multiform_flag = true;
     }
+
 }
 
 

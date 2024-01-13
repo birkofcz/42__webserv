@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Index</title>
+	<title>Index</index></title>
 	<style>
 		body {
 			font-family: Arial, sans-serif;
@@ -39,8 +39,7 @@
 			<button type="submit">Submit POST</button>
 		</form>
 
-		<!-- Form for DELETE request -->
-		<form method="post" action="/testloc1/uploads" onsubmit="return confirm('Are you sure you want to delete?');">
+		<form method="post" action="/delete-resource" onsubmit="return confirm('Are you sure you want to delete?');">
             <label for="filename">Enter Filename:</label>
             <input type="text" id="filename" name="filename" required>
             <input type="hidden" name="_method" value="delete">
