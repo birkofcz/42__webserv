@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/10 15:53:57 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/13 12:59:51 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,12 @@ extern bool debugFile;
 
 #include <fstream>
 #include <istream>
+
+//signals
+#include <csignal>
+
+//threads
+#include <pthread.h>
 
 //file system - opendir, readdir, closedir
 #include <dirent.h>

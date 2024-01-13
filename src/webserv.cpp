@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/10 16:33:49 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/13 12:51:23 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include "../include/Server.hpp"
 #include "../include/ServerManager.hpp"
 #include "../include/Mime.hpp"
+#include "../include/Interface.hpp"
+
 #include <iostream>
 #include <cstdlib>
 
@@ -46,10 +48,15 @@ int main(int argc, char **argv)
 	// Mime mime;
 	// mime.testPrint("test/anotherdir/test.jpeg");
 	
+	std::vector<Server> servers = parser.getServers();
+	Interface interface(parser, servers);
+	interface.start();
 
-	ServerManager	manager;
+	/* ServerManager	manager;
 	manager.initServers(parser.getServers());
-	manager.runServers();
+	manager.runServers(); */
+	
+
 	
 	return 0;
 }
