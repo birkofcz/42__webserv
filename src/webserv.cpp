@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 11:13:24 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 13:59:16 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,15 @@
 
 #include <iostream>
 #include <cstdlib>
-void setLogFlags(char **argv)
+
+/* 
+setLogs - sets the logging options based on the flags passed, prints the logo and
+the logging options set
+ */
+void setLogs(char **argv)
 {
+	std::system("clear"); //clears the terminal
+	
 	cout << "									   " << endl;
 	cout << GREEN << " __ _____ ___ __                     " << endl;
 	cout <<  "| _|_   _/ __|_ |___ _ ___ _____ _ _ " << endl;
@@ -48,8 +55,9 @@ void setLogFlags(char **argv)
 		}
 		if (!strcmp(argv[2], "-logfile"))
 		{
+			Log::out_console = true;
 			Log::out_file = true;
-			cout << GREEN << "[TS]erver logging: FILE logs ON" << RESET << endl;
+			cout << GREEN << "[TS]erver logging: CONSOLE & FILE logs ON" << RESET << endl;
 		}
 		Log::type_info = true;
 		Log::type_warning = true;
@@ -63,8 +71,9 @@ void setLogFlags(char **argv)
 	}
 	if (argv[2] && argv[3] && !strcmp(argv[2], "-logfile"))
 	{
+		Log::out_console = true;
 		Log::out_file = true;
-		cout << GREEN << "[TS]erver logging: FILE logs ON" << RESET << endl;
+		cout << GREEN << "[TS]erver logging: CONSOLE & FILE logs ON" << RESET << endl;
 	}
 	if (argv[3] && !strcmp(argv[3], "--all"))
 	{	
@@ -102,7 +111,17 @@ void setLogFlags(char **argv)
 		cout << RED << "Runtime log types on" << RESET << endl;
 		cout << GREEN << "[TS]erver logging: RUNTIME logs ON (no DEBUG)" << RESET << endl;
 	}
+	cout << endl;
 
+	// //control if the logging is set correctly
+	// cout << "out_console: " << Log::out_console << endl;	
+	// cout << "out_file: " << Log::out_file << endl;
+	// cout << "type_info: " << Log::type_info << endl;
+	// cout << "type_warning: " << Log::type_warning << endl;
+	// cout << "type_error: " << Log::type_error << endl;
+	// cout << "type_debug: " << Log::type_debug << endl;
+	// cout << endl;
+	
 }
 
 int main(int argc, char **argv)
@@ -112,7 +131,7 @@ int main(int argc, char **argv)
 		print("Usage: ./webserv <config_file>", RED, 2);
 		exit(EXIT_FAILURE);
 	}
-	setLogFlags(argv);
+	setLogs(argv);
 
 	Parser	parser(argv[1]);
 	parser.parseFile(argv[1]);

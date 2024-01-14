@@ -6,7 +6,7 @@
 #    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/08 11:05:29 by sbenes            #+#    #+#              #
-#    Updated: 2024/01/13 16:27:32 by sbenes           ###   ########.fr        #
+#    Updated: 2024/01/14 14:09:29 by sbenes           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,10 @@ $(OBJ_PATH):
 $(NAME): $(OBJS)
 	@echo "$(BOLD)$(GREEN)[ 🙊 Compiling ... ]$(NC)"
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(INC)
+	@if [ ! -d "logs" ]; then \
+		echo "$(BOLD)$(GREEN)[ Creating logs directory ]$(NC)"; \
+		mkdir logs; \
+	fi
 	@echo "$(BOLD)$(GREEN)[ 🪄 Program ready! ]$(NC)"
 	@echo "$(BOLD)$(GREEN)                      "
 	@echo " __ _____ ___ __                     "
@@ -67,17 +71,29 @@ $(NAME): $(OBJS)
 	@echo "| |  |_| |___/| \___|_|  \_/\___|_|  "
 	@echo "|__|         |__|                    			"
 	@echo "									    			"
-	@echo " run ./webserv <config_file>          "
-	@echo " run ./webserv <config_file> -d for debug_prints     	"
+	@echo " run ./webserv <config_file> <-flags> <--options>          "
+	@echo "									    		$(NC)"
 
+	@echo "$(GREEN) -flags: "
+	@echo "	-log :		logging to console (default)"
+	@echo "	-logfile :	logging to console & file"
+	@echo "	 "
+	@echo " --options: "
+	@echo "	--runtime :	runtime logs (INFO, WARNING, ERROR) (default)"
+	@echo "	--all :		all logs (INFO, WARNING, ERROR, DEBUG)"
+	@echo "	--info :	INFO logs"
+	@echo "	--warning :	WARNING logs"
+	@echo "	--error :	ERROR logs"
+	@echo "	--debug :	DEBUG logs"
 	@echo "                             				   $(NC)"
- 
 
 bonus: all
 
 clean:
 	@echo "$(BOLD)$(RED)[ 🔥 Purging object files ]$(NC)"
 	@rm -Rf $(OBJ_PATH)
+	@echo "$(BOLD)$(RED)[ 🔥 Removing logs directory ]$(NC)"
+	@rm -Rf logs
 
 fclean: clean
 	@echo "$(BOLD)$(RED)[ 🔥 Removing program ]$(NC)"

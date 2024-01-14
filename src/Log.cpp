@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:28:05 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 09:13:45 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 14:07:58 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,60 +21,62 @@ bool	Log::type_warning = false;
 bool	Log::type_error = false;
 bool	Log::type_debug = false;
 
-void	
-Log::Msg(LogType type, string msg)
+
+void Log::Msg(LogType type, string msg)
 {
-	if (out_console)
+	string message("");
+
+	// Determine the message based on the log type
+	switch (type)
 	{
-		switch (type)
-		{
-			case INFO:
-				if (type_info)
-					print(TimeStamp() + " [INFO] " + msg, GREEN);
-				break;
-			case WARNING:
-				if (type_warning)
-					print(TimeStamp() + " [WARNING] " + msg, YELLOW);
-			case ERROR:
-				if (type_error)
-					print(TimeStamp() + " [ERROR] " + msg, RED);
-				break;
-			case DEBUG:
-				if (type_debug)
-					print(TimeStamp() + " [DEBUG] " + msg, BLUE);
-				break;
-		}
+		case INFO:
+			if (type_info)
+				message = TimeStamp() + " [INFO] " + msg;
+			break;
+		case WARNING:
+			if (type_warning)
+				message = TimeStamp() + " [WARNING] " + msg;
+			break;
+		case ERROR:
+			if (type_error)
+				message = TimeStamp() + " [ERROR] " + msg;
+			break;
+		case DEBUG:
+			if (type_debug)
+				message = TimeStamp() + " [DEBUG] " + msg;
+			break;
 	}
-	if (out_file)
+
+	// Print to console if enabled
+	if (out_console && !message.empty())
+	{
+		print(message, _DetermineColor(type));
+	}
+
+	// Log to file if enabled
+	if (out_file && !message.empty())
 	{
 		string filename = "logs/log" + TimeStamp() + ".txt";
 		const char *filepath = filename.c_str();
-		std::ofstream logFile;
-		logFile.open(filepath, std::ios::app); // Open in append mode
+		std::ofstream logFile(filepath, std::ios::app); // Open in append mode
 		if (logFile.is_open())
 		{
-			string message("");
-			switch (type)
-			{
-				case INFO:
-					if (type_info)
-						message = TimeStamp() + " [INFO] " + msg;
-					break;
-				case WARNING:
-					if (type_warning)
-						message = TimeStamp() + " [WARNING] " + msg;
-					break;
-				case ERROR:
-					if (type_error)
-						message = TimeStamp() + " [ERROR] " + msg;
-					break;
-				case DEBUG:
-					if (type_debug)
-						message = TimeStamp() + " [DEBUG] " + msg;
-					break;
-			}
 			logFile << message << endl;
 		}
+	}
+}
+
+// Helper function to determine the color based on log type
+string
+Log::_DetermineColor(LogType type)
+{
+	switch (type)
+	{
+		case INFO:		return GREEN;
+		case WARNING:	return YELLOW;
+		case ERROR:		return RED;
+		case DEBUG:		return BLUE;
+		default:		return NONECOLOR;
 	}
 }
 

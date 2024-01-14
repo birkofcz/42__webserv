@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:19:58 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 11:14:22 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 14:03:27 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ Interface::start()
 	while (true) 
 	{
 		if (_isRunning)
-			std::cout << GREEN << "\n(Servers running) " << RESET << "Enter command (shutdown/config) > ";
+			std::cout << GREEN << "\n(Servers running) " << RESET << "Enter command (shutdown/config/parser_log) > ";
 		else
-			std::cout << RED << "\n(Servers stopped) " << RESET << "Enter command (run/shutdown/config) > ";
+			std::cout << RED << "\n(Servers stopped) " << RESET << "Enter command (run/shutdown/config/parser_log) > ";
 		std::cin >> command;
 		if (command == "shutdown") 
 		{
@@ -59,6 +59,19 @@ Interface::start()
 		else if (command == "config") 
 		{
 			printServers();
+		}
+		else if (command == "parser_log")
+		{
+			std::ifstream file("logs/parser_log.txt");
+			string line;
+			if (file.fail())
+			{
+				std::cerr << "Error opening file: " << "logs/parser_log.txt" << std::endl;
+				Log::Msg(ERROR, "Error opening parser logfile: " + string("logs/parser_log.txt"));
+				continue ;
+			}
+			while (std::getline(file, line))
+				cout << line << std::endl;
 		}
 		else 
 		{

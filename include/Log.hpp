@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 15:48:25 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/13 16:28:55 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 13:53:26 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ enum LogType
 
 class Log
 {
+	private:
+		static string			_DetermineColor(LogType type);
+
 	public:
 		//switchers - what output is activated
 		static bool		out_console;
