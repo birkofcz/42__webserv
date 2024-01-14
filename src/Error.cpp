@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 16:20:36 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/07 16:06:02 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 09:42:12 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ string
 Error::buildErrorPage(short error_code, string location_key,  Server &server)
 {
 
-	debugPrint("[Error::buildErrorPage()] location_key: " + location_key, YELLOW);
-	debugPrint("[Error::buildErrorPage()] error_code: " + toString(error_code), YELLOW);
+	Log::Msg(DEBUG, FUNC + "location_key: " + location_key);
+	Log::Msg(DEBUG, FUNC + "error_code: " + toString(error_code));
 	
 	string l_dep_path(""); 										//location error page path
 	string s_dep_path("");										//server error page path
@@ -37,7 +37,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server)
 		if (it->getPath() == location_key)
 		{
 			location = &(*it);
-			debugPrint("[Error::buildErrorPage()] location found on a server", YELLOW);
+			Log::Msg(DEBUG, FUNC + "location found on a server");
 			break;
 		}
 	}
@@ -51,38 +51,38 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server)
 			l_dep_path = loc_error_pages[error_code];
 			if (l_dep_path[0] == '/')
 				l_dep_path = l_dep_path.substr(1);
-			debugPrint("[Error::buildErrorPage()] location error page: " + l_dep_path, YELLOW);
+			Log::Msg(DEBUG, FUNC + "location error page: " + l_dep_path);
 		}
 		else
 		{
-			debugPrint("[Error::buildErrorPage()] location found, location error pages not found - > switching to server check", YELLOW);
+			Log::Msg(DEBUG, FUNC + "location found, location error pages not found - > switching to server check");
 			ser_error_pages = server.getErrorPages();
 			if (!ser_error_pages.empty() && ser_error_pages.find(error_code) != ser_error_pages.end())
 			{
 				s_dep_path = ser_error_pages[error_code];
 				if (s_dep_path[0] == '/')
 					s_dep_path = s_dep_path.substr(1);
-				debugPrint("[Error::buildErrorPage()] server error page: " + s_dep_path, YELLOW);
+				Log::Msg(DEBUG, FUNC + "server error page: " + s_dep_path);
 			}
 			else
-				debugPrint("[Error::buildErrorPage()] server error pages not found - > switching to [TS]erver default error page", YELLOW);
+				Log::Msg(DEBUG, FUNC + "server error pages not found - > switching to [TS]erver default error page");
 		}
 	}
 	//if location does not exist, check if there is error page defined in server
 	else
 	{
-		debugPrint("[Error::buildErrorPage()] location not found -> swithcing to server check", YELLOW);
+		Log::Msg(DEBUG, FUNC + "location not found -> switching to server check");
 		ser_error_pages = server.getErrorPages();
 		if (!ser_error_pages.empty() && ser_error_pages.find(error_code) != ser_error_pages.end())
 		{
 			s_dep_path = ser_error_pages[error_code];
 			if (s_dep_path[0] == '/')
 				s_dep_path = s_dep_path.substr(1);
-			debugPrint("[Error::buildErrorPage()] server error page: " + s_dep_path, YELLOW);
+			Log::Msg(DEBUG, FUNC + "server error page: " + s_dep_path);
 		}
 		//if there is no error page defined in server, opt for default error page
 		else
-			debugPrint("[Error::buildErrorPage()] server error pages not found - > switching to [TS]erver default error page", YELLOW);
+			Log::Msg(DEBUG, FUNC + "server error pages not found - > switching to [TS]erver default error page");
 			
 	}
 
@@ -92,7 +92,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server)
 	it will build default error page */
 	if (!l_dep_path.empty())
 	{
-		debugPrint("[Error::buildErrorPage()] inside location error page reader", YELLOW);
+		Log::Msg(DEBUG, FUNC + "inside location error page reader");
 
 		//open file on the path, read it and write it to the string to return
 		std::ifstream file(l_dep_path.c_str());
@@ -102,7 +102,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server)
 			std::cerr << "Error opening file for location error pages: " << l_dep_path << std::endl;
 			return ("");
 		}
-		debugPrint("[Error::buildErrorPage()] file opened", YELLOW);
+		Log::Msg(DEBUG, FUNC + "file opened");
 		string default_error_page("");
 		while (std::getline(file, line))
 		{
@@ -111,13 +111,13 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server)
 		}
 		file.close();
 
-		debugPrint("[Error::buildErrorPage()] file closed, response build", YELLOW);
+		Log::Msg(DEBUG, FUNC + "file closed, response build");
 		
 		return (default_error_page);
 	}
 	else if (l_dep_path.empty() && !s_dep_path.empty())
 	{
-		debugPrint("[Error::buildErrorPage()] iside server error page reader", YELLOW);
+		Log::Msg(DEBUG, FUNC + "inside server error page reader");
 		//open file on the path, read it and write it to the string to return
 		std::ifstream file(s_dep_path.c_str());
 		string line;
@@ -126,7 +126,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server)
 			std::cerr << "Error opening file for server error pages: " << s_dep_path << std::endl;
 			return ("");
 		}
-		debugPrint("[Error::buildErrorPage()] file opened", YELLOW);
+		Log::Msg(DEBUG, FUNC + "file opened");
 		string default_error_page("");
 		while (std::getline(file, line) != NULL)
 		{
@@ -135,13 +135,13 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server)
 		}
 		file.close();
 		
-		debugPrint("[Error::buildErrorPage] file closed, response build", YELLOW);
+		Log::Msg(DEBUG, FUNC + "file closed, response build");
 		
 		return (default_error_page);
 	}
 	else if (s_dep_path.empty() && s_dep_path.empty())
 	{
-		debugPrint("[Error::buildErrorPage] inside [TS]erver default error page creator", YELLOW);
+		Log::Msg(DEBUG, FUNC + "inside [TS]erver default error page creator");
 		//Build default error page
 		std::stringstream ss;
 		ss << error_code;
@@ -216,7 +216,7 @@ Error::buildErrorPage(short error_code, string location_key,  Server &server)
 		error_page += description;
 		error_page += "</h1></center>\r\n";
 
-		debugPrint("[Error::buildErrorPage] [TS]erver default error page created", YELLOW);
+		Log::Msg(DEBUG, FUNC + "[TS]erver default error page created");
 		return error_page;
 	}
 	return ("");

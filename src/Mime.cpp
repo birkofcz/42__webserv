@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:55:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/07 15:47:51 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 09:44:38 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Mime::Mime(const short &status_code, const bool &autoindex)
 		std::cerr << "Error opening file: " << path << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	cout << "Testprint here before reading file" << endl;
+	Log::Msg(DEBUG, FUNC + "before reading data file for MIME " + path);
 	while (std::getline(file, line))
 	{
 		std::vector<string> split = CppSplit(line, ',');//split line by ',' and add to map
@@ -64,7 +64,7 @@ Mime::getMime() const
 
 	if (_status_code != 200 || (_status_code == 200 && _autoindex == true))
 	{
-		debugPrint("[Mime::getMime()] status code is not 200 or autoindex is true, setting text/html.", YELLOW);
+		Log::Msg(DEBUG, FUNC + "status code is not 200 or autoindex is true, setting text/html.");
 		return "text/html";
 	}
 	else
@@ -73,7 +73,8 @@ Mime::getMime() const
 		{
 			if (it->first == _extension)
 			{
-				debugPrint("[Mime::getMime()] recognized MIME: " + it->second, YELLOW);
+				Log::Msg(DEBUG, FUNC + "recognized MIME: " + it->second);
+				
 				return it->second;
 			}
 		}
@@ -84,7 +85,7 @@ Mime::getMime() const
 	code is not 200 - so there is an error and we need the content-type to be set to text/html 
 	to properly encode errorbody to html format. The is no risk as in case of error, there is no content 
 	read, only error response body is internally constructed*/
-	debugPrint("[Mime::getMime()] no match, setting text/plain.", YELLOW);
+	Log::Msg(DEBUG, FUNC + "no match, setting text/plain.");
 	return "text/plain";
 }
 

@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:28:05 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/13 16:53:10 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 09:13:45 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,18 @@ Log::Msg(LogType type, string msg)
 		{
 			case INFO:
 				if (type_info)
-					print(TimeStamp() + "  [INFO]  " + msg, GREEN);
+					print(TimeStamp() + " [INFO] " + msg, GREEN);
 				break;
 			case WARNING:
 				if (type_warning)
-					print(TimeStamp() + "  [WARNING]  " + msg, YELLOW);
+					print(TimeStamp() + " [WARNING] " + msg, YELLOW);
 			case ERROR:
 				if (type_error)
-					print(TimeStamp() + "  [ERROR]  " + msg, RED);
+					print(TimeStamp() + " [ERROR] " + msg, RED);
 				break;
 			case DEBUG:
 				if (type_debug)
-					print(TimeStamp() + "  [DEBUG]  " + msg, BLUE);
+					print(TimeStamp() + " [DEBUG] " + msg, BLUE);
 				break;
 		}
 	}
@@ -58,19 +58,19 @@ Log::Msg(LogType type, string msg)
 			{
 				case INFO:
 					if (type_info)
-						message = TimeStamp() + "  [INFO]  " + msg;
+						message = TimeStamp() + " [INFO] " + msg;
 					break;
 				case WARNING:
 					if (type_warning)
-						message = TimeStamp() + "  [WARNING]  " + msg;
+						message = TimeStamp() + " [WARNING] " + msg;
 					break;
 				case ERROR:
 					if (type_error)
-						message = TimeStamp() + "  [ERROR]  " + msg;
+						message = TimeStamp() + " [ERROR] " + msg;
 					break;
 				case DEBUG:
 					if (type_debug)
-						message = TimeStamp() + "  [DEBUG]  " + msg;
+						message = TimeStamp() + " [DEBUG] " + msg;
 					break;
 			}
 			logFile << message << endl;
@@ -83,17 +83,17 @@ Log::TimeStamp()
 {
 	time_t now = time(0);
 	tm *ltm = localtime(&now);
-	string month("");
-	if (ltm->tm_mon + 1 < 10)
-		month = "0" + toString(ltm->tm_mon + 1);
-	else
-		month = ltm->tm_mon + 1;
-	string year = toString(ltm->tm_year + 1900);
-	
+	string month((ltm->tm_mon + 1) < 10 ? "0" + toString(ltm->tm_mon + 1) : toString(ltm->tm_mon + 1));
+	string day(ltm->tm_mday < 10 ? "0" + toString(ltm->tm_mday) : toString(ltm->tm_mday));
+	string hour(ltm->tm_hour < 10 ? "0" + toString(ltm->tm_hour) : toString(ltm->tm_hour));
+	string minute(ltm->tm_min < 10 ? "0" + toString(ltm->tm_min) : toString(ltm->tm_min));
+	string second((ltm->tm_sec < 10) ? "0" + toString(ltm->tm_sec) : toString(ltm->tm_sec));
+	string year(toString(ltm->tm_year + 1900));
+
 	std::stringstream ss;
 	//add date:
-	ss << "[" << ltm->tm_mday << "." << month << "." << year << "] ";
-	ss << "[" << ltm->tm_hour << ":" << ltm->tm_min << ":" << ltm->tm_sec << "] ";
+	ss << "[" << day << "." << month << "." << year << "]";
+	ss << "[" << hour << ":" << minute << ":" << second << "]";
 	return (ss.str());
 	
 }

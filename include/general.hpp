@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/13 12:59:51 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 09:36:47 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ I would include this in all adjacent code */
 //global variable to switch on or off the debug mode test prints
 extern bool debug;
 extern bool debugFile;
-
 
 //basic includes
 #include <iostream>
@@ -69,6 +68,14 @@ using std::string;
 
 #define NONECOLOR	""
 
+//function identifiers - this is used to print the function name in the debug messages,
+//so that we know where the message is coming from. __FUNCTION__ is a macro that is
+//replaced by the name of the function where it is used.
+#define FUNC "[" + toString(__FUNCTION__) + "]: "
+
+//log types
+#include "Log.hpp"
+
 //macros
 #define CLIENT_MAX_BODY_SIZE_LIMIT 10485760 // 10 megabytes (in bytes) as limit - used in NGINX
 
@@ -101,6 +108,6 @@ std::vector<string>	CppSplit(std::string str, char delimiter);
 bool isNumeric(string str);
 
 /* For printing debug messages using a global "debug" switch */
-void debugPrint(string message, string color = NONECOLOR);
+//void debugPrint(string message, string color = NONECOLOR); -- DEPRECATED for logging
 
 #endif

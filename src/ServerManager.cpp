@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/13 13:24:53 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 09:50:28 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,8 +234,7 @@ void ServerManager::acceptNewConnection(Server &serv)
 	// Output information about the new connection
 	char buf[INET_ADDRSTRLEN];
 	
-	fprintf(stderr, "New Connection From %s, Assigned Socket %d\n",
-			inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN), client_sock);
+	Log::Msg(INFO, "New Connection From " + toString(inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN)) + ", Assigned Socket " + toString(client_sock));
 }
 
 void    ServerManager::_closeConnection(const int fd)
