@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/13 15:32:39 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 15:19:40 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ class HttpRequest
 
 		void _handle_headers();
 
-		std::map<std::string, std::string> parseFormData(const std::string& body); //added for delete, 13.1.2024
+		std::map<std::string, std::string> parseFormData(const std::string& body); //added for DELETE, 13.1.2024, NOT WORKING...
 
 		friend std::ostream& operator<<(std::ostream& os, const HttpRequest& request);
 };

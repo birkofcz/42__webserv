@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:19:58 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 14:03:27 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 15:17:06 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ Interface::start()
 
 	if (pthread_create(&_managerThread, NULL, Interface::runServersWrapper, this) != 0)
 	{
-		cerr << RED << "Error creating thread" << RESET << endl;
+		//cerr << RED << "Error creating thread" << RESET << endl;
 		Log::Msg(ERROR, "Error creating server thread, exiting...");
 		exit(EXIT_FAILURE);
 	}
