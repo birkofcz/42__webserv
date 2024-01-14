@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 10:21:42 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 11:35:36 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,7 @@ void Parser::parseFile(const string& path)
 	// --- --- 
 	if (!file.good())
 	{
-		print("Error opening file", RED, 2);
+		Log::Msg(ERROR, "Error opening config file: " + path);
 		file.close();
 		return;
 	}
@@ -286,7 +286,21 @@ void Parser::parseFile(const string& path)
 	Server currentServer;
 	Location currentLocation;
 
+	//open file for parsing log
+	std::fstream plog;
+
+	plog.open("logs/parser_log.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+	if (!plog.is_open())
+	{
+		Log::Msg(ERROR, "Error opening parser log file");
+		return;
+	}
+	//set strings for coloring
+
+
 	cout << YELLOW << "\n[PARSING CONFIG FILE ... ]" << RESET << endl << endl;
+	plog << endl << Log::TimeStamp() << endl;
+	plog << "[PARSING CONFIG FILE ... ]" << endl;
 
 	std::stack<string> blockStack; 
 	while (std::getline(file, line))
@@ -304,7 +318,8 @@ void Parser::parseFile(const string& path)
 			if (line.find("server {") != string::npos)
 			{
 				blockStack.push("server");
-				cout << YELLOW << "Found server { at depth " << blockDepth << RESET << endl;
+				//cout << YELLOW << "Found server { at depth " << blockDepth << RESET << endl;
+				plog << YELLOW << "Found server { at depth " << blockDepth << RESET << endl;
 				inServerBlock = true;
 				server_count++;
 				std::stringstream ss;
@@ -314,7 +329,8 @@ void Parser::parseFile(const string& path)
 			else if (line.find("location") != string::npos && inServerBlock)
 			{
 				blockStack.push("location");
-				cout << YELLOW << "\tFound location { at depth " << blockDepth << RESET << endl;
+				//cout << YELLOW << "\tFound location { at depth " << blockDepth << RESET << endl;
+				plog << YELLOW << "\tFound location { at depth " << blockDepth << RESET << endl;
 				inLocationBlock = true;
 				currentLocation = Location();
 				currentLocation.setPath(parseLocationPath(line));

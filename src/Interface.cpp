@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 12:19:58 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/13 14:46:51 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 11:14:22 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ Interface::~Interface()
 {
 	if (_managerThread) 
 	{
-        pthread_join(_managerThread, NULL); // Ensure the server thread is joined upon destruction
-    }
+		pthread_join(_managerThread, NULL); // Ensure the server thread is joined upon destruction
+	}
 }
 
 /// METHODS // ------------------------------------------------------------------
@@ -35,37 +35,35 @@ Interface::start()
 
 	string command;
 
-    while (true) 
+	if (pthread_create(&_managerThread, NULL, Interface::runServersWrapper, this) != 0)
+	{
+		cerr << RED << "Error creating thread" << RESET << endl;
+		Log::Msg(ERROR, "Error creating server thread, exiting...");
+		exit(EXIT_FAILURE);
+	}
+	Log::Msg(INFO, "Server(s) started");
+	_isRunning = true;
+
+	while (true) 
 	{
 		if (_isRunning)
-    		std::cout << GREEN << "(Servers running) " << RESET << "Enter command (shutdown/config) > ";
+			std::cout << GREEN << "\n(Servers running) " << RESET << "Enter command (shutdown/config) > ";
 		else
-			std::cout << RED << "(Servers stopped) " << RESET << "Enter command (run/shutdown/config) > ";
-        std::cin >> command;
-		if (command == "run")
+			std::cout << RED << "\n(Servers stopped) " << RESET << "Enter command (run/shutdown/config) > ";
+		std::cin >> command;
+		if (command == "shutdown") 
 		{
-			if(pthread_create(&_managerThread, NULL, Interface::runServersWrapper, this) != 0)
-			{
-				cerr << RED << "Error creating thread" << RESET << endl;
-				exit(EXIT_FAILURE);
-			}
-			cout << GREEN << "Server(s) started" << RESET << endl;
-			_isRunning = true;
-			//some control print of what has been started??
-		}
-        else if (command == "shutdown") 
-		{
-            shutdownServers();
-            break;
-        } 
+			shutdownServers();
+			break;
+		} 
 		else if (command == "config") 
 		{
-	        printServers();
-        }
+			printServers();
+		}
 		else 
 		{
-                std::cout << "Unknown command." << std::endl;
-        }
+			std::cout << "Unknown command." << std::endl;
+		}
 	}
 }
 
@@ -86,27 +84,33 @@ Interface::runServers()
 	_manager.runServers();
 }
 
-    // Signal handler for gentle shutdown
+	// Signal handler for gentle shutdown
 void 
 Interface::signalHandler(int signum)
 {
-        std::cout << "\nSignal (" << signum << ") received. Shutting down..." << std::endl;
-        // Perform gentle shutdown tasks here
-        exit(signum);
+		std::cout << "\nSignal (" << signum << ") received. Shutting down..." << std::endl;
+		// Perform gentle shutdown tasks here
+		exit(signum);
 }
 
 void
 Interface::shutdownServers()
 {
-    cout << "Shutting down servers." << endl;
+	Log::Msg(INFO, "Shutting down server(s)...");
 	raise(SIGINT);
+	// if (_managerThread) 
+	// {
+	// 	Log::Msg(INFO, "Server(s) stopped");
+	// 	pthread_join(_managerThread, NULL); // Ensure the server thread is joined upon destruction
+	// }
+	
 /* 	for (std::vector<Server>::iterator it = _servers.begin(); it != _servers.end(); ++it)
 	{
 		//shutdown server, maybe do it in server manager
 	}	 */
 }
 
-    // Function to print server configurations
+	// Function to print server configurations
 void
 Interface::printServers()
 {
