@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 09:36:47 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 10:04:07 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@ I would include this in all adjacent code */
 
 #ifndef GENERAL_HPP
 # define GENERAL_HPP
-
-
-//global variable to switch on or off the debug mode test prints
-extern bool debug;
-extern bool debugFile;
 
 //basic includes
 #include <iostream>
@@ -73,7 +68,7 @@ using std::string;
 //replaced by the name of the function where it is used.
 #define FUNC "[" + toString(__FUNCTION__) + "]: "
 
-//log types
+//Logging
 #include "Log.hpp"
 
 //macros
@@ -81,11 +76,13 @@ using std::string;
 
 //templates
 
+/* toString - converts whatever to string:) */
 template <typename T>
-string toString(const T& value) {
-    std::stringstream ss;
-    ss << value;
-    return ss.str();
+string toString(const T& value)
+{
+	std::stringstream ss;
+	ss << value;
+	return ss.str();
 }
 
 //enums

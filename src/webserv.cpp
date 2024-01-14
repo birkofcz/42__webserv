@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/13 16:29:47 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 09:55:57 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,46 +21,6 @@
 #include <iostream>
 #include <cstdlib>
 
-bool debug = false;
-bool debugFile = false;
-
-/* int main(int argc, char **argv)
-{
-	if (argc < 2)
-	{
-		print("Usage: ./webserv <config_file>", RED, 2);
-		exit(EXIT_FAILURE);
-	}
-	if (argv[2] && !strcmp(argv[2], "-d"))
-	{	
-		debug = true;
-		cout << RED << "Debug mode on" << RESET << endl;
-	}
-
-	if (argv[2] && !strcmp(argv[2], "-df"))
-	{
-		debugFile = true;
-		cout << RED << "Debug file mode on" << RESET << endl;
-	}
-	Parser	parser(argv[1]);
-	parser.parseFile(argv[1]);
-	parser.printServers();
-
-	// Mime mime;
-	// mime.testPrint("test/anotherdir/test.jpeg");
-	
-	std::vector<Server> servers = parser.getServers();
-	Interface interface(parser, servers);
-	interface.start();
-
-	// ServerManager	manager;
-	// manager.initServers(parser.getServers());
-	// manager.runServers();
-	
-
-	
-	return 0;
-} */
 
 int main(int argc, char **argv)
 {
