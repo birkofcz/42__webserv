@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 16:31:20 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/16 16:50:13 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	HttpRequest::setHeader(std::string &header_name, std::string &value)
 void        HttpRequest::_handle_headers()
 {
     std::stringstream ss;
-
+	
     if (_request_headers.count("content-length"))
     {
         _body_flag = true;
@@ -128,6 +128,7 @@ void        HttpRequest::_handle_headers()
 		}		
 		this->_multiform_flag = true;
     }
+
 }
 
 

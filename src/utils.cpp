@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:25:51 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/10 16:41:49 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 09:22:11 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,35 @@ bool isNumeric(string str)
 	return (true);
 }
 
+// version that is printing a new line after every series of messages - checks timestamp
 /* void debugPrint(string message, string color)
 {
-	if (debug)
-		print(message, color);
-} */
+    static int lastSecond = -1; // Static variable to store the second of the last printed message
 
-void debugPrint(string message, string color)
-{
-	if (debugFile)
-	{
-        // Write the message to a log file
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    int currentSecond = ltm->tm_sec;
+
+    if (currentSecond != lastSecond)
+    {
+		if (debugFile)
+		{
+        	std::ofstream logFile;
+        	logFile.open("debugLog.txt", std::ios::app);
+       		if (logFile.is_open())
+        	{
+        		logFile << endl; // Print newline
+        		logFile.close();
+        	}
+		}
+	}
+    if (debugFile)
+    {
         std::ofstream logFile;
-        logFile.open("debugLog.txt", std::ios::app); // Open in append mode
+        logFile.open("debugLog.txt", std::ios::app);
         if (logFile.is_open())
         {
+            logFile << "[" << ltm->tm_hour << ":" << ltm->tm_min << ":" << currentSecond << "] ";
             logFile << message << endl;
             logFile.close();
         }
@@ -71,10 +85,11 @@ void debugPrint(string message, string color)
         {
             cerr << "Unable to open log file." << endl;
         }
-	}
+    }
     else if (debug)
     {
-        // Print the message with the specified color, or no color if NONECOLOR is used
-        cout << color << message << "\033[0m" << endl; // Reset color after message if used
+        cout << color << message << "\033[0m" << endl;
     }
-}
+
+    lastSecond = currentSecond; // Update the second of the last printed message
+} */

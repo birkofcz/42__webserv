@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/10 15:53:57 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/16 16:03:55 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,6 @@ I would include this in all adjacent code */
 #ifndef GENERAL_HPP
 # define GENERAL_HPP
 
-
-//global variable to switch on or off the debug mode test prints
-extern bool debug;
-extern bool debugFile;
-
-
 //basic includes
 #include <iostream>
 #include <string>
@@ -30,6 +24,12 @@ extern bool debugFile;
 
 #include <fstream>
 #include <istream>
+
+//signals
+#include <csignal>
+
+//threads
+#include <pthread.h>
 
 //file system - opendir, readdir, closedir
 #include <dirent.h>
@@ -63,16 +63,26 @@ using std::string;
 
 #define NONECOLOR	""
 
+//function identifiers - this is used to print the function name in the debug messages,
+//so that we know where the message is coming from. __FUNCTION__ is a macro that is
+//replaced by the name of the function where it is used.
+#define FUNC "[" + toString(__FUNCTION__) + "]: "
+
+//Logging
+#include "Log.hpp"
+
 //macros
 #define CLIENT_MAX_BODY_SIZE_LIMIT 10485760 // 10 megabytes (in bytes) as limit - used in NGINX
 
 //templates
 
+/* toString - converts whatever to string:) */
 template <typename T>
-string toString(const T& value) {
-    std::stringstream ss;
-    ss << value;
-    return ss.str();
+string toString(const T& value)
+{
+	std::stringstream ss;
+	ss << value;
+	return ss.str();
 }
 
 //enums
@@ -95,6 +105,6 @@ std::vector<string>	CppSplit(std::string str, char delimiter);
 bool isNumeric(string str);
 
 /* For printing debug messages using a global "debug" switch */
-void debugPrint(string message, string color = NONECOLOR);
+//void debugPrint(string message, string color = NONECOLOR); -- DEPRECATED for logging
 
 #endif

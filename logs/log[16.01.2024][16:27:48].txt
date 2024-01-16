@@ -1,0 +1,22 @@
+[16.01.2024][16:27:48] [INFO] New Connection From 127.0.0.1, Assigned Socket 4
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: _location_key: /testloc1
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: request.getPath(): /testloc1/
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: target_location found: /testloc1
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: method allowed: GET
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: body lenght ok: 0
+[16.01.2024][16:27:48] [DEBUG] [_appendRoot]: location.getRoot(): 
+[16.01.2024][16:27:48] [DEBUG] [_appendRoot]: _server.getRoot(): content/www
+[16.01.2024][16:27:48] [DEBUG] [_appendRoot]: request.getPath(): /testloc1/
+[16.01.2024][16:27:48] [DEBUG] [_appendRoot]: _target_file before appendRoot: 
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: _target_file before diectory check: content/www/testloc1/
+[16.01.2024][16:27:48] [DEBUG] [_isDirectory]: path: content/www/testloc1/
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: _target_file is a directory.
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: target_location has no index defined, using server index.
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: _target_file after index: content/www/testloc1/index.html
+[16.01.2024][16:27:48] [DEBUG] [_isDirectory]: path: content/www/testloc1/index.html
+[16.01.2024][16:27:48] [DEBUG] [_handleTarget]: RETURN: content/www/testloc1/index.html
+[16.01.2024][16:27:48] [DEBUG] [buildResponse]: setting status line and headers.
+[16.01.2024][16:27:48] [DEBUG] [_contentType]: building "Content-type", _status_cod is: 200
+[16.01.2024][16:27:48] [DEBUG] [Mime]: before reading data file for MIME ./data/mime_types.csv
+[16.01.2024][16:27:48] [DEBUG] [getMime]: recognized MIME: text/html
+[16.01.2024][16:27:48] [INFO] New Connection From 127.0.0.1, Assigned Socket 7

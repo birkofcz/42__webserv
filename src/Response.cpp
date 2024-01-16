@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 17:57:52 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/14 09:32:58 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void   Response::_contentType()
 {
 	_response_content.append("Content-Type: ");
 	
-	debugPrint("[Response::_contentType()]: building \"Content-type\", _status_code is: " + toString(_status_code), GREEN);
+	Log::Msg(DEBUG, FUNC + "building \"Content-type\", _status_cod is: " + toString(_status_code));
 	
 	Mime mime(_status_code, _auto_index);
 	//Mime class handling the content type
@@ -139,8 +139,8 @@ to retrieve information about the file specified by the given path.
 */
 bool Response::_isDirectory(std::string path)
 {
-	debugPrint("[Response::_isDirectory] path: " + path, GREEN);
-
+	Log::Msg(DEBUG, FUNC + "path: " + path);
+	
     struct stat file_stat;
  	// if (path[path.length() - 1] != '/')
 	// 	path += '/';
@@ -192,10 +192,10 @@ std::string Response::_combinePaths(std::string p1, std::string p2, std::string 
 
 void Response::_appendRoot(Location &location, HttpRequest &request)
 {
-	debugPrint("[Response::_appendRoot] location.getRoot(): " + location.getRoot(), GREEN);
-	debugPrint("[Response::_appendRoot] _server.getRoot(): " + _server.getRoot(), GREEN);
-	debugPrint("[Response::_appendRoot] request.getPath(): " + request.getPath(), GREEN);
-	debugPrint("[Response::_appendRoot] _target_file before appendRoot: " + _target_file, GREEN);
+	Log::Msg(DEBUG, FUNC + "location.getRoot(): " + location.getRoot());
+	Log::Msg(DEBUG, FUNC + "_server.getRoot(): " + _server.getRoot());
+	Log::Msg(DEBUG, FUNC + "request.getPath(): " + request.getPath());
+	Log::Msg(DEBUG, FUNC + "_target_file before appendRoot: " + _target_file);
 
 	string root("");
 	if (location.getRoot().empty())
@@ -321,25 +321,29 @@ void    Response::_getLocationMatch(std::string& path, std::vector<Location> loc
 int    Response::_handleTarget()
 {
     _getLocationMatch(request.getPath(), _server.getLocations(), _location_key);
-	debugPrint("[Response::_handleTarget] _location_key: " + _location_key, GREEN);
+
+	Log::Msg(DEBUG, FUNC + "_location_key: " + _location_key);
+	
 	string path = request.getPath();
-	debugPrint("[Response::_handleTarget] request.getPath(): " + path, GREEN);
+
+	Log::Msg(DEBUG, FUNC + "request.getPath(): " + path);
+	
     if (_location_key.length() > 0)
     {
         Location target_location = *_server.getLocationKey(_location_key);
-		    debugPrint("[Response::_handleTarget] target_location found: " + target_location.getPath(), GREEN);
+			Log::Msg(DEBUG, FUNC + "target_location found: " + target_location.getPath());
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
         {
             std::cout << "METHOD NOT ALLOWED \n";
             return (1);
         }
-		    debugPrint("[Response::_handleTarget] method allowed", GREEN);
+			Log::Msg(DEBUG, FUNC + "method allowed: " + toString(request.getMethod()));
         if (request.getBody().length() > static_cast<size_t>(target_location.getClientMaxBodySize()))
         {
             _status_code = 413;
             return (1);
         }
-        debugPrint("[Response::_handleTarget] body lenght ok: " + toString(request.getBody().length()), GREEN);
+		Log::Msg(DEBUG, FUNC + "body lenght ok: " + toString(request.getBody().length()));
         // if (checkReturn(target_location, _code, _location))
         //     return (1);
 
@@ -368,39 +372,40 @@ int    Response::_handleTarget()
         //     }
 
         // }
-		debugPrint("[Response::_handleTarget] _target_file before directory check: " + _target_file, GREEN);
+		Log::Msg(DEBUG, FUNC + "_target_file before diectory check: " + _target_file);
         if (_isDirectory(_target_file))
         {
-			debugPrint("[Response::_handleTarget] _target file is a directory.", YELLOW);
+			Log::Msg(DEBUG, FUNC + "_target_file is a directory.");
             if (_target_file[_target_file.length() - 1] != '/')
             {
-				debugPrint("[Response::_handleTarget] _target file does not end with /", YELLOW);
-                _status_code = 301; //moved permanently
+                Log::Msg(DEBUG, FUNC + "_target file does not end with /");
+			    _status_code = 301; //moved permanently
                 _location = request.getPath() + "/";
                 return (1);
             }
             if (!target_location.getIndex().empty())
 			{
-				debugPrint("[Response::_handleTarget] target_location has index defined.", YELLOW);
-                _target_file += target_location.getIndex()[0]; //hardcoded index index.html
+                Log::Msg(DEBUG, FUNC + "target_location has index defined.");
+				_target_file += target_location.getIndex()[0]; //hardcoded index index.html
 				cout << "TEST: LOCATION _target_file after index: " << _target_file << endl;
 			}
             else
             {
-				debugPrint("[Response::_handleTarget] target_location has no index defined, using server index", YELLOW);
+				Log::Msg(DEBUG, FUNC + "target_location has no index defined, using server index.");
 				_target_file += _server.getIndex()[0]; //hardcoded index index.html 
-				debugPrint("[Response::_handleTarget] _target_file after index: " + _target_file, YELLOW);
+
+				Log::Msg(DEBUG, FUNC + "_target_file after index: " + _target_file);
 			}
 			//Index appended, now check if the file exists
             if (!_fileExists(_target_file))
             {
-				debugPrint("[Response::_handleTarget] _target_file does not exist.", RED);
+				Log::Msg(DEBUG, FUNC + "_target_file does not exist.");
                 if (target_location.getAutoindex())
                 {
-					debugPrint("[Response::_handleTarget] autoindex is on.", RED);
+					Log::Msg(DEBUG, FUNC + "autoindex is on.");
                     _target_file.erase(_target_file.find_last_of('/') + 1);
                     _auto_index = true;
-					debugPrint("[Response::_handleTarget] autoindex turned on in Response: " + toString(_auto_index), RED);
+					Log::Msg(DEBUG, FUNC + "autoindex turned on in Response: " + toString(_auto_index));
                     return (0);
                 }
                 else
@@ -426,11 +431,11 @@ int    Response::_handleTarget()
     else
     {
         _target_file = _combinePaths(_server.getRoot(), request.getPath(), "");
-		debugPrint("[Response::_handleTarget] location not found" + _target_file, GREEN);
+		Log::Msg(DEBUG, FUNC + "location not found" + _target_file);
         if (_isDirectory(_target_file))
         {
-			debugPrint("[Response::_handleTarget()] _target_file is a directory.", YELLOW);
-            if (_target_file[_target_file.length() - 1] != '/')
+            Log::Msg(DEBUG, FUNC + "_target_file is a directory.");
+			if (_target_file[_target_file.length() - 1] != '/')
             {
                 _status_code = 301; // 301 Moved Permanently
                 _location = request.getPath() + "/";
@@ -447,7 +452,7 @@ int    Response::_handleTarget()
 			// "/var/www/html/example/index.html" .
             if (_isDirectory(_target_file))
             {
-				debugPrint("[Response::_handleTarget()] _target_file is a directory - second test.", YELLOW);
+				Log::Msg(DEBUG, FUNC + "_target_file is a directory - second test.");
                 _status_code = 301;
                 _location = _combinePaths(request.getPath(), _server.getIndex()[0], "");
                 if(_location[_location.length() - 1] != '/')
@@ -456,7 +461,7 @@ int    Response::_handleTarget()
             }
         }
     }
-	debugPrint("[Response::_handleTarget()] RETURN: " + _target_file, GREEN);
+	Log::Msg(DEBUG, FUNC + "RETURN: " + _target_file);
     return (0);
 }
 
@@ -577,9 +582,11 @@ void	Response::buildResponse()
             _status_code = 200;
 		_response_body_str = _buildAutoindex(_target_file);
 		_status_code = 200;
-		debugPrint("[Response::buildResponse()] Autoindex build as response", RED);
+		Log::Msg(DEBUG, FUNC + "Autoindex build as response");
     }
-	debugPrint("[Response::buildResponse()] setting status line and headers.", GREEN);
+	
+	Log::Msg(DEBUG, FUNC + "setting status line and headers.");
+	//debugPrint("[Response::buildResponse()] setting status line and headers.", GREEN);
     _setStatusLine();
     _setHeaders(); // + body test content if it works
     if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
@@ -694,6 +701,7 @@ int    Response::_buildBody()
             _status_code = 404;
             return (1);
         }
+
         if (remove(_target_file.c_str()) != 0 )
         {
             _status_code = 500;

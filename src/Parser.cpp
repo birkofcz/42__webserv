@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/06 15:58:29 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/14 14:06:30 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,7 @@ void Parser::parseFile(const string& path)
 	// --- --- 
 	if (!file.good())
 	{
-		print("Error opening file", RED, 2);
+		Log::Msg(ERROR, "Error opening config file: " + path);
 		file.close();
 		return;
 	}
@@ -286,7 +286,21 @@ void Parser::parseFile(const string& path)
 	Server currentServer;
 	Location currentLocation;
 
-	cout << YELLOW << "\n[PARSING CONFIG FILE ... ]" << RESET << endl << endl;
+	//open file for parsing log
+	std::fstream plog;
+
+	plog.open("logs/parser_log.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+	if (!plog.is_open())
+	{
+		Log::Msg(ERROR, "Error opening parser log file");
+		return;
+	}
+	//set strings for coloring
+
+
+	//cout << YELLOW << "\n[PARSING CONFIG FILE ... ]" << RESET << endl << endl;
+	plog << endl << Log::TimeStamp() << endl;
+	plog << "PARSING CONFIG FILE: " + path << endl << endl;
 
 	std::stack<string> blockStack; 
 	while (std::getline(file, line))
@@ -304,7 +318,8 @@ void Parser::parseFile(const string& path)
 			if (line.find("server {") != string::npos)
 			{
 				blockStack.push("server");
-				cout << YELLOW << "Found server { at depth " << blockDepth << RESET << endl;
+				//cout << YELLOW << "Found server { at depth " << blockDepth << RESET << endl;
+				plog << "Found server { at depth " << blockDepth << endl;
 				inServerBlock = true;
 				server_count++;
 				std::stringstream ss;
@@ -314,7 +329,8 @@ void Parser::parseFile(const string& path)
 			else if (line.find("location") != string::npos && inServerBlock)
 			{
 				blockStack.push("location");
-				cout << YELLOW << "\tFound location { at depth " << blockDepth << RESET << endl;
+				//cout << YELLOW << "\tFound location { at depth " << blockDepth << RESET << endl;
+				plog << "\tFound location { at depth " << blockDepth << endl;
 				inLocationBlock = true;
 				currentLocation = Location();
 				currentLocation.setPath(parseLocationPath(line));
@@ -329,13 +345,15 @@ void Parser::parseFile(const string& path)
 			
 				if (currentBlock == "location")
 				{
-					cout << RED << "\tFound } at depth " << blockDepth << " - ending location block ^" << RESET << endl;
+					//cout << RED << "\tFound } at depth " << blockDepth << " - ending location block ^" << RESET << endl;
+					plog << "\tFound } at depth " << blockDepth << " - ending location block ^" << endl;
 					inLocationBlock = false;
 					currentServer.addLocation(currentLocation);
 				}
 				else if (currentBlock == "server")
 				{
-					cout << RED << "Found } at depth " << blockDepth << " - ending server block ^" << RESET << endl;
+					//cout << RED << "Found } at depth " << blockDepth << " - ending server block ^" << RESET << endl;
+					plog << "Found } at depth " << blockDepth << " - ending server block ^" << endl;
 					inServerBlock = false;
 					_servers.push_back(currentServer);
 					currentServer = Server(); // Reset for the next server block
@@ -348,61 +366,71 @@ void Parser::parseFile(const string& path)
 		{
 			if (line.find("listen") != string::npos)
 				{
-					print("config[server]: Found listen directive", GREEN);
+					//print("config[server]: Found listen directive", GREEN);
+					plog << "config[server]: Found listen directive" << endl;
 					std::vector<int> ports = parsePorts(line);
 					currentServer.setPorts(ports);
 				}
 				else if (line.find("server_name") != string::npos)
 				{
-					print("config[server]: Found server_name directive", GREEN);
+					//print("config[server]: Found server_name directive", GREEN);
+					plog << "config[server]: Found server_name directive" << endl;
 					std::vector<string> server_names = parseServerNames(line);
 					currentServer.setServerNames(server_names);
 				}
 				else if (line.find("root") != string::npos)
 				{
-					print("config[server]: Found root directive", GREEN);
+					//print("config[server]: Found root directive", GREEN);
+					plog << "config[server]: Found root directive" << endl;
 					string root = parseRoot(line);
 					currentServer.setRoot(root);
 				}
 				else if (line.find("autoindex") != string::npos)
 				{
-					print("config[server]: Found autoindex directive", GREEN);
+					//print("config[server]: Found autoindex directive", GREEN);
+					plog << "config[server]: Found autoindex directive" << endl;
 					string autoindex = parseRoot(line);
 					currentServer.setAutoindex(autoindex);
 				}
 				else if (line.find("index") != string::npos)
 				{
-					print("config[server]: Found index directive", GREEN);
+					//print("config[server]: Found index directive", GREEN);
+					plog << "config[server]: Found index directive" << endl;
 					std::vector<string> index = parseIndex(line);
 					currentServer.setIndex(index);
 				}
 				else if (line.find("error_page") != string::npos)
 				{
-					print("config[server]: Found error_page directive", GREEN);
+					//print("config[server]: Found error_page directive", GREEN);
+					plog << "config[server]: Found error_page directive" << endl;
 					std::map<int, string> error_pages = parseErrorPages(line);
 					currentServer.setErrorPages(error_pages);
 				}
 				else if (line.find("client_max_body_size") != string::npos)
 				{
-					print("config[server]: Found client_max_body_size directive", GREEN);
+					//print("config[server]: Found client_max_body_size directive", GREEN);
+					plog << "config[server]: Found client_max_body_size directive" << endl;
 					size_t client_max_body_size = parseClientMaxBodySize(line);
 					currentServer.setClientMaxBodySize(client_max_body_size);
 				}
 				else if (line.find("allowed_methods") != string::npos)
 				{
-					print("config[server]: Found allowed_methods directive", GREEN);
+					//print("config[server]: Found allowed_methods directive", GREEN);
+					plog << "config[server]: Found allowed_methods directive" << endl;
 					std::vector<int> allowed_methods = parseAllowedMethods(line);
 					currentServer.setAllowedMethods(allowed_methods);
 				}
 				else if (line.find("upload_path") != string::npos)
 				{
-					print("config[server]: Found upload_path directive", GREEN);
+					//print("config[server]: Found upload_path directive", GREEN);
+					plog << "config[server]: Found upload_path directive" << endl;
 					string upload_path = parseRoot(line);
 					currentServer.setUploadPath(upload_path);
 				}
 				else if (line.find("cgi") != string::npos)
 				{
-					print("config[server]: Found cgi directive", GREEN);
+					//print("config[server]: Found cgi directive", GREEN);
+					plog << "config[server]: Found cgi directive" << endl;
 					std::map<string, string> cgi = parseCgi(line);
 					currentServer.setCgi(cgi);
 				}
@@ -411,49 +439,57 @@ void Parser::parseFile(const string& path)
 		{
 			if (line.find("root") != string::npos)
 			{
-				print("\tconfig[location]: Found root directive", GREEN);
+				//print("\tconfig[location]: Found root directive", GREEN);
+				plog << "\tconfig[location]: Found root directive" << endl;
 				string root = parseRoot(line);
 				currentLocation.setRoot(root);
 			}
 			else if (line.find("autoindex") != string::npos)
 			{
-				print("\tconfig[location]: Found autoindex directive", GREEN);
+				//print("\tconfig[location]: Found autoindex directive", GREEN);
+				plog << "\tconfig[location]: Found autoindex directive" << endl;
 				string autoindex = parseRoot(line);
 				currentLocation.setAutoindex(autoindex);
 			}
 			else if (line.find("index") != string::npos)
 			{
-				print("\tconfig[location]: Found index directive", GREEN);
+				//print("\tconfig[location]: Found index directive", GREEN);
+				plog << "\tconfig[location]: Found index directive" << endl;
 				std::vector<string> index = parseIndex(line);
 				currentLocation.setIndex(index);
 			}
 			else if (line.find("allowed_methods") != string::npos)
 			{
-				print("\tconfig[location]: Found allowed_methods directive", GREEN);
+				// print("\tconfig[location]: Found allowed_methods directive", GREEN);
+				plog << "\tconfig[location]: Found allowed_methods directive" << endl;
 				std::vector<int> allowed_methods = parseAllowedMethods(line);
 				currentLocation.setAllowedMethods(allowed_methods);
 			}
 			else if (line.find("error_page") != string::npos)
 			{
-				print("\tconfig[location]: Found error_page directive", GREEN);
+				// print("\tconfig[location]: Found error_page directive", GREEN);
+				plog << "\tconfig[location]: Found error_page directive" << endl;
 				std::map<int, string> error_pages = parseErrorPages(line);
 				currentLocation.setErrorPages(error_pages);
 			}
 			else if (line.find("client_max_body_size") != string::npos)
 			{
-				print("\tconfig[location]: Found client_max_body_size directive", GREEN);
+				// print("\tconfig[location]: Found client_max_body_size directive", GREEN);
+				plog << "\tconfig[location]: Found client_max_body_size directive" << endl;
 				size_t client_max_body_size = parseClientMaxBodySize(line);
 				currentLocation.setClientMaxBodySize(client_max_body_size);
 			}
 			else if (line.find("upload_path") != string::npos)
 			{
-				print("\tconfig[location]: Found upload_path directive", GREEN);
+				// print("\tconfig[location]: Found upload_path directive", GREEN);
+				plog << "\tconfig[location]: Found upload_path directive" << endl;
 				string upload_path = parseRoot(line);
 				currentLocation.setUploadPath(upload_path);
 			}
 			else if (line.find("cgi") != string::npos)
 			{
-				print("\tconfig[location]: Found cgi directive", GREEN);
+				// print("\tconfig[location]: Found cgi directive", GREEN);
+				plog << "\tconfig[location]: Found cgi directive" << endl;
 				std::map<string, string> cgi = parseCgi(line);
 				currentLocation.setCgi(cgi);
 			}
@@ -467,10 +503,8 @@ void Parser::parseFile(const string& path)
 	}
 
 	file.close();
+	Log::Msg(INFO, "Config file parsed successfully");
 }
-
-
-
 
 //////// --- GETTERS --- ////////
 std::vector<Server>

@@ -1,0 +1,56 @@
+
+[16.01.2024][16:20:26]
+PARSING CONFIG FILE: config/www.conf
+
+Found server { at depth 1
+config[server]: Found listen directive
+config[server]: Found server_name directive
+config[server]: Found root directive
+config[server]: Found index directive
+config[server]: Found cgi directive
+config[server]: Found client_max_body_size directive
+	Found location { at depth 2
+	config[location]: Found allowed_methods directive
+	config[location]: Found upload_path directive
+	config[location]: Found error_page directive
+	Found } at depth 2 - ending location block ^
+	Found location { at depth 2
+	config[location]: Found allowed_methods directive
+	config[location]: Found autoindex directive
+	config[location]: Found cgi directive
+	Found } at depth 2 - ending location block ^
+Found } at depth 1 - ending server block ^
+Found server { at depth 1
+config[server]: Found listen directive
+config[server]: Found server_name directive
+config[server]: Found root directive
+config[server]: Found index directive
+Found } at depth 1 - ending server block ^
+
+[16.01.2024][16:27:42]
+PARSING CONFIG FILE: config/www.conf
+
+Found server { at depth 1
+config[server]: Found listen directive
+config[server]: Found server_name directive
+config[server]: Found root directive
+config[server]: Found index directive
+config[server]: Found cgi directive
+config[server]: Found client_max_body_size directive
+	Found location { at depth 2
+	config[location]: Found allowed_methods directive
+	config[location]: Found upload_path directive
+	config[location]: Found error_page directive
+	Found } at depth 2 - ending location block ^
+	Found location { at depth 2
+	config[location]: Found allowed_methods directive
+	config[location]: Found autoindex directive
+	config[location]: Found cgi directive
+	Found } at depth 2 - ending location block ^
+Found } at depth 1 - ending server block ^
+Found server { at depth 1
+config[server]: Found listen directive
+config[server]: Found server_name directive
+config[server]: Found root directive
+config[server]: Found index directive
+Found } at depth 1 - ending server block ^
