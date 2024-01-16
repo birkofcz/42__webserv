@@ -1,0 +1,155 @@
+void ServerManager::readRequest(const int& fd, Client& c)
+{
+	char buffer[MESSAGE_BUFFER];
+    std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
+    size_t total_bytes_read = 0;
+	int bytes_read = 0;
+
+	while (total_bytes_read < MESSAGE_BUFFER)
+    {
+        bytes_read = read(fd, buffer + total_bytes_read, MESSAGE_BUFFER - total_bytes_read);	
+		cout << endl << "temp BUFFER: "<< endl << buffer << endl;
+		cout << endl << "bytes_read: "<< endl <<bytes_read  << endl;
+        if (bytes_read == 0)
+        {
+            // Client closed the connection
+            break;
+        }
+        else if (bytes_read < 0)
+        {
+            // Read error occurred
+            break;
+        }
+        
+        total_bytes_read += bytes_read;
+    } 
+	debugFile << "\nBUFFER BEFORE feed: \n" << buffer << "\n";
+	cout << endl << "BUFFER BEFORE feed: "<< endl << buffer << endl;
+   
+
+	if (total_bytes_read != 0)
+    {
+        // Data was successfully read.
+        c.request.feed(buffer, total_bytes_read);
+        memset(buffer, 0, sizeof(buffer));
+    }
+ 	debugFile << "PRESENTING REQUEST data: \n" << c.request << "\n";
+    debugFile.close();
+
+	// assignServer(c);
+	c.clientBuildResponse();
+
+
+	// if (c.request.parsingCompleted() || c.request.errorCode()) {
+	// 		assignServer(c);
+	// 		Logger::logMsg(CYAN, CONSOLE_OUTPUT, "Request Received From Socket %d, Method=<%s>  URI=<%s>",
+	// 					fd, c.request.getMethodStr().c_str(), c.request.getPath().c_str());
+	// 		c.buildResponse();
+	// 		if (c.response.getCgiState()) {
+	// 			handleReqBody(c);
+	// 			// Add logic to wait for pipe events if needed
+	// 		}
+	// 	}
+	
+}
+
+
+
+
+
+ERRORS:
+
+temp BUFFER: 
+POST /testloc1/ HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: multipart/form-data; boundary=---------------------------8617409118601722482600775143
+Content-Length: 84510
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+-----------------------------8617409118601722482600775143
+Content-Disposition: form-data; name="file"; filename="Screenshot from 2023-02-05 15-52-03.png"
+Content-Type: image/png
+
+�PNG
+�
+
+
+bytes_read: 
+65536
+
+temp BUFFER: 
+POST /testloc1/ HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: multipart/form-data; boundary=---------------------------8617409118601722482600775143
+Content-Length: 84510
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+-----------------------------8617409118601722482600775143
+Content-Disposition: form-data; name="file"; filename="Screenshot from 2023-02-05 15-52-03.png"
+Content-Type: image/png
+
+�PNG
+�
+
+
+bytes_read: 
+-1
+
+RESPONSE SEND:
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 0
+Connection: keep-alive
+Server: [TS]erver
+Date: Wed, 10 Jan 2024 17:23:21 GMT
+
+
+Successful SEND RESPONSE 
+
+temp BUFFER: 
+��NT�����H+��v�j��k%��<��17�������Y8!��ӛ�T���>��nW��&
+                                                     s��Ύu�_`������0�hzǱ�v`,\7.��w�cع�m�;��L���͓	�2a2{p������H�
+      ���MĨ�[/�Ne؏!�9��E��+b��g�v
+                                 �����lL
+                                        2X�y7׭��uSs��Ӏ��������K�wF:�n�J�Q;
+                                                                          ���UW�]1ᑄ�4�������F�޷�uFDTG}�P�停�	�=�j},��ur>�=V����_�
+
+bytes_read: 
+19624
+
+temp BUFFER: 
+��NT�����H+��v�j��k%��<��17�������Y8!��ӛ�T���>��nW��&
+                                                     s��Ύu�_`������0�hzǱ�v`,\7.��w�cع�m�;��L���͓	�2a2{p������H�
+      ���MĨ�[/�Ne؏!�9��E��+b��g�v
+                                 �����lL
+                                        2X�y7׭��uSs��Ӏ��������K�wF:�n�J�Q;
+                                                                          ���UW�]1ᑄ�4�������F�޷�uFDTG}�P�停�	�=�j},��ur>�=V����_�
+
+bytes_read: 
+-1
+
+
