@@ -6,21 +6,19 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:28:05 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 14:07:58 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/16 16:49:04 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Log.hpp"
 
+bool Log::out_console = false;
+bool Log::out_file = false;
 
-bool	Log::out_console = false;
-bool	Log::out_file = false;
-
-bool	Log::type_info = false;
-bool	Log::type_warning = false;
-bool	Log::type_error = false;
-bool	Log::type_debug = false;
-
+bool Log::type_info = false;
+bool Log::type_warning = false;
+bool Log::type_error = false;
+bool Log::type_debug = false;
 
 void Log::Msg(LogType type, string msg)
 {
@@ -29,22 +27,22 @@ void Log::Msg(LogType type, string msg)
 	// Determine the message based on the log type
 	switch (type)
 	{
-		case INFO:
-			if (type_info)
-				message = TimeStamp() + " [INFO] " + msg;
-			break;
-		case WARNING:
-			if (type_warning)
-				message = TimeStamp() + " [WARNING] " + msg;
-			break;
-		case ERROR:
-			if (type_error)
-				message = TimeStamp() + " [ERROR] " + msg;
-			break;
-		case DEBUG:
-			if (type_debug)
-				message = TimeStamp() + " [DEBUG] " + msg;
-			break;
+	case INFO:
+		if (type_info)
+			message = TimeStamp() + " [INFO] " + msg;
+		break;
+	case WARNING:
+		if (type_warning)
+			message = TimeStamp() + " [WARNING] " + msg;
+		break;
+	case ERROR:
+		if (type_error)
+			message = TimeStamp() + " [ERROR] " + msg;
+		break;
+	case DEBUG:
+		if (type_debug)
+			message = TimeStamp() + " [DEBUG] " + msg;
+		break;
 	}
 
 	// Print to console if enabled
@@ -72,11 +70,16 @@ Log::_DetermineColor(LogType type)
 {
 	switch (type)
 	{
-		case INFO:		return GREEN;
-		case WARNING:	return YELLOW;
-		case ERROR:		return RED;
-		case DEBUG:		return BLUE;
-		default:		return NONECOLOR;
+	case INFO:
+		return GREEN;
+	case WARNING:
+		return YELLOW;
+	case ERROR:
+		return RED;
+	case DEBUG:
+		return BLUE;
+	default:
+		return NONECOLOR;
 	}
 }
 
@@ -93,9 +96,8 @@ Log::TimeStamp()
 	string year(toString(ltm->tm_year + 1900));
 
 	std::stringstream ss;
-	//add date:
+	// add date:
 	ss << "[" << day << "." << month << "." << year << "]";
 	ss << "[" << hour << ":" << minute << ":" << second << "]";
 	return (ss.str());
-	
 }
