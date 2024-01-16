@@ -21,7 +21,7 @@
 
 using std::vector;
 #define MAX_EVENTS 64
-#define MESSAGE_BUFFER 1000000
+#define MESSAGE_BUFFER 5000000
 
 ServerManager::ServerManager()
 {
@@ -104,7 +104,7 @@ allowing the program to take appropriate actions.
 void ServerManager::runServers()
 {
 	struct epoll_event serverEvent;
-	serverEvent.events = EPOLLIN | EPOLLOUT | EPOLLET; // Edge-triggered mode
+	serverEvent.events = EPOLLIN | EPOLLOUT; // Edge-triggered mode
 	for (vector<Server>::iterator it = _servers.begin(); it != _servers.end(); ++it)
 	{
 		if (listen(it->getFd(), 512) == -1)
@@ -142,7 +142,7 @@ void ServerManager::runServers()
 		{
 			// There is incoming data from a client.
 			// Client sends an HTTP request (e.g., GET, POST)for example.
-			if (triggeredEvents[i].events & EPOLLIN)
+			if (triggeredEvents[i].events & (EPOLLIN | EPOLLHUP | EPOLLERR))
 			{
 				int fd = triggeredEvents[i].data.fd;
 				if (_servers_map.count(fd))
@@ -153,10 +153,10 @@ void ServerManager::runServers()
 
 			// The socket's send buffer is ready to accept data, and we can write to it without blocking.
 			// Example: After processing the request, the server may generate an HTTP response.
-			if (triggeredEvents[i].events & EPOLLOUT)
+			if (triggeredEvents[i].events & (EPOLLOUT | EPOLLHUP | EPOLLERR))
 			{
 				int fd = triggeredEvents[i].data.fd;
-				if (_clients_map.count(fd))
+				if (_clients_map.count(fd) && !_clients_map[fd].response._response_content.empty())
 				{
 					// int cgi_state = _clients_map[fd].response.getCgiState();
 					// if (cgi_state == 1 && FD_ISSET(_clients_map[fd].response._cgi_obj.pipe_in[1], &_write_fd_pool))
@@ -176,7 +176,12 @@ void ServerManager::runServers()
 void ServerManager::sendResponse(const int& fd, Client& c)
 {
 	cout << endl << "SENDING RESPONSE data: \n" << c.response._response_content << endl;
-    ssize_t bytes_written = write(fd, c.response._response_content.c_str(), c.response._response_content.size());
+
+	std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
+    debugFile << "SENDING RESPONSE data: \n" << c.response._response_content << "\n";
+    debugFile.close();
+
+    ssize_t bytes_written = send(fd, c.response._response_content.c_str(), c.response._response_content.size(), MSG_DONTWAIT);
     if (bytes_written < 0)
     {
         perror("write");
@@ -216,7 +221,7 @@ void ServerManager::acceptNewConnection(Server &serv)
 
 	// add client to epoll structure
 	struct epoll_event client_event;
-    client_event.events = EPOLLIN | EPOLLOUT | EPOLLET; // Edge-triggered mode
+    client_event.events = EPOLLIN | EPOLLOUT; // Edge-triggered mode
     client_event.data.fd = client_sock;
     if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_sock, &client_event) == -1)
     {
@@ -256,9 +261,11 @@ void ServerManager::readRequest(const int& fd, Client& c)
 {
 	char buffer[MESSAGE_BUFFER];
 	int bytes_read = 0;
-	bytes_read = read(fd, buffer, MESSAGE_BUFFER);
+	bytes_read = recv(fd, buffer, MESSAGE_BUFFER, MSG_DONTWAIT);
 	cout << endl << "BUFFER BEFORE feed: "<< endl << buffer << endl;
 
+	std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
+    debugFile << "\nBUFFER BEFORE feed: \n" << buffer << "\n";
 	if (bytes_read == 0)
 	{
 		// Client closed the connection
@@ -280,7 +287,10 @@ void ServerManager::readRequest(const int& fd, Client& c)
 		c.request.feed(buffer, bytes_read);
 		memset(buffer, 0, sizeof(buffer));
 	}
-	cout << "\nPRESENTING REQUEST data: \n" << c.request << endl;
+
+    debugFile << "PRESENTING REQUEST data: \n" << c.request << "\n";
+    debugFile.close();
+
 	// assignServer(c);
 	c.clientBuildResponse();
 
