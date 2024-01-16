@@ -78,6 +78,8 @@ void	HttpRequest::setBody(std::string body)
 	_body_str = body;
 }
 
+
+
 void	HttpRequest::setHeader(std::string &header_name, std::string &value)
 {
 	static const char* spaces = " \t";
@@ -183,6 +185,7 @@ void HttpRequest::feed(char *data, size_t size)
 	static std::stringstream s;
 	_state = Request_Line;
 	// int j = 0;
+	std::ofstream debugFile("debug_output.txt", std::ios::app);  // for debug log
 
 	for (size_t i = 0; i < size; ++i)
 	{
@@ -708,16 +711,23 @@ void HttpRequest::feed(char *data, size_t size)
 			}
 			case Parsing_Done:
 			{
+				debugFile << "PARSING DONE! \n"<< "\n";
+				debugFile.close(); 
 				return;
 			}
 		} // end of switch
 		_storage += character;
+
+		// debugFile << "_storage_: \n" << _storage << "\n"; // for debug
+		
 	}
 	if (_state == Parsing_Done)
 	{
 
 		std::cout << "TEST:FOR LOOP of request parser is done _bodz in bytes are appended." << std::endl;
+
 		_body_str.append((char *)_body.data(), _body.size());
+		debugFile << "__body_str after PARSING DONE: \n" << _body_str << "\n";
 		// vypada ze nikdy nenastane, zceknout a pripadne dat do case
 	}
 }

@@ -161,7 +161,13 @@ inline std::ostream& operator<<(std::ostream& os, const HttpRequest& request) {
         os << it->first << ": " << it->second << std::endl;
     }
 	os << "_boundary:" << request._boundary << std::endl;
-    os << "Body: " << request._body_str << std::endl;
+    os << "Body str: " << request._body_str << std::endl;
+	os << "Body vector: ";
+  	for (std::vector<uint8_t>::const_iterator it = request._body.begin(); it != request._body.end(); ++it) {
+    uint8_t byte = *it;
+    os << static_cast<char>(byte) << " ";
+}
+    os << std::endl;
 
     return os;
 }

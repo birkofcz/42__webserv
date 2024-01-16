@@ -389,7 +389,8 @@ int    Response::_handleTarget()
             {
 				debugPrint("[Response::_handleTarget] target_location has no index defined, using server index", YELLOW);
 				_target_file += _server.getIndex()[0]; //hardcoded index index.html 
-				debugPrint("[Response::_handleTarget] _target_file after index: " + _target_file, YELLOW);			}
+				debugPrint("[Response::_handleTarget] _target_file after index: " + _target_file, YELLOW);
+			}
 			//Index appended, now check if the file exists
             if (!_fileExists(_target_file))
             {
@@ -679,29 +680,27 @@ int    Response::_buildBody()
 				}
 			}
 			file.write(body.c_str(), body.length());
-			return (0);
 		}
 		else
         {
             file.write(request.getBody().c_str(), request.getBody().length());
 			std::cout << "Not Multiform: File successfully uploaded." << std::endl;
-			return (0);
         }
     }
-    // else if (request.getMethod() == DELETE)
-    // {
-    //     if (!fileExists(_target_file))
-    //     {
-    //         _status_code = 404;
-    //         return (1);
-    //     }
-    //     if (remove( _target_file.c_str() ) != 0 )
-    //     {
-    //         _status_code = 500;
-    //         return (1);
-    //     }
-    // }
-    _status_code = 200;
+    else if (request.getMethod() == DELETE)
+    {
+        if (!_fileExists(_target_file))
+        {
+            _status_code = 404;
+            return (1);
+        }
+        if (remove(_target_file.c_str()) != 0 )
+        {
+            _status_code = 500;
+            return (1);
+        }
+    }
+    _status_code = 200; //If the DELETE request has been successful, the server should respond with a 204 No Content status code.
     return (0);
 }
 

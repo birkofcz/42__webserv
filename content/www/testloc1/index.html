@@ -39,12 +39,43 @@
 			<button type="submit">Submit POST</button>
 		</form>
 
-		<form method="post" action="/delete-resource" onsubmit="return confirm('Are you sure you want to delete?');">
-            <label for="filename">Enter Filename:</label>
-            <input type="text" id="filename" name="filename" required>
-            <input type="hidden" name="_method" value="delete">
-            <button type="submit">Delete</button>
-        </form>
+		<form id="deleteForm">
+			<label for="directory">Directory:</label>
+			<input type="text" id="directory" name="directory" placeholder="http://localhost:8000/testloc1/uploads/">
+		
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+		
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = document.getElementById("directory").value.trim();
+				var filename = document.getElementById("filename").value.trim();
+		
+				// Ensure the directory ends with a slash ("/")
+				if (directory && !directory.endsWith("/")) {
+					directory += "/";
+				}
+		
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						alert("DELETE request successful");
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
 		
     </div>
 </body>
