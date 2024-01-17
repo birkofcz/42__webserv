@@ -641,7 +641,8 @@ int    Response::_buildBody()
     if (_cgi || _auto_index)
         return (0);
     if (_status_code)
-        return (0);
+		return (0);
+	Log::Msg(DEBUG, FUNC + _target_file);
     if (request.getMethod() == GET || request.getMethod() == HEAD)
     {
         if (_readFile())
@@ -696,8 +697,10 @@ int    Response::_buildBody()
     }
     else if (request.getMethod() == DELETE)
     {
+		Log::Msg(DEBUG, FUNC + " file at: " + _target_file);
         if (!_fileExists(_target_file))
         {
+			Log::Msg(DEBUG, FUNC + " file doesnt exist at: " + _target_file);
             _status_code = 404;
             return (1);
         }

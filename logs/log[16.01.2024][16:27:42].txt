@@ -1,2 +1,0 @@
-[16.01.2024][16:27:42] [INFO] Config file parsed successfully
-[16.01.2024][16:27:42] [INFO] Server(s) started
