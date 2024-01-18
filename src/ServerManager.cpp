@@ -158,6 +158,7 @@ void ServerManager::runServers()
 				int fd = triggeredEvents[i].data.fd;
 				if (_clients_map.count(fd) && !_clients_map[fd].response._response_content.empty())
 				{
+					Log::Msg(DEBUG, FUNC + "sending response.");
 					// int cgi_state = _clients_map[fd].response.getCgiState();
 					// if (cgi_state == 1 && FD_ISSET(_clients_map[fd].response._cgi_obj.pipe_in[1], &_write_fd_pool))
 					// 	sendCgiBody(_clients_map[fd], _clients_map[fd].response._cgi_obj);
@@ -292,7 +293,12 @@ void ServerManager::readRequest(const int& fd, Client& c)
     debugFile.close();
 
 	// assignServer(c);
-	c.clientBuildResponse();
+	if (c.request.complete_flag || c.request.getErrorCode())
+	{
+		Log::Msg(DEBUG, FUNC + "Parsing completed or Error code setted");
+		c.clientBuildResponse();
+	}
+
 
 
 	// if (c.request.parsingCompleted() || c.request.errorCode()) {
@@ -305,7 +311,6 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	// 			// Add logic to wait for pipe events if needed
 	// 		}
 	// 	}
-	
 }
 
 

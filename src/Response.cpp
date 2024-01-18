@@ -185,10 +185,10 @@ std::string Response::_combinePaths(std::string p1, std::string p2, std::string 
 }
 
 
-// static void replaceAlias(Location &location, HttpRequest &request, std::string &target_file)
-// {
-//     target_file = combinePaths(location.getAlias(), request.getPath().substr(location.getPath().length()), "");
-// }
+// // static void replaceAlias(Location &location, HttpRequest &request, std::string &target_file)
+// // {
+// //     target_file = combinePaths(location.getAlias(), request.getPath().substr(location.getPath().length()), "");
+// // }
 
 void Response::_appendRoot(Location &location, HttpRequest &request)
 {
@@ -205,22 +205,22 @@ void Response::_appendRoot(Location &location, HttpRequest &request)
    _target_file = _combinePaths(root, request.getPath(), "");
 }
 
-// int Response::handleCgiTemp(std::string &location_key)
-// {
-//     std::string path;
-//     path = _target_file;
-//     _cgi_obj.clear();
-//     _cgi_obj.setCgiPath(path);
-//     _cgi = 1;
-//     if (pipe(_cgi_fd) < 0)
-//     {
-//         _code = 500;
-//         return (1);
-//     }
-//     _cgi_obj.initEnvCgi(request, _server.getLocationKey(location_key)); // + URI
-//     _cgi_obj.execute(this->_code);
-//     return (0);
-// }
+// // int Response::handleCgiTemp(std::string &location_key)
+// // {
+// //     std::string path;
+// //     path = _target_file;
+// //     _cgi_obj.clear();
+// //     _cgi_obj.setCgiPath(path);
+// //     _cgi = 1;
+// //     if (pipe(_cgi_fd) < 0)
+// //     {
+// //         _code = 500;
+// //         return (1);
+// //     }
+// //     _cgi_obj.initEnvCgi(request, _server.getLocationKey(location_key)); // + URI
+// //     _cgi_obj.execute(this->_code);
+// //     return (0);
+// // }
 
 // /* check a file for CGI (the extension is supported, the file exists and is executable) and run the CGI */
 // int        Response::handleCgi(std::string &location_key)
@@ -347,10 +347,10 @@ int    Response::_handleTarget()
         // if (checkReturn(target_location, _code, _location))
         //     return (1);
 
-		// if (target_location.getPath().find("cgi-bin") != std::string::npos)
-		// {
-        //     return (handleCgi(location_key));
-		// }
+		// // // if (target_location.getPath().find("cgi-bin") != std::string::npos)
+		// // // {
+		// // // 	return (_handleCgi(_location_key));
+		// // // }
 
         // if (!target_location.getAlias().empty())
         // {
@@ -467,9 +467,9 @@ int    Response::_handleTarget()
 
 bool Response::_reqError()
 {
-    if(request.errorCode())
+    if(request.getErrorCode())
 	{
-		_status_code = request.errorCode();
+		_status_code = request.getErrorCode();
 		return (1);
 	}
 	return (0);
@@ -566,7 +566,6 @@ Response::_buildAutoindex(string &path)
 
 void	Response::buildResponse()
 {
-	//_buildBody();
     if (_reqError() || _buildBody())
         _response_body_str = Error::buildErrorPage(_status_code, _location_key, _server);
     /* if (_cgi)
