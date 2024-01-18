@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/16 16:50:13 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/18 16:58:53 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ HttpRequest::HttpRequest()
 	_body_str = "";
 	_boundary = "";
 	_error_code = 0;
-	// _chunk_length = 0;
+	_chunk_length = 0;
 	_method_index = 1;
 	_state = Request_Line;
 	_fields_done_flag = false;
 	_body_flag = false;
 	_body_done_flag = false;
-	// _chunked_flag = false;
+	_chunked_flag = false;
 	_body_length = 0;
 	_storage = "";
 	_key_storage = "";
@@ -107,12 +107,12 @@ void        HttpRequest::_handle_headers()
         ss << _request_headers["content-length"];
         ss >> _body_length;
     }
-    // if ( _request_headers.count("transfer-encoding"))
-    // {
-    //     if (_request_headers["transfer-encoding"].find_first_of("chunked") != std::string::npos)
-    //         _chunked_flag = true;
-    //     _body_flag = true;
-    // }
+    if ( _request_headers.count("transfer-encoding"))
+    {
+        if (_request_headers["transfer-encoding"].find_first_of("chunked") != std::string::npos)
+            _chunked_flag = true;
+        _body_flag = true;
+    }
     if (_request_headers.count("host"))
     {
         size_t pos = _request_headers["host"].find_first_of(':');
@@ -506,12 +506,12 @@ void HttpRequest::feed(char *data, size_t size)
 					// if no body then parsing is completed.
 					if (_body_flag == true)
 					{
-						// if (_chunked_flag == true)
-						// 	_state = Chunked_Length_Begin;
-						// else
-						// {
+						if (_chunked_flag == true)
+							_state = Chunked_Length_Begin;
+						else
+						{
 							_state = Message_Body;
-						// }
+						}
 					}
 					else
 					{
@@ -544,8 +544,6 @@ void HttpRequest::feed(char *data, size_t size)
 					return;
 				}
 				break;
-				// if (!character allowed)
-				//  error;
 			}
 			case Field_Value:
 			{
@@ -574,132 +572,133 @@ void HttpRequest::feed(char *data, size_t size)
 				}
 				break;
 			}
-			// case Chunked_Length_Begin:
-			// {
-			// 	if (isxdigit(character) == 0)
-			// 	{
-			// 		_error_code = 400;
-			// 		std::cout << "Bad Character (Chunked_Length_Begin)" << std::endl;
-			// 		return;
-			// 	}
-			// 	s.str("");
-			// 	s.clear();
-			// 	s << character;
-			// 	s >> std::hex >> _chunk_length;
-			// 	if (_chunk_length == 0)
-			// 		_state = Chunked_Length_CR;
-			// 	else
-			// 		_state = Chunked_Length;
-			// 	continue;
-			// }
-			// case Chunked_Length:
-			// {
-			// 	if (isxdigit(character) != 0)
-			// 	{
-			// 		int temp_len = 0;
-			// 		s.str("");
-			// 		s.clear();
-			// 		s << character;
-			// 		s >> std::hex >> temp_len;
-			// 		_chunk_length *= 16;
-			// 		_chunk_length += temp_len;
-			// 	}
-			// 	else if (character == '\r')
-			// 		_state = Chunked_Length_LF;
-			// 	else
-			// 		_state = Chunked_Ignore;
-			// 	continue;
-			// }
-			// case Chunked_Length_CR:
-			// {
-			// 	if (character == '\r')
-			// 		_state = Chunked_Length_LF;
-			// 	else
-			// 	{
-			// 		_error_code = 400;
-			// 		std::cout << "Bad Character (Chunked_Length_CR)" << std::endl;
-			// 		return;
-			// 	}
-			// 	continue;
-			// }
-			// case Chunked_Length_LF:
-			// {
-			// 	if (character == '\n')
-			// 	{
-			// 		if (_chunk_length == 0)
-			// 			_state = Chunked_End_CR;
-			// 		else
-			// 			_state = Chunked_Data;
-			// 	}
-			// 	else
-			// 	{
-			// 		_error_code = 400;
-			// 		std::cout << "Bad Character (Chunked_Length_LF)" << std::endl;
-			// 		return;
-			// 	}
-			// 	continue;
-			// }
-			// case Chunked_Ignore:
-			// {
-			// 	if (character == '\r')
-			// 		_state = Chunked_Length_LF;
-			// 	continue;
-			// }
-			// case Chunked_Data:
-			// {
-			// 	_body.push_back(character);
-			// 	--_chunk_length;
-			// 	if (_chunk_length == 0)
-			// 		_state = Chunked_Data_CR;
-			// 	continue;
-			// }
-			// case Chunked_Data_CR:
-			// {
-			// 	if (character == '\r')
-			// 		_state = Chunked_Data_LF;
-			// 	else
-			// 	{
-			// 		_error_code = 400;
-			// 		std::cout << "Bad Character (Chunked_Data_CR)" << std::endl;
-			// 		return;
-			// 	}
-			// 	continue;
-			// }
-			// case Chunked_Data_LF:
-			// {
-			// 	if (character == '\n')
-			// 		_state = Chunked_Length_Begin;
-			// 	else
-			// 	{
-			// 		_error_code = 400;
-			// 		std::cout << "Bad Character (Chunked_Data_LF)" << std::endl;
-			// 		return;
-			// 	}
-			// 	continue;
-			// }
-			// case Chunked_End_CR:
-			// {
-			// 	if (character != '\r')
-			// 	{
-			// 		_error_code = 400;
-			// 		std::cout << "Bad Character (Chunked_End_CR)" << std::endl;
-			// 		return;
-			// 	}
-			// 	_state = Chunked_End_LF;
-			// 	continue;
-			// }
-			// case Chunked_End_LF:
-			// {
-			// 	if (character != '\n')
-			// 	{
-			// 		_error_code = 400;
-			// 		std::cout << "Bad Character (Chunked_End_LF)" << std::endl;
-			// 		return;
-			// 	}
-			// 	_body_done_flag = true;
-			// 	_state = Parsing_Done;
-			// 	continue;
-			// }
+			case Chunked_Length_Begin:
+			{
+				if (isxdigit(character) == 0) //checking if hexadecimal
+				{
+					_error_code = 400;
+					std::cout << "Bad Character (Chunked_Length_Begin)" << std::endl;
+					return;
+				}
+				s.str("");
+				s.clear();
+				s << character;
+				s >> std::hex >> _chunk_length;
+				if (_chunk_length == 0)
+					_state = Chunked_Length_CR;
+				else
+					_state = Chunked_Length;
+				continue;
+			}
+			case Chunked_Length:
+			{
+				if (isxdigit(character) != 0)
+				{
+					int temp_len = 0;
+					s.str("");
+					s.clear();
+					s << character;
+					s >> std::hex >> temp_len;
+					_chunk_length *= 16;
+					_chunk_length += temp_len;
+				}
+				else if (character == '\r')
+					_state = Chunked_Length_LF;
+				else
+					_state = Chunked_Ignore;
+				continue;
+			}
+			case Chunked_Length_CR:
+			{
+				if (character == '\r')
+					_state = Chunked_Length_LF;
+				else
+				{
+					_error_code = 400;
+					std::cout << "Bad Character (Chunked_Length_CR)" << std::endl;
+					return;
+				}
+				continue;
+			}
+			case Chunked_Length_LF:
+			{
+				if (character == '\n')
+				{
+					if (_chunk_length == 0)
+						_state = Chunked_End_CR;
+					else
+						_state = Chunked_Data;
+				}
+				else
+				{
+					_error_code = 400;
+					std::cout << "Bad Character (Chunked_Length_LF)" << std::endl;
+					return;
+				}
+				continue;
+			}
+			case Chunked_Ignore:
+			{
+				if (character == '\r')
+					_state = Chunked_Length_LF;
+				continue;
+			}
+			case Chunked_Data:
+			{
+				_body.push_back(character);
+				--_chunk_length;
+				if (_chunk_length == 0)
+					_state = Chunked_Data_CR;
+				continue;
+			}
+			case Chunked_Data_CR:
+			{
+				if (character == '\r')
+					_state = Chunked_Data_LF;
+				else
+				{
+					_error_code = 400;
+					std::cout << "Bad Character (Chunked_Data_CR)" << std::endl;
+					return;
+				}
+				continue;
+			}
+			case Chunked_Data_LF:
+			{
+				if (character == '\n')
+					_state = Chunked_Length_Begin;
+				else
+				{
+					_error_code = 400;
+					std::cout << "Bad Character (Chunked_Data_LF)" << std::endl;
+					return;
+				}
+				continue;
+			}
+			case Chunked_End_CR:
+			{
+				if (character != '\r')
+				{
+					_error_code = 400;
+					std::cout << "Bad Character (Chunked_End_CR)" << std::endl;
+					return;
+				}
+				_state = Chunked_End_LF;
+				continue;
+			}
+			case Chunked_End_LF:
+			{
+				if (character != '\n')
+				{
+					_error_code = 400;
+					std::cout << "Bad Character (Chunked_End_LF)" << std::endl;
+					return;
+				}
+				_body_done_flag = true;
+				_state = Parsing_Done;
+				complete_flag = true;
+				continue;
+			}
 			case Message_Body:
 			{
 				if (_body.size() < _body_length)
@@ -749,7 +748,7 @@ void    HttpRequest::clear()
 	_state = Request_Line;
 	_body_length = 0;
 	_error_code = 0;
-	// _chunk_length = 0x0;
+	_chunk_length = 0x0; //why 0x0 ??
 	_storage.clear();
 	_key_storage.clear();
 	_method_index = 1;
@@ -760,8 +759,7 @@ void    HttpRequest::clear()
 	_fields_done_flag = false;
 	_body_flag = false;
 	_body_done_flag = false;
-	// _complete_flag = false;
-	// _chunked_flag = false;
+	_chunked_flag = false;
 	_multiform_flag = false;
 }
 

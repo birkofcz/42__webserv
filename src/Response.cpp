@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/14 09:32:58 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/18 17:30:28 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,57 +222,61 @@ void Response::_appendRoot(Location &location, HttpRequest &request)
 // //     return (0);
 // // }
 
-// /* check a file for CGI (the extension is supported, the file exists and is executable) and run the CGI */
-// int        Response::handleCgi(std::string &location_key)
-// {
-//     std::string path;
-//     std::string exten;
-//     size_t      pos;
+/* check a file for CGI (the extension is supported, the file exists and is executable) and run the CGI */
+int        Response::handleCgi(std::string &location_key)
+{
+    std::string path;
+    std::string exten;
+    size_t      pos;
 
-//     path = this->request.getPath();
-//     if (path[0] && path[0] == '/')
-//         path.erase(0, 1);
-//     if (path == "cgi-bin")
-//         path += "/" + _server.getLocationKey(location_key)->getIndexLocation();
-//     else if (path == "cgi-bin/")
-//         path.append(_server.getLocationKey(location_key)->getIndexLocation());
+    path = this->request.getPath();
+	Log::Msg(DEBUG, FUNC + "path before formatting: " + path);
 
-//     pos = path.find(".");
-//     if (pos == std::string::npos)
-//     {
-//         _code = 501;
-//         return (1);
-//     }
-//     exten = path.substr(pos);
-//     if (exten != ".py" && exten != ".sh")
-//     {
-//         _code = 501;
-//         return (1);
-//     }
-//     if (ConfigFile::getTypePath(path) != 1)
-//     {
-//         _code = 404;
-//         return (1);
-//     }
-//     if (ConfigFile::checkFile(path, 1) == -1 || ConfigFile::checkFile(path, 3) == -1)
-//     {
-//         _code = 403;
-//         return (1);
-//     }
-//     if (isAllowedMethod(request.getMethod(), *_server.getLocationKey(location_key), _code))
-//         return (1);
-//     _cgi_obj.clear();
-//     _cgi_obj.setCgiPath(path);
-//     _cgi = 1;
-//     if (pipe(_cgi_fd) < 0)
-//     {
-//         _code = 500;
-//         return (1);
-//     }
-//     _cgi_obj.initEnv(request, _server.getLocationKey(location_key)); // + URI
-//     _cgi_obj.execute(this->_code);
-//     return (0);
-// }
+    if (path[0] && path[0] == '/')
+        path.erase(0, 1);
+    if (path == "cgi-bin")
+        path += "/" + _server.getLocationKey(location_key)->getIndex()[0];
+    else if (path == "cgi-bin/")
+        path.append(_server.getLocationKey(location_key)->getIndex()[0]);
+
+    pos = path.find(".");
+    if (pos == std::string::npos)
+    {
+        _status_code = 501;
+        return (1);
+    }
+    exten = path.substr(pos);
+    if (exten != ".py") // && exten != ".sh")
+    {
+        _status_code = 501;
+        return (1);
+    }
+
+	/////////////////////////////////////////
+    // if (ConfigFile::getTypePath(path) != 1)
+    // {
+    //     _code = 404;
+    //     return (1);
+    // }
+    // if (ConfigFile::checkFile(path, 1) == -1 || ConfigFile::checkFile(path, 3) == -1)
+    // {
+    //     _code = 403;
+    //     return (1);
+    // }
+    // if (isAllowedMethod(request.getMethod(), *_server.getLocationKey(location_key), _code))
+    //     return (1);
+    // _cgi_obj.clear();
+    // _cgi_obj.setCgiPath(path);
+    // _cgi = 1;
+    // if (pipe(_cgi_fd) < 0)
+    // {
+    //     _code = 500;
+    //     return (1);
+    // }
+    // _cgi_obj.initEnv(request, _server.getLocationKey(location_key)); // + URI
+    // _cgi_obj.execute(this->_code);
+    return (0);
+}
 
 
 /*
@@ -347,10 +351,10 @@ int    Response::_handleTarget()
         // if (checkReturn(target_location, _code, _location))
         //     return (1);
 
-		// // // if (target_location.getPath().find("cgi-bin") != std::string::npos)
-		// // // {
-		// // // 	return (_handleCgi(_location_key));
-		// // // }
+		if (target_location.getPath().find("cgi-bin") != std::string::npos)
+		{
+			return (handleCgi(_location_key));
+		}
 
         // if (!target_location.getAlias().empty())
         // {
@@ -383,7 +387,7 @@ int    Response::_handleTarget()
                 _location = request.getPath() + "/";
                 return (1);
             }
-            if (!target_location.getIndex().empty())
+            if (!target_location.getIndex().empty()) //nechybi tam [0] ?
 			{
                 Log::Msg(DEBUG, FUNC + "target_location has index defined.");
 				_target_file += target_location.getIndex()[0]; //hardcoded index index.html

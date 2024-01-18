@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/13 16:26:26 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/18 17:24:51 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ class Response
 		
 		// void buildErrorBody();
 		bool _reqError();
-		// int handleCgi(std::string &);
+		int handleCgi(std::string &);
 		// int handleCgiTemp(std::string &);
 
 		string _buildAutoindex(string &path);

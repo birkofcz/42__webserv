@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/16 16:49:26 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/18 17:21:56 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,16 @@ enum ParsingState
     Field_Name,
     Field_Value,
     Field_Value_End,
-    // Chunked_Length_Begin,
-    // Chunked_Length,
-    // Chunked_Ignore,
-    // Chunked_Length_CR,
-    // Chunked_Length_LF,
-    // Chunked_Data,
-    // Chunked_Data_CR,
-    // Chunked_Data_LF,
-    // Chunked_End_CR,
-    // Chunked_End_LF,
+    Chunked_Length_Begin,
+    Chunked_Length,
+    Chunked_Ignore,
+    Chunked_Length_CR,
+    Chunked_Length_LF,
+    Chunked_Data,
+    Chunked_Data_CR,
+    Chunked_Data_LF,
+    Chunked_End_CR,
+    Chunked_End_LF,
     Message_Body,
     Parsing_Done
 };
@@ -111,7 +111,7 @@ class HttpRequest
 		size_t _max_body_size;
 		size_t _body_length;
 		short _error_code;
-		// size_t _chunk_length;
+		size_t _chunk_length;
 		std::string _storage; // temporary buffer
 		std::string _key_storage; // temp buffer for key in the map
 		short _method_index;
@@ -124,7 +124,7 @@ class HttpRequest
 		bool _body_flag; //the request contains body
 		bool _body_done_flag;
 		
-		// bool _chunked_flag;
+		bool _chunked_flag;
 		bool _multiform_flag;
 
 		void _handle_headers();
