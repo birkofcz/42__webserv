@@ -14,6 +14,7 @@
 
 HttpRequest::HttpRequest()
 {
+	complete_flag = false;
 	_method_str[::GET] = "GET";
 	_method_str[::POST] = "POST";
 	_method_str[::DELETE] = "DELETE";
@@ -32,7 +33,6 @@ HttpRequest::HttpRequest()
 	_fields_done_flag = false;
 	_body_flag = false;
 	_body_done_flag = false;
-	// _complete_flag = false;
 	// _chunked_flag = false;
 	_body_length = 0;
 	_storage = "";
@@ -184,7 +184,7 @@ void HttpRequest::feed(char *data, size_t size)
 {
 	uint8_t character;
 	static std::stringstream s;
-	_state = Request_Line;
+
 	// int j = 0;
 	std::ofstream debugFile("debug_output.txt", std::ios::app);  // for debug log
 
@@ -516,6 +516,7 @@ void HttpRequest::feed(char *data, size_t size)
 					else
 					{
 						_state = Parsing_Done;
+						complete_flag = true;
 					}
 					continue;
 				}
@@ -707,6 +708,7 @@ void HttpRequest::feed(char *data, size_t size)
 				{
 					_body_done_flag = true;
 					_state = Parsing_Done;
+					complete_flag = true;
 				}
 				break;
 			}
@@ -729,12 +731,14 @@ void HttpRequest::feed(char *data, size_t size)
 
 		_body_str.append((char *)_body.data(), _body.size());
 		debugFile << "__body_str after PARSING DONE: \n" << _body_str << "\n";
+		//complete_flag = true;
 		// vypada ze nikdy nenastane, zceknout a pripadne dat do case
 	}
 }
 
 void    HttpRequest::clear()
 {
+	complete_flag = false;
 	_path.clear();
 	_query.clear();
 	_request_headers.clear();
@@ -753,7 +757,6 @@ void    HttpRequest::clear()
 	_ver_minor = 0;
 	_server_name.clear();
 	_body_str = "";
-
 	_fields_done_flag = false;
 	_body_flag = false;
 	_body_done_flag = false;
@@ -762,4 +765,4 @@ void    HttpRequest::clear()
 	_multiform_flag = false;
 }
 
-short HttpRequest::errorCode() { return (_error_code); }
+short HttpRequest::getErrorCode() { return (_error_code); }

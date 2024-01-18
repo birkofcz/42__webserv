@@ -93,9 +93,10 @@ class HttpRequest
 		// bool parsingCompleted();
 		// void printMessage();
 		void clear();
-		short errorCode();
+		short getErrorCode();
 		// bool keepAlive();
 		// void cutReqBody(int bytes);
+		bool complete_flag;
 
 	private:
 		std::string _path;
@@ -122,7 +123,7 @@ class HttpRequest
 		bool _fields_done_flag; //all headers done
 		bool _body_flag; //the request contains body
 		bool _body_done_flag;
-		// bool _complete_flag; // k cemu?
+		
 		// bool _chunked_flag;
 		bool _multiform_flag;
 
