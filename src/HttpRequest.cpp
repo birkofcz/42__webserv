@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/18 16:58:53 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/23 14:56:53 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ HttpRequest::HttpRequest()
 	_multiform_flag = false;
 	_ver_major = 0;
 	_ver_minor = 0;
+	_server_name = ""; //is it necessary?
+	_server_port = "";
 	
 }
 
@@ -65,6 +67,7 @@ const std::map<std::string, std::string>&	HttpRequest::getHeaders() const
 std::string		HttpRequest::getMethodStr() { return (_method_str[_method]); }
 std::string&	HttpRequest::getBody() { return (_body_str); }
 std::string		HttpRequest::getServerName() { return (this->_server_name); }
+std::string		HttpRequest::getServerPort() { return (this->_server_port); }
 bool			HttpRequest::getMultiformFlag() { return (this->_multiform_flag); }
 std::string&	HttpRequest::getBoundary() { return (this->_boundary); }
 
@@ -117,6 +120,7 @@ void        HttpRequest::_handle_headers()
     {
         size_t pos = _request_headers["host"].find_first_of(':');
         _server_name = _request_headers["host"].substr(0, pos);
+		_server_port = _request_headers["host"].substr(pos + 1);
     }
     if (_request_headers.count("content-type") && _request_headers["content-type"].find("multipart/form-data") != std::string::npos)
     {
@@ -755,6 +759,7 @@ void    HttpRequest::clear()
 	_ver_major = 0;
 	_ver_minor = 0;
 	_server_name.clear();
+	_server_port.clear();
 	_body_str = "";
 	_fields_done_flag = false;
 	_body_flag = false;
