@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 13:59:16 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/27 17:34:24 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,9 +137,17 @@ int main(int argc, char **argv)
 	parser.parseFile(argv[1]);
 	//parser.printServers();
 	
-	std::vector<Server> servers = parser.getServers();
-	Interface interface(parser, servers);
-	interface.start();
+	// std::vector<Server> servers = parser.getServers();
+	// Interface interface(parser, servers);
+	// interface.start();
+	ServerManager	manager;
+	manager.initServers(parser.getServers());
+	manager.runServers();
 
 	return 0;
 }
+
+/*
+pri ukonceni nutno close fd_epoll a fd of servers.
+Asi iterovat skrze server map...
+*/

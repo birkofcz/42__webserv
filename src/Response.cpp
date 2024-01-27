@@ -6,12 +6,13 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/23 17:31:55 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/27 18:49:24 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Response.hpp"
 #include "../include/general.hpp"
+#include <unistd.h>
 
 // Mime Response::_mime;
 
@@ -27,7 +28,7 @@ Response::Response()
 	_location = "";
 	_status_code = 0;
 	_cgi_flag = 0;
-	// _cgi_response_length = 0;
+	_cgi_response_length = 0;
 	_auto_index = false;
 }
 
@@ -45,7 +46,7 @@ Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
     _location = "";
     _status_code = 0;
     _cgi_flag = 0;
-    // _cgi_response_length = 0;
+    _cgi_response_length = 0;
     _auto_index = false;
 }
 void   Response::_contentType()
@@ -246,7 +247,7 @@ int        Response::handleCgi(std::string &location_key)
         return (1);
     }
     exten = path.substr(pos);
-    if (exten != ".py") // && exten != ".sh")
+    if (exten != ".py" && exten != ".sh")
     {
         _status_code = 501;
         return (1);
@@ -269,15 +270,52 @@ int        Response::handleCgi(std::string &location_key)
 	Log::Msg(DEBUG, FUNC + "extension: " + exten);
     cgi_object.clear();
 	cgi_object.setExtension(exten);
-    cgi_object.setCgiPath(path);
+    cgi_object.setCgiPath("content/www/" + path); //nutno predelat
     _cgi_flag = true;
-    if (pipe(_cgi_fd) == -1)
+
+	int cgi_stdin[2];
+    if (pipe(cgi_stdin) == -1)
     {
         _status_code = 500;
         return (1);
     }
+
+	if(request.getBodyLen() > 0)
+	{
+		ssize_t bytes_written = write(cgi_stdin[1], request.getBody().c_str(), request.getBodyLen());
+		if (bytes_written == -1)
+		{
+			perror("write to CGI stdin");
+			close(cgi_stdin[0]);
+            close(cgi_stdin[1]);
+			_status_code = 500;
+			return 1;
+			// Handle the error (e.g., log it, return an error code, etc.)
+		}
+		else if (bytes_written < static_cast<ssize_t>(request.getBodyLen()))
+		{
+			perror("pipe for stdin CGI full");
+				// Handle the case where not all data could be written
+				// This may happen if the pipe is full, and you need to handle it accordingly
+		}
+		close(cgi_stdin[1]);
+
+	}
+	else
+	{
+		close(cgi_stdin[0]);
+		close(cgi_stdin[1]);
+		cgi_stdin[0] = -1;	
+	}
+
+	// cgi_object.setCgiStdin(cgi_stdin[1]);
+    // if (pipe(_cgi_fd) == -1)
+    // {
+    //     _status_code = 500;
+    //     return (1);
+    // }
     cgi_object.initEnv(request, _server.getLocationKey(location_key)); // + URI
-    cgi_object.execute(this->_status_code);
+	cgi_object.execute(this->_status_code, cgi_stdin[0]);
     return (0);
 }
 
@@ -576,8 +614,8 @@ void	Response::buildResponse()
 {
     if (_reqError() || _buildBody())
         _response_body_str = Error::buildErrorPage(_status_code, _location_key, _server);
-    /* if (_cgi)
-       return ; */
+    if (_cgi_flag)
+       return ;
 	else if (_auto_index)
     {
 		if (_buildAutoindex(_target_file) == "")
@@ -643,6 +681,7 @@ int    Response::_buildBody()
         _status_code = 413;
         return (1);
     }
+	Log::Msg(DEBUG, FUNC + "before _handle target");
     if ( _handleTarget() )
         return (1);
     if (_cgi_flag || _auto_index)
@@ -763,7 +802,7 @@ void   Response::clear()
     _location.clear();
     _status_code = 0;
     _cgi_flag = 0;
-    // _cgi_response_length = 0;
+    _cgi_response_length = 0;
     _auto_index = 0;
 }
 

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:04:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/01 15:49:50 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/27 17:45:55 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ Client::Client(Server& server)
 void Client::setSocket(int& sock)
 {
 	_client_socket = sock;
+	request.client_socket = sock;
 }
 
 void Client::setAddress(sockaddr_in& addr)

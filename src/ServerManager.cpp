@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/14 09:50:28 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/27 17:33:26 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 using std::vector;
 #define MAX_EVENTS 64
-#define MESSAGE_BUFFER 5000000
+#define MESSAGE_BUFFER 1000000
 
 ServerManager::ServerManager()
 {
@@ -137,6 +137,11 @@ void ServerManager::runServers()
 			perror("epoll_wait");
 			exit(EXIT_FAILURE);
 		}
+		if (numEvents == 0) //not sure
+		{
+			// No events occurred within the timeout, continue the loop
+			continue;
+		}
 		// cout << "epoll wait iteration" << endl;
 		for (int i = 0; i < numEvents; ++i)
 		{
@@ -145,11 +150,54 @@ void ServerManager::runServers()
 			if (triggeredEvents[i].events & (EPOLLIN | EPOLLHUP | EPOLLERR))
 			{
 				int fd = triggeredEvents[i].data.fd;
+				Log::Msg(DEBUG, FUNC + "fd triggered : " + toString(fd));
 				if (_servers_map.count(fd))
 					acceptNewConnection(_servers_map.find(fd)->second);
 				else if (_clients_map.count(fd))
+				{
 					readRequest(fd, _clients_map[fd]);
+					if (_clients_map[fd].response.getCgiFlag())
+					{
+						// Add pipe_out[0] (read end of the pipe) to the epoll interest list
+						struct epoll_event cgi_event;
+						cgi_event.events = EPOLLIN;  // EPOLLIN for read events
+						cgi_event.data.fd = _clients_map[fd].response.cgi_object.cgi_pipe_out_read_end;  // The file descriptor to monitor
+
+						if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, &cgi_event) == -1)
+						{
+							perror("epoll_ctl");
+							// close(pipe_stdin);
+							// close(pipe_out[0]);
+							// close(pipe_out[1]);
+							// error_code = 500;
+							return ;
+						}
+						// pridat do <int,int> mapy <client, pipe>
+						Log::Msg(DEBUG, FUNC + "pipe fd added to client fd map : " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end));
+						_cgi_pipe_to_client_map.insert(std::make_pair(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, fd));
+
+						// std::map<int, int>::const_iterator it;
+						// for (it = _cgi_pipe_to_client_map.begin(); it != _cgi_pipe_to_client_map.end(); ++it)
+						// {
+						// int key = it->first;
+						// int value = it->second;
+						// std::cout << "Key: " << toString(key) << ", Value: " << toString(value) << std::endl;
+   						// }
+						
+					}
+
+				}
+				else if (_cgi_pipe_to_client_map.count(fd))
+				{
+					// Handle EPOLLIN on CGI pipe
+					Log::Msg(DEBUG, FUNC + "cgi out pipe triggered");
+					int fd_client = _cgi_pipe_to_client_map[fd];
+					Log::Msg(DEBUG, FUNC + "fd_client: " + toString(fd_client));
+					_readCgiResponse(_clients_map[fd_client]);
+					_cgi_pipe_to_client_map.erase(fd);
+				}
 			}
+			
 
 			// The socket's send buffer is ready to accept data, and we can write to it without blocking.
 			// Example: After processing the request, the server may generate an HTTP response.
@@ -159,18 +207,12 @@ void ServerManager::runServers()
 				if (_clients_map.count(fd) && !_clients_map[fd].response._response_content.empty())
 				{
 					Log::Msg(DEBUG, FUNC + "sending response.");
-					// int cgi_state = _clients_map[fd].response.getCgiState();
-					// if (cgi_state == 1 && FD_ISSET(_clients_map[fd].response._cgi_obj.pipe_in[1], &_write_fd_pool))
-					// 	sendCgiBody(_clients_map[fd], _clients_map[fd].response._cgi_obj);
-					// else if (cgi_state == 1 && FD_ISSET(_clients_map[fd].response._cgi_obj.pipe_out[0], &_recv_fd_pool))
-					// 	readCgiResponse(_clients_map[fd], _clients_map[fd].response._cgi_obj);
-					// else if ((cgi_state == 0 || cgi_state == 2) && FD_ISSET(fd, &_write_fd_pool))
-					// 	sendResponse(fd, _clients_map[fd]);
+				
 					sendResponse(fd, _clients_map[fd]);
 				}
 			}
 		}
-		//checkTimeout();
+		//checkTimeout(); not necessary because epoll wait already has timeout
 	}
 }
 
@@ -313,7 +355,50 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	// 	}
 }
 
-
+void    ServerManager::_readCgiResponse(Client &c)
+{
+    char    buffer[MESSAGE_BUFFER];
+    int     bytes_read = 0;
+	Log::Msg(DEBUG, FUNC + "before reading from pipe");
+    bytes_read = read(c.response.cgi_object.cgi_pipe_out_read_end, buffer, MESSAGE_BUFFER);
+	Log::Msg(DEBUG, FUNC + "bytes read from cgi pipe: " + toString(bytes_read));
+    if (bytes_read == 0)
+    {
+        // removeFromSet(cgi.pipe_out[0], _recv_fd_pool);
+        // close(cgi.pipe_in[0]);
+        // close(cgi.pipe_out[0]);
+		// int status;
+		// waitpid(cgi.getCgiPid(), &status, 0);
+		// if(WEXITSTATUS(status) != 0)
+		// {
+		// 	c.response.setErrorResponse(502);
+		// }
+        // c.response.setCgiState(2);
+        // if (c.response._response_content.find("HTTP/1.1") == std::string::npos)
+		//     c.response._response_content.insert(0, "HTTP/1.1 200 OK\r\n");
+		close(c.response.cgi_object.cgi_pipe_out_read_end);
+        return ;
+    }
+    else if (bytes_read < 0)
+    {
+        // Logger::logMsg(RED, CONSOLE_OUTPUT, "readCgiResponse() Error Reading From CGI Script: ", strerror(errno));
+        // removeFromSet(cgi.pipe_out[0], _recv_fd_pool);
+        // close(cgi.pipe_in[0]);
+        // close(cgi.pipe_out[0]);
+        // c.response.setCgiState(2);
+        // c.response.setErrorResponse(500);
+		close(c.response.cgi_object.cgi_pipe_out_read_end);
+        return ;
+    }
+    else
+    {
+		close(c.response.cgi_object.cgi_pipe_out_read_end);
+		buffer[bytes_read] = '\0';
+		Log::Msg(DEBUG, FUNC + "buffer: " + buffer);
+		c.response._response_content.append(buffer, bytes_read);
+		memset(buffer, 0, sizeof(buffer));
+    }
+}
 
 /* Assigen server_block configuration to a client based on Host Header in request and server_name*/
 // void	ServerManager::assignServer(Client& c)

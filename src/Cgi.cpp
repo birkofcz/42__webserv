@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 16:03:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/23 17:31:56 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/27 18:36:21 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 Cgi::Cgi()
 {
 	this->_cgi_pid = -1;
+	this->cgi_pipe_out_read_end = -1;
+	this->_client_fd = -1;
 	this->_exit_code = 0;
 	this->_cgi_path = "";
 	this->_char_environment = NULL;
@@ -25,6 +27,8 @@ Cgi::Cgi()
 Cgi::Cgi(std::string path)
 {
 	this->_cgi_pid = -1;
+	this->cgi_pipe_out_read_end = -1;
+	this->_client_fd = -1;
 	this->_exit_code = 0;
 	this->_cgi_path = path;
 	this->_char_environment = NULL;
@@ -56,6 +60,8 @@ Cgi::Cgi(const Cgi& other)
 		this->_cgi_path = other._cgi_path;
 		this->_cgi_pid = other._cgi_pid;
 		this->_exit_code = other._exit_code;
+		this->cgi_pipe_out_read_end = other.cgi_pipe_out_read_end;
+		this->_client_fd = other._client_fd; 
 }
 
 Cgi& Cgi::operator=(const Cgi &rhs)
@@ -68,6 +74,8 @@ Cgi& Cgi::operator=(const Cgi &rhs)
 		this->_cgi_path = rhs._cgi_path;
 		this->_cgi_pid = rhs._cgi_pid;
 		this->_exit_code = rhs._exit_code;
+		this->cgi_pipe_out_read_end = rhs.cgi_pipe_out_read_end;
+		this->_client_fd = rhs._client_fd;
 	}
 	return (*this);
 }
@@ -205,7 +213,6 @@ void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc
     this->_environment["PATH_TRANSLATED"] = it_loc->getRoot() + (this->_environment["PATH_INFO"] == "" ? "/" : this->_environment["PATH_INFO"]);
     // this->_environment["QUERY_STRING"] = decode(req.getQuery());
     this->_environment["REMOTE_ADDR"] = req.getHeader("host");
-	poz = findStart(req.getHeader("host"), ":");
     this->_environment["SERVER_NAME"] = req.getServerName();
     this->_environment["SERVER_PORT"] = req.getServerPort();
     this->_environment["REQUEST_METHOD"] = req.getMethodStr();
@@ -231,44 +238,54 @@ void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc
 }
 
 /* Pipe and execute CGI */
-void Cgi::execute(short& error_code)
+void Cgi::execute(short& error_code, int pipe_stdin)
 {
+	int cgi_stdout[2];
 	if (this->_arguments_for_execve[0] == NULL || this->_arguments_for_execve[1] == NULL)
 	{
 		error_code = 500;
 		return ;
 	}
-	if (pipe(pipe_in) < 0)
+	if (pipe(cgi_stdout) < 0)
 	{
         // Logger::logMsg(RED, CONSOLE_OUTPUT, "pipe() failed");
-
+		if (pipe_stdin != -1)
+			close(pipe_stdin);
 		error_code = 500;
 		return ;
 	}
-	if (pipe(pipe_out) < 0)
-	{
-        // Logger::logMsg(RED, CONSOLE_OUTPUT, "pipe() failed");
 
-		close(pipe_in[0]);
-		close(pipe_in[1]);
-		error_code = 500;
-		return ;
-	}
+	Log::Msg(DEBUG, FUNC + "before forking");
+
+	
 	this->_cgi_pid = fork();
 	if (this->_cgi_pid == 0)
 	{
-		dup2(pipe_in[0], STDIN_FILENO); //proc kdyz tam nic nedavame
-		dup2(pipe_out[1], STDOUT_FILENO);
-		close(pipe_in[0]);
-		close(pipe_in[1]);
-		close(pipe_out[0]);
-		close(pipe_out[1]);
+		if (pipe_stdin != -1)
+			dup2(pipe_stdin, STDIN_FILENO);
+		if (pipe_stdin != -1)
+			close(pipe_stdin);
+		dup2(cgi_stdout[1], STDOUT_FILENO);
+
+		close(cgi_stdout[0]);
+		close(cgi_stdout[1]);
+		std::cerr << "child after sleeping\n";
 		this->_exit_code = execve(this->_arguments_for_execve[0], this->_arguments_for_execve, this->_char_environment);
 		exit(this->_exit_code); //kdyz selze execve?
 	}
-	else if (this->_cgi_pid > 0){}
+	else if (this->_cgi_pid > 0)
+	{
+		cgi_pipe_out_read_end = cgi_stdout[0];
+		close(cgi_stdout[1]);
+		if (pipe_stdin != -1) //not sure
+			close(pipe_stdin);
+		Log::Msg(DEBUG, FUNC + "parent after forking");
+	}
 	else
 	{
+		if (pipe_stdin != -1)
+			close(pipe_stdin);
+		close(cgi_stdout[1]);
         std::cout << "Fork failed" << std::endl;
 		error_code = 500;
 	}
@@ -292,7 +309,7 @@ void Cgi::execute(short& error_code)
 // 	return (path);
 // }
 
-std::string getPathInfo() const
+std::string Cgi::getPathInfo() const
 {
 	// Assuming that the script name is everything after the last '/'
 	size_t lastSlashPos = _cgi_path.rfind('/');
@@ -331,9 +348,25 @@ std::string getPathInfo() const
 // 	return (end == std::string::npos ? tmp : tmp.substr(0, end));
 // }
 
-void		Cgi::clear()
+
+// int		Cgi::getPipeOutReadEnd()	const
+// {	
+// 	return pipe_out[0];
+// }
+
+// void	Cgi::setCgiStdin(int stdinWriteEnd)
+// {
+// 	pipe_in[1] = stdinWriteEnd;
+// }
+
+void	Cgi::setCgiClientFd(int client_fd)
+{
+	this->_client_fd = client_fd;
+}
+void	Cgi::clear()
 {
 	this->_cgi_pid = -1;
+	this->cgi_pipe_out_read_end = -1;
 	this->_exit_code = 0;
 	this->_cgi_path = "";
 	this->_char_environment = NULL;
@@ -341,3 +374,46 @@ void		Cgi::clear()
 	this->_environment.clear();
 	this->_cgi_extension.clear();
 }
+
+
+
+
+
+/* looped script!
+#include <signal.h>
+#include <unistd.h>
+
+// Define a global flag to indicate if the timeout occurred
+volatile sig_atomic_t timeout_flag = 0;
+
+// Signal handler for SIGALRM
+void handle_alarm(int signum) {
+    timeout_flag = 1;  // Set the timeout flag
+}
+
+// Function to execute the CGI script with a timeout
+void Cgi::executeWithTimeout(short& error_code, int pipe_stdin, int timeout_seconds) {
+    // Set the signal handler for SIGALRM
+    signal(SIGALRM, handle_alarm);
+
+    // Set the alarm for the specified timeout
+    alarm(timeout_seconds);
+
+    // Execute the CGI script as usual
+    execute(error_code, pipe_stdin);
+
+    // Check if the timeout flag is set
+    if (timeout_flag) {
+        // Handle the timeout (e.g., log, cleanup, set error code)
+        error_code = 504; // Gateway Timeout
+    }
+
+    // Disable the alarm
+    alarm(0);
+}
+
+// Function to execute the CGI script (original function)
+void Cgi::execute(short& error_code, int pipe_stdin) {
+    // Your existing code for executing the CGI script goes here
+}
+*/

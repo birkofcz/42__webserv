@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:09:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/06 14:37:34 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/25 15:19:46 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class ServerManager
 		vector<Server>		_servers;
 		map<int, Server>	_servers_map; // every server fd connected with Server
 		map<int, Client>	_clients_map;
+		map<int, int> 		_cgi_pipe_to_client_map;
 		int 				_epoll_fd;
 
 		// fd_set     _recv_fd_pool; spojene se select() -> vymazat
@@ -44,6 +45,7 @@ class ServerManager
 		//void checkTimeout();
 		//void initializeSets(); spojene se select() -> vymazat
 		void readRequest(const int&, Client &);
+		void _readCgiResponse(Client &c);
 		//void handleReqBody(Client &);
 		void sendResponse(const int&, Client&);
 		//void sendCgiBody(Client &, CgiHandler &);

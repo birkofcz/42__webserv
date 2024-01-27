@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 14:33:11 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/23 17:11:29 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/27 16:46:11 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ class Cgi
 		char**								_arguments_for_execve;	
 		int									_exit_code;
 		pid_t								_cgi_pid;
+		int									_client_fd;
 
 	public:
-		int									pipe_in[2];
-		int									pipe_out[2];
+		// int									pipe_in[2];
+		// int									pipe_out[2];
+		int									cgi_pipe_out_read_end;
 	
 		Cgi();
 		Cgi(string cgi_path);
@@ -44,7 +46,12 @@ class Cgi
 		void	setEnvironment(HttpRequest& request);
 		void	setExtension(const string& ext);
 		void	setCgiPath(const string& cgi_path);
-		void	execute(short &error_code);
+		
+		// void	setCgiStdin(int stdinWriteEnd);
+		void	setCgiClientFd(int client_fd);
+
+		void	execute(short &error_code,  int pipe_stdin);
+		// int		getPipeOutReadEnd() const; //pipe out is public so mazbe not necessary
 		///to be continued...14.1.2024
 
 

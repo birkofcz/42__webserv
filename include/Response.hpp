@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/23 15:07:37 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/25 15:42:16 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,10 @@ class Response
 		// int getCgiState();
 		// void setCgiState(int);
 		// void setErrorResponse(short code);
+		bool	getCgiFlag ()
+		{
+			return (this->_cgi_flag);
+		}
 
 		Cgi cgi_object;
 
@@ -75,8 +79,8 @@ class Response
 		short _status_code; //  200(for a successful response).
 		// // // char *_res; co to je?
 		bool _cgi_flag;
-		int _cgi_fd[2];
-		// size_t _cgi_response_length;
+		// int _cgi_fd[2]; smazat
+		size_t _cgi_response_length;
 		bool _auto_index; //automatic generation of directory listings when a client requests a directory that does not contain an index file 
 
 		// private methods
