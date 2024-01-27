@@ -6,7 +6,7 @@
 #    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/08 11:05:29 by sbenes            #+#    #+#              #
-#    Updated: 2024/01/14 14:09:29 by sbenes           ###   ########.fr        #
+#    Updated: 2024/01/27 16:48:13 by sbenes           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,26 +65,19 @@ $(NAME): $(OBJS)
 	fi
 	@echo "$(BOLD)$(GREEN)[ 🪄 Program ready! ]$(NC)"
 	@echo "$(BOLD)$(GREEN)                      "
-	@echo " __ _____ ___ __                     "
-	@echo "| _|_   _/ __|_ |___ _ ___ _____ _ _ "
-	@echo "| |  | | \__ \| / -_| '_\ V / -_| '_|"
-	@echo "| |  |_| |___/| \___|_|  \_/\___|_|  "
-	@echo "|__|         |__|                    			"
+	@echo "    _____________________                    " 
+	@echo "   / _/ ___/_  __/ __/  /__ _____  _____ ____ "
+	@echo "  / // |_ / / / _\ \ / / -_| __/ |/ / -_| __/ " 
+	@echo " / / \___/ /_/ /___// /\__/_/  |___/\__/_/    " 
+	@echo "/__/              /__/                        " 
 	@echo "									    			"
-	@echo " run ./webserv <config_file> <-flags> <--options>          "
+	@echo " run ./webserv <config_file> <flag1> <flag2>          "
 	@echo "									    		$(NC)"
-
-	@echo "$(GREEN) -flags: "
-	@echo "	-log :		logging to console (default)"
-	@echo "	-logfile :	logging to console & file"
+	@echo "$(BOLD)$(GREEN) optional flags: "
+	@echo "  "
+	@echo "	--if :		interface mode"
+	@echo "	--debug :	debug logs"
 	@echo "	 "
-	@echo " --options: "
-	@echo "	--runtime :	runtime logs (INFO, WARNING, ERROR) (default)"
-	@echo "	--all :		all logs (INFO, WARNING, ERROR, DEBUG)"
-	@echo "	--info :	INFO logs"
-	@echo "	--warning :	WARNING logs"
-	@echo "	--error :	ERROR logs"
-	@echo "	--debug :	DEBUG logs"
 	@echo "                             				   $(NC)"
 
 bonus: all

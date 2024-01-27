@@ -6,18 +6,18 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:28:05 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/16 16:49:04 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/27 16:12:19 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Log.hpp"
 
-bool Log::out_console = false;
-bool Log::out_file = false;
+bool Log::out_console = true;
+bool Log::out_file = true;
 
-bool Log::type_info = false;
-bool Log::type_warning = false;
-bool Log::type_error = false;
+bool Log::type_info = true;
+bool Log::type_warning = true;
+bool Log::type_error = true;
 bool Log::type_debug = false;
 
 void Log::Msg(LogType type, string msg)
