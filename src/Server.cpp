@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/06 15:00:04 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/28 16:44:57 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,11 @@ Server::setUploadPath(string upload_path)
 	_upload_path = upload_path;
 }
 
+void
+Server::setHost(in_addr_t host)
+{
+	_host = host;
+}
 
 
 /* GETTERS --------------------------------------------------------------------------------------------------------*/
@@ -221,12 +226,15 @@ void Server::setupServer(void)
 	// is closed, even if it's still in TIME_WAIT.
 
 
-	_host = INADDR_ANY; // replace with proper initialization bsd on config
+	//_host = INADDR_ANY; // replace with proper initialization bsd on config
 	
 	memset(&_server_address, 0, sizeof(_server_address));
 	_server_address.sin_family = AF_INET;
 	_server_address.sin_addr.s_addr = _host;
-	_server_address.sin_port = htons(_ports[0]); //!!
+	//print the host in readable format..
+	Log::Msg(DEBUG, FUNC + "Host: " + toString(inet_ntoa(_server_address.sin_addr)));
+	_server_address.sin_port = htons(_ports[0]); //!! needs to be only one !!!
+	Log::Msg(DEBUG, FUNC + "Port " + toString(_ports[0]));
 
 	//cout << htons(_ports[0]) << " " << _ports[0] << " "  << _host << " " << _socket_fd << endl; // test
 

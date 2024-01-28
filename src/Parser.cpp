@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 14:06:30 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/28 16:39:07 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,50 @@ Parser::parsePorts(const string& line)
 		port.push_back(atoi(split[i].c_str()));
 	}
 	return port;
+}
+
+/* Helper function to check the formal validity of IPv4 address format - uses inet_pton designed
+for the occasion */
+static int checkIPv4(const string& ip)
+{
+	struct sockaddr_in sa;
+	return inet_pton(AF_INET, ip.c_str(), &(sa.sin_addr));
+}
+
+/* Get a host name in in_addr_t format. Using above helper function to check if the ip address 
+is in a right format */
+in_addr_t 
+Parser::parseHost(const std::string& line) 
+{
+	std::vector<std::string> split = CppSplit(line, ' ');
+
+	if (split.size() < 2) 
+	{
+		print("parseHost: Invalid configuration line. Host not specified.", RED, 2);
+		return INADDR_NONE; // INDDR_NONE is -1, indicating an error
+	}
+
+	std::string host = split[1];
+	//check the format of the host
+	if (host.find(';') != std::string::npos)
+		host.erase(host.find(';'));
+	Log::Msg(DEBUG, FUNC + "Parsed host = " + host);
+
+	//check if the host is localhost
+	if (host == "localhost")
+		host = "127.0.0.1";
+		
+	//check if the host is an ip address
+	if (checkIPv4(host) == 1)
+	{	
+		Log::Msg(DEBUG, FUNC + "inet_pton: Host is an ip address");	
+		return inet_addr(host.c_str());
+	}
+	else
+	{
+		print("parseHost: Invalid IP address or hostname.", RED, 2);
+		return INADDR_NONE;
+	}
 }
 
 /* Get server names from a line */
@@ -370,6 +414,13 @@ void Parser::parseFile(const string& path)
 					plog << "config[server]: Found listen directive" << endl;
 					std::vector<int> ports = parsePorts(line);
 					currentServer.setPorts(ports);
+				}
+				else if (line.find("host") != string::npos)
+				{
+					//print("config[server]: Found host directive", GREEN);
+					plog << "config[server]: Found host directive" << endl;
+					in_addr_t host = parseHost(line);
+					currentServer.setHost(host);
 				}
 				else if (line.find("server_name") != string::npos)
 				{

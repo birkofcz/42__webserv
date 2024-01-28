@@ -6,16 +6,16 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 14:29:08 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/13 12:36:18 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/28 15:45:11 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_HPP
 # define PARSER_HPP
 
-# include "../include/general.hpp"
-# include "../include/Server.hpp"
-# include "../include/Location.hpp"
+# include "general.hpp"
+# include "Server.hpp"
+# include "Location.hpp"
 
 
 /* Parser class to parse the config file and create a vector of Server objects,
@@ -39,6 +39,7 @@ class Parser
 		//parser helper methods - second level
 		string						parseLocationPath(const string& line);
 		std::vector<int>			parsePorts(const string& line);
+		in_addr_t					parseHost(const string& line);
 		std::vector<string>			parseServerNames(const string& line);
 		string						parseRoot(const string& line);
 		std::vector<string>			parseIndex(const string& line);

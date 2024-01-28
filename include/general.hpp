@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/16 16:03:55 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/28 15:48:52 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ I would include this in all adjacent code */
 
 #include <fstream>
 #include <istream>
+
+//networking
+#include <arpa/inet.h> // for inet_addr	
 
 //signals
 #include <csignal>

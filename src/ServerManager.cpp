@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/14 09:50:28 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/28 12:25:01 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,14 @@ void ServerManager::runServers()
 void ServerManager::sendResponse(const int& fd, Client& c)
 {
 	cout << endl << "SENDING RESPONSE data: \n" << c.response._response_content << endl;
-
+	
+	//----
+	//write the response to the text file in data/response_temp.txt - in truncate mode - for debugging and showcase purposes
+	std::ofstream responseFile("data/response_temp.txt", std::ios::out | std::ios::trunc); // Opens the file in write/truncate mode
+	responseFile << c.response._response_content << "\n";
+	responseFile.close();
+	//----
+	
 	std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
     debugFile << "SENDING RESPONSE data: \n" << c.response._response_content << "\n";
     debugFile.close();
@@ -267,6 +274,14 @@ void ServerManager::readRequest(const int& fd, Client& c)
 
 	std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
     debugFile << "\nBUFFER BEFORE feed: \n" << buffer << "\n";
+	
+	//writes the request to the text file in data/request_temp.txt - in truncate mode - for debugging and showcase purposes
+	//----
+	std::ofstream requestFile("data/request_temp.txt", std::ios::out | std::ios::trunc); // Opens the file in write/truncate mode
+	requestFile << buffer<< "\n";
+	requestFile.close();
+	//---
+
 	if (bytes_read == 0)
 	{
 		// Client closed the connection

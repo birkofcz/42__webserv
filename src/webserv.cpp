@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/28 11:48:41 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/28 15:12:01 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,4 +133,5 @@ int main(int argc, char **argv)
 	manager.runServers();
 
 	return 0;
+
 }
