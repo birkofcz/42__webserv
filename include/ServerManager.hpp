@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:09:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/25 15:19:46 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/28 18:39:33 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <map>
 # include <vector>
+#include <sys/wait.h>
 # include "Server.hpp"
 # include "Client.hpp"
 
@@ -47,13 +48,16 @@ class ServerManager
 		void readRequest(const int&, Client &);
 		void _readCgiResponse(Client &c);
 		//void handleReqBody(Client &);
-		void sendResponse(const int&, Client&);
+		void	sendResponse(const int&, Client&);
+		void	_sendCgiBody(Client&);
+
 		//void sendCgiBody(Client &, CgiHandler &);
 		//void readCgiResponse(Client &, CgiHandler &);
 		void _closeConnection(const int);
 		//void assignServer(Client &);
 		//void addToSet(const int , fd_set &); spojene se select() -> vymazat
 		//void removeFromSet(const int , fd_set &); spojene se select() -> vymazat
+		size_t _calcContLenCgi(const char*, size_t);
 };
 
 #endif

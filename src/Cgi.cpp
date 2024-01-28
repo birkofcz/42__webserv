@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 16:03:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/27 18:36:21 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/28 18:39:30 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ Cgi::Cgi()
 {
 	this->_cgi_pid = -1;
 	this->cgi_pipe_out_read_end = -1;
+	this->cgi_pipe_in_write_end = -1;
 	this->_client_fd = -1;
 	this->_exit_code = 0;
 	this->_cgi_path = "";
@@ -28,6 +29,7 @@ Cgi::Cgi(std::string path)
 {
 	this->_cgi_pid = -1;
 	this->cgi_pipe_out_read_end = -1;
+	this->cgi_pipe_in_write_end = -1;
 	this->_client_fd = -1;
 	this->_exit_code = 0;
 	this->_cgi_path = path;
@@ -61,6 +63,7 @@ Cgi::Cgi(const Cgi& other)
 		this->_cgi_pid = other._cgi_pid;
 		this->_exit_code = other._exit_code;
 		this->cgi_pipe_out_read_end = other.cgi_pipe_out_read_end;
+		this->cgi_pipe_in_write_end = other.cgi_pipe_in_write_end;
 		this->_client_fd = other._client_fd; 
 }
 
@@ -95,10 +98,10 @@ void	Cgi::setExtension(const string& ext) {this->_cgi_extension = ext;}
 //     return (this->_environment);
 // }
 
-// const pid_t &Cgi::getCgiPid() const
-// {
-//     return (this->_cgi_pid);
-// }
+const pid_t &Cgi::getCgiPid() const
+{
+	return (this->_cgi_pid);
+}
 
 // const std::string &Cgi::getCgiPath() const
 // {
@@ -238,53 +241,60 @@ void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc
 }
 
 /* Pipe and execute CGI */
-void Cgi::execute(short& error_code, int pipe_stdin)
+void Cgi::execute(short& error_code)
 {
+	
+
 	int cgi_stdout[2];
+	int cgi_stdin[2];
+
 	if (this->_arguments_for_execve[0] == NULL || this->_arguments_for_execve[1] == NULL)
 	{
 		error_code = 500;
 		return ;
 	}
+
+    if (pipe(cgi_stdin) == -1)
+    {
+        error_code = 500;
+        return ;
+    }
+	
 	if (pipe(cgi_stdout) < 0)
 	{
         // Logger::logMsg(RED, CONSOLE_OUTPUT, "pipe() failed");
-		if (pipe_stdin != -1)
-			close(pipe_stdin);
+		close(cgi_stdin[0]);
+		close(cgi_stdin[1]);
 		error_code = 500;
 		return ;
 	}
-
+	//	set cgi_in
 	Log::Msg(DEBUG, FUNC + "before forking");
 
-	
 	this->_cgi_pid = fork();
 	if (this->_cgi_pid == 0)
 	{
-		if (pipe_stdin != -1)
-			dup2(pipe_stdin, STDIN_FILENO);
-		if (pipe_stdin != -1)
-			close(pipe_stdin);
+		dup2(cgi_stdin[0], STDIN_FILENO);
 		dup2(cgi_stdout[1], STDOUT_FILENO);
-
+		close(cgi_stdin[0]);
+		close(cgi_stdin[1]);
 		close(cgi_stdout[0]);
 		close(cgi_stdout[1]);
-		std::cerr << "child after sleeping\n";
+		std::cerr << "cgi after dups and before execve\n";
 		this->_exit_code = execve(this->_arguments_for_execve[0], this->_arguments_for_execve, this->_char_environment);
 		exit(this->_exit_code); //kdyz selze execve?
 	}
 	else if (this->_cgi_pid > 0)
 	{
+		cgi_pipe_in_write_end = cgi_stdin[1];	
+		close (cgi_stdin[0]);
 		cgi_pipe_out_read_end = cgi_stdout[0];
 		close(cgi_stdout[1]);
-		if (pipe_stdin != -1) //not sure
-			close(pipe_stdin);
 		Log::Msg(DEBUG, FUNC + "parent after forking");
 	}
 	else
 	{
-		if (pipe_stdin != -1)
-			close(pipe_stdin);
+		close (cgi_stdin[0]);
 		close(cgi_stdout[1]);
         std::cout << "Fork failed" << std::endl;
 		error_code = 500;
@@ -367,6 +377,7 @@ void	Cgi::clear()
 {
 	this->_cgi_pid = -1;
 	this->cgi_pipe_out_read_end = -1;
+	this->cgi_pipe_in_write_end = -1;
 	this->_exit_code = 0;
 	this->_cgi_path = "";
 	this->_char_environment = NULL;

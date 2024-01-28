@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/27 18:49:24 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/28 19:20:46 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,42 +272,6 @@ int        Response::handleCgi(std::string &location_key)
 	cgi_object.setExtension(exten);
     cgi_object.setCgiPath("content/www/" + path); //nutno predelat
     _cgi_flag = true;
-
-	int cgi_stdin[2];
-    if (pipe(cgi_stdin) == -1)
-    {
-        _status_code = 500;
-        return (1);
-    }
-
-	if(request.getBodyLen() > 0)
-	{
-		ssize_t bytes_written = write(cgi_stdin[1], request.getBody().c_str(), request.getBodyLen());
-		if (bytes_written == -1)
-		{
-			perror("write to CGI stdin");
-			close(cgi_stdin[0]);
-            close(cgi_stdin[1]);
-			_status_code = 500;
-			return 1;
-			// Handle the error (e.g., log it, return an error code, etc.)
-		}
-		else if (bytes_written < static_cast<ssize_t>(request.getBodyLen()))
-		{
-			perror("pipe for stdin CGI full");
-				// Handle the case where not all data could be written
-				// This may happen if the pipe is full, and you need to handle it accordingly
-		}
-		close(cgi_stdin[1]);
-
-	}
-	else
-	{
-		close(cgi_stdin[0]);
-		close(cgi_stdin[1]);
-		cgi_stdin[0] = -1;	
-	}
-
 	// cgi_object.setCgiStdin(cgi_stdin[1]);
     // if (pipe(_cgi_fd) == -1)
     // {
@@ -315,7 +279,7 @@ int        Response::handleCgi(std::string &location_key)
     //     return (1);
     // }
     cgi_object.initEnv(request, _server.getLocationKey(location_key)); // + URI
-	cgi_object.execute(this->_status_code, cgi_stdin[0]);
+	cgi_object.execute(this->_status_code);
     return (0);
 }
 
@@ -670,7 +634,16 @@ void	Response::_setStatusLine()
     _response_content.append("\r\n");
 }
 
+string	Response::getStatusLineCgi()
+{
+	string	status_line = "";
+    status_line.append("HTTP/1.1 " + toString(_status_code) + " ");
+    // _response_content.append(statusCodeString(_status_code));
+	status_line.append(Error::getErrorDescription(_status_code));
+    status_line.append("\r\n");
 
+	return (status_line);
+}
 
 
 
@@ -909,3 +882,8 @@ std::string Response::removeBoundary(std::string& body, std::string& boundary, s
 // {
 //     _cgi_flag = state;
 // }
+
+void Response::setStatusCode(short code)
+{
+    _status_code = code;
+}

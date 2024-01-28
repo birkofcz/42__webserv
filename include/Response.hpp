@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/25 15:42:16 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/28 17:45:05 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@ class Response
 		{
 			return (this->_cgi_flag);
 		}
-
+		string	getStatusLineCgi();
+		void setStatusCode(short code);
+		
 		Cgi cgi_object;
 
 		std::string removeBoundary(std::string& body, std::string& boundary, std::string& filename); //proc public

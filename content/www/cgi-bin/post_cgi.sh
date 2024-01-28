@@ -12,8 +12,7 @@ name=$(echo "$POST_DATA" | grep -oP 'name=\K\S+')
 
 # Check if 'name' field is present in form data
 if [ -n "$name" ]; then
-    echo "<h1>Hello, $name!</h1>"
+    echo -e "<h1>Hello, $name!</h1>\r\n"
 else
-    echo "<h1>Hello, anonymous!</h1>"
+    echo -e "<h1>Hello, anonymous!</h1>\r\n"
 fi
-

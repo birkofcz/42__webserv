@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 14:33:11 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/27 16:46:11 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/28 16:40:28 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Cgi
 		// int									pipe_in[2];
 		// int									pipe_out[2];
 		int									cgi_pipe_out_read_end;
+		int									cgi_pipe_in_write_end;
 	
 		Cgi();
 		Cgi(string cgi_path);
@@ -50,7 +51,7 @@ class Cgi
 		// void	setCgiStdin(int stdinWriteEnd);
 		void	setCgiClientFd(int client_fd);
 
-		void	execute(short &error_code,  int pipe_stdin);
+		void	execute(short &error_code);
 		// int		getPipeOutReadEnd() const; //pipe out is public so mazbe not necessary
 		///to be continued...14.1.2024
 
@@ -66,7 +67,7 @@ class Cgi
 		// void setCgiPid(pid_t cgi_pid);
 
 		// const std::map<std::string, std::string> &getEnv() const;
-		// const pid_t &getCgiPid() const;
+		const pid_t &getCgiPid() const;
 		// const std::string &getCgiPath() const;
 
 		// std::string	getAfter(const std::string& path, char delim);

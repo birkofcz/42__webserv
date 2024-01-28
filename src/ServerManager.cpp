@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/27 17:33:26 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/28 19:20:47 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,11 @@ void ServerManager::runServers()
 					if (_clients_map[fd].response.getCgiFlag())
 					{
 						// Add pipe_out[0] (read end of the pipe) to the epoll interest list
-						struct epoll_event cgi_event;
-						cgi_event.events = EPOLLIN;  // EPOLLIN for read events
-						cgi_event.data.fd = _clients_map[fd].response.cgi_object.cgi_pipe_out_read_end;  // The file descriptor to monitor
+						struct epoll_event cgi_event_out;
+						cgi_event_out.events = EPOLLIN;  // EPOLLIN for read events
+						cgi_event_out.data.fd = _clients_map[fd].response.cgi_object.cgi_pipe_out_read_end;  // The file descriptor to monitor
 
-						if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, &cgi_event) == -1)
+						if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, &cgi_event_out) == -1)
 						{
 							perror("epoll_ctl");
 							// close(pipe_stdin);
@@ -172,17 +172,33 @@ void ServerManager::runServers()
 							// error_code = 500;
 							return ;
 						}
-						// pridat do <int,int> mapy <client, pipe>
-						Log::Msg(DEBUG, FUNC + "pipe fd added to client fd map : " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end));
-						_cgi_pipe_to_client_map.insert(std::make_pair(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, fd));
 
-						// std::map<int, int>::const_iterator it;
-						// for (it = _cgi_pipe_to_client_map.begin(); it != _cgi_pipe_to_client_map.end(); ++it)
-						// {
-						// int key = it->first;
-						// int value = it->second;
-						// std::cout << "Key: " << toString(key) << ", Value: " << toString(value) << std::endl;
-   						// }
+						struct epoll_event cgi_event_in;
+						cgi_event_in.events = EPOLLOUT;  // EPOLLIN for read events
+						cgi_event_in.data.fd = _clients_map[fd].response.cgi_object.cgi_pipe_in_write_end;  // The file descriptor to monitor
+
+						if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _clients_map[fd].response.cgi_object.cgi_pipe_in_write_end, &cgi_event_in) == -1)
+						{
+							perror("epoll_ctl");
+							// Handle error
+							return ;
+						}
+						Log::Msg(DEBUG, FUNC + "write end of CGI pipe in added to epoll interest list: " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_in_write_end));
+
+
+						Log::Msg(DEBUG, FUNC + "pipe fd added to client fd map : " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end));
+						Log::Msg(DEBUG, FUNC + "pipe fd added to client fd map : " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_in_write_end));
+
+						_cgi_pipe_to_client_map.insert(std::make_pair(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, fd));
+						_cgi_pipe_to_client_map.insert(std::make_pair(_clients_map[fd].response.cgi_object.cgi_pipe_in_write_end, fd));
+					
+						std::map<int, int>::const_iterator it;
+						for (it = _cgi_pipe_to_client_map.begin(); it != _cgi_pipe_to_client_map.end(); ++it)
+						{
+						int key = it->first;
+						int value = it->second;
+						std::cout << "Key: " << toString(key) << ", Value: " << toString(value) << std::endl;
+   						}
 						
 					}
 
@@ -193,8 +209,26 @@ void ServerManager::runServers()
 					Log::Msg(DEBUG, FUNC + "cgi out pipe triggered");
 					int fd_client = _cgi_pipe_to_client_map[fd];
 					Log::Msg(DEBUG, FUNC + "fd_client: " + toString(fd_client));
-					_readCgiResponse(_clients_map[fd_client]);
-					_cgi_pipe_to_client_map.erase(fd);
+					int status;
+					pid_t pid = waitpid(_clients_map[fd_client].response.cgi_object.getCgiPid(), &status, 0); // Wait for child process to terminate
+					if (pid == -1)
+					{
+						perror("waitpid");
+						exit(EXIT_FAILURE);
+					}
+					if (WIFEXITED(status))
+					{
+						_readCgiResponse(_clients_map[fd_client]);
+						_clients_map[fd_client].response.setStatusCode(200);
+						_clients_map[fd_client].response._response_content.insert(0, _clients_map[fd_client].response.getStatusLineCgi());
+						_cgi_pipe_to_client_map.erase(fd);
+						printf("Child process terminated normally with status: %d\n", WEXITSTATUS(status));
+					}
+					else if (WIFSIGNALED(status))
+					{
+						printf("Child process terminated by signal: %d\n", WTERMSIG(status));
+					}
+
 				}
 			}
 			
@@ -207,9 +241,16 @@ void ServerManager::runServers()
 				if (_clients_map.count(fd) && !_clients_map[fd].response._response_content.empty())
 				{
 					Log::Msg(DEBUG, FUNC + "sending response.");
-				
 					sendResponse(fd, _clients_map[fd]);
 				}
+				else if (_cgi_pipe_to_client_map.count(fd))
+				{
+					Log::Msg(DEBUG, FUNC + "cgi in pipe triggered");
+					int fd_client = _cgi_pipe_to_client_map[fd];
+					Log::Msg(DEBUG, FUNC + "fd_client: " + toString(fd_client));
+					_sendCgiBody(_clients_map[fd_client]);
+					_cgi_pipe_to_client_map.erase(fd);
+				}	
 			}
 		}
 		//checkTimeout(); not necessary because epoll wait already has timeout
@@ -355,6 +396,26 @@ void ServerManager::readRequest(const int& fd, Client& c)
 	// 	}
 }
 
+void    ServerManager::_sendCgiBody(Client &c)
+{
+		ssize_t bytes_written = write(c.response.cgi_object.cgi_pipe_in_write_end, c.request.getBody().c_str(), c.request.getBodyLen());
+		if (bytes_written == -1)
+		{
+			perror("write to CGI stdin");
+			close(c.response.cgi_object.cgi_pipe_in_write_end);
+			// c.response._status_code = 500; upravit pak na setter
+			return ;
+			// Handle the error (e.g., log it, return an error code, etc.)
+		}
+		else if (bytes_written < static_cast<ssize_t>(c.request.getBodyLen()))
+		{
+			perror("pipe for stdin CGI full");
+				// Handle the case where not all data could be written
+				// This may happen if the pipe is full, and you need to handle it accordingly
+		}
+		close(c.response.cgi_object.cgi_pipe_in_write_end);
+}
+
 void    ServerManager::_readCgiResponse(Client &c)
 {
     char    buffer[MESSAGE_BUFFER];
@@ -394,10 +455,37 @@ void    ServerManager::_readCgiResponse(Client &c)
     {
 		close(c.response.cgi_object.cgi_pipe_out_read_end);
 		buffer[bytes_read] = '\0';
-		Log::Msg(DEBUG, FUNC + "buffer: " + buffer);
+		size_t cont_len = _calcContLenCgi(buffer, bytes_read);
+		c.response._response_content.append("Content-Length: ");
+		c.response._response_content.append(toString(cont_len));
+		c.response._response_content.append("\r\n");
 		c.response._response_content.append(buffer, bytes_read);
+		Log::Msg(DEBUG, FUNC + "buffer: " + buffer);
 		memset(buffer, 0, sizeof(buffer));
     }
+}
+
+size_t ServerManager::_calcContLenCgi(const char* buffer, size_t size)
+{
+	std::string buffer_str(buffer, size);
+	size_t contentLength = 0;
+    size_t contentStart = buffer_str.find("\n\n");
+	std::cout << "buffer_str = " << buffer_str << " and contentStart: " << contentStart << endl;
+
+    if (contentStart != std::string::npos)
+    {
+        contentStart += 4; // Move to the start of content after "\r\n\r\n"
+        contentLength = buffer_str.size() - contentStart;
+    }
+
+    std::cout << "contentLength = " << contentLength << " and content: " << endl;
+    if (contentStart != std::string::npos)
+    {
+        std::cout << buffer_str.substr(contentStart, contentLength);
+    }
+    std::cout << std::endl;
+
+    return contentLength;
 }
 
 /* Assigen server_block configuration to a client based on Host Header in request and server_name*/

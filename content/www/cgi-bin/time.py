@@ -17,10 +17,8 @@ html_content = """
 # Calculate the length of the HTML content
 content_length = len(html_content.encode('utf-8'))
 
-# Print the HTTP status line and headers
-print("HTTP/1.1 200 OK")
+# Print headers
 print("Content-Type: text/html")
-print("Content-Length: {}\r\n".format(content_length))
 
 # Print the HTML content
 print(html_content)
