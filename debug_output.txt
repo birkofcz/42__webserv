@@ -7149,3 +7149,231 @@ zu9’zc£ß(II+éváŞ30²€ùªÃ6TùsMè}c|í‹”ÎfÌCÅ;zx[Cã ëú(@° `œºÙ¾‘•7Ïˆ¦ç¯ì{­
 ş^ı†w+|íóšò†k9|ı!Ğòv€ÿÈ€¤]²GØRÊ`ö›Š*Æ@j\41IXè½î=Tˆ~ÑLüÙ¿ÓvJ}÷Ä¨‡¾DıŒÏV6Ş?+hY¥m…Û1n €ØT<÷ˆ-`TĞu±W2ÂYA¾}’| ½éT†Å8¡Å[d€n)÷/.Ë{ï^”‡/Ëûß+ÿüÏÿ\>ûì³¦½îûï¿/_~ùoåßÿı¿—ï¾û¦¼¸zY¦SìN­ÈÏÑm–¥5BVTø·‚s+0ÄFÖ$f!boÖœó´?r•î½^íÙßbC¥²®,?K
 ¡Ò{?Í}¯¾_¹ÿZ¾¹V²À	_3Úú(iEì¥ŸÏõ4 €{óö÷ÇóF@éA¿r{MY<¬‚›ÒÏC}ÌÃ'{äyn¶µ¤E¥íÛ^mœQ`É~}QĞ³å!â›ú{dâ €€õñã¸ ¾ãçşŞ µÿô•l£eöÕ(æ‡Õc$l“C£Gl6b†´ÿ•Y*¥WVÛnéÌ°•öTT¯gó©æ¯Ä=£•Uñqêv8Í/k€5%«°dºe³r<Ãnä=ÃK$ÏÏl)”°£Ån¤ø®Š‘fõ0×Å¤È
 rÕÍïçói-“2ÿÖc£a¨&ûM'ÉÈbCır¨ ƒütÂb]ññ	Ìë¨Øw6;Åİ*–Xîœ¼‹ZŸÇí&ì×**†€y‚}ŒM:¬w'»K-Ö±Ÿ¦ÃÂÁõFî£ÛÀ+`-`B2Têç«°’ÊüŠı­Æã¸À-TwÁáÔ@DRñhsñ÷dF41Bõúÿ€ÿ¦`ˆ/ó¿²/    IEND®B`‚
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /testloc3/ HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+sec-ch-ua: "Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /testloc3/
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+connection: keep-alive
+host: localhost:8000
+sec-ch-ua: "Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1628
+Connection: keep-alive
+Server: [TS]erver
+Date: Sun, 28 Jan 2024 15:47:29 GMT
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Request and Response Viewer</title>
+    <style>
+        .container {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .info-box {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Request and Response Viewer</h1>
+        <div class="info-box">
+            <h2>Request Details</h2>
+            <pre id="requestDetails"></pre>
+        </div>
+        <div class="info-box">
+            <h2>Response Details</h2>
+            <pre id="responseDetails"></pre>
+        </div>
+    </div>
+
+    <script>
+       function fetchAndDisplayData() 
+	   {
+  
+        fetch('../../../../data/request_temp.txt')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('requestDetails').textContent = data;
+            })
+            .catch(error => console.error('Error fetching request details:', error));
+
+        fetch('../../../../data/response_temp.txt')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('responseDetails').textContent = data;
+            })
+            .catch(error => console.error('Error fetching response details:', error));
+    }
+
+
+        //setInterval(fetchAndDisplayData, 5000); // Poll every 5 seconds
+	fetchAndDisplayData();
+    </script>
+</body>
+</html>
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /data/request_temp.txt HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+sec-ch-ua: "Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"
+sec-ch-ua-mobile: ?0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36
+sec-ch-ua-platform: "Linux"
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8000/testloc3/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /data/request_temp.txt
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: */*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+connection: keep-alive
+host: localhost:8000
+referer: http://localhost:8000/testloc3/
+sec-ch-ua: "Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 101
+Connection: keep-alive
+Server: [TS]erver
+Date: Sun, 28 Jan 2024 15:47:29 GMT
+
+<html>
+<head><title>404 Not Found </title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /data/response_temp.txt HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+sec-ch-ua: "Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"
+sec-ch-ua-mobile: ?0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36
+sec-ch-ua-platform: "Linux"
+Accept: */*
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://localhost:8000/testloc3/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /data/response_temp.txt
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: */*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+connection: keep-alive
+host: localhost:8000
+referer: http://localhost:8000/testloc3/
+sec-ch-ua: "Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: empty
+sec-fetch-mode: cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 101
+Connection: keep-alive
+Server: [TS]erver
+Date: Sun, 28 Jan 2024 15:47:29 GMT
+
+<html>
+<head><title>404 Not Found </title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+
