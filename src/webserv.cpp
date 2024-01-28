@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/27 17:04:05 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/28 11:48:41 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 {
 	std::vector<string> config_and_interface = setLogInterface(argc, argv);
 	
-	// INTERFACE ON
+	// INTERFACE ON CASE
 	if (config_and_interface[1] == "interface")
 	{
 		printStartInfo(config_and_interface);
