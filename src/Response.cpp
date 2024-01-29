@@ -6,12 +6,13 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/18 17:30:28 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/28 19:41:33 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Response.hpp"
 #include "../include/general.hpp"
+#include <unistd.h>
 
 // Mime Response::_mime;
 
@@ -26,8 +27,8 @@ Response::Response()
 	_response_body_str = "";
 	_location = "";
 	_status_code = 0;
-	_cgi = 0;
-	// _cgi_response_length = 0;
+	_cgi_flag = 0;
+	_cgi_response_length = 0;
 	_auto_index = false;
 }
 
@@ -44,8 +45,8 @@ Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
     _response_body_str = "";
     _location = "";
     _status_code = 0;
-    _cgi = 0;
-    // _cgi_response_length = 0;
+    _cgi_flag = 0;
+    _cgi_response_length = 0;
     _auto_index = false;
 }
 void   Response::_contentType()
@@ -211,7 +212,7 @@ void Response::_appendRoot(Location &location, HttpRequest &request)
 // //     path = _target_file;
 // //     _cgi_obj.clear();
 // //     _cgi_obj.setCgiPath(path);
-// //     _cgi = 1;
+// //     _cgi_flag = 1;
 // //     if (pipe(_cgi_fd) < 0)
 // //     {
 // //         _code = 500;
@@ -246,13 +247,13 @@ int        Response::handleCgi(std::string &location_key)
         return (1);
     }
     exten = path.substr(pos);
-    if (exten != ".py") // && exten != ".sh")
+    if (exten != ".py" && exten != ".sh")
     {
         _status_code = 501;
         return (1);
     }
-
-	/////////////////////////////////////////
+	// /cgi-bin/time.py
+	///////////////////////////////////////
     // if (ConfigFile::getTypePath(path) != 1)
     // {
     //     _code = 404;
@@ -263,18 +264,22 @@ int        Response::handleCgi(std::string &location_key)
     //     _code = 403;
     //     return (1);
     // }
-    // if (isAllowedMethod(request.getMethod(), *_server.getLocationKey(location_key), _code))
-    //     return (1);
-    // _cgi_obj.clear();
-    // _cgi_obj.setCgiPath(path);
-    // _cgi = 1;
-    // if (pipe(_cgi_fd) < 0)
+	if (!_isAllowedMethod(request.getMethod(), *_server.getLocationKey(location_key), _status_code))
+		return (1);
+	Log::Msg(DEBUG, FUNC + "path after formatting: " + path);
+	Log::Msg(DEBUG, FUNC + "extension: " + exten);
+    cgi_object.clear();
+	cgi_object.setExtension(exten);
+    cgi_object.setCgiPath("content/www/" + path); //nutno predelat
+    _cgi_flag = true;
+	// cgi_object.setCgiStdin(cgi_stdin[1]);
+    // if (pipe(_cgi_fd) == -1)
     // {
-    //     _code = 500;
+    //     _status_code = 500;
     //     return (1);
     // }
-    // _cgi_obj.initEnv(request, _server.getLocationKey(location_key)); // + URI
-    // _cgi_obj.execute(this->_code);
+    cgi_object.initEnv(request, _server.getLocationKey(location_key)); // + URI
+	cgi_object.execute(this->_status_code);
     return (0);
 }
 
@@ -291,7 +296,8 @@ bool Response::_isAllowedMethod(HttpMethod& method, Location& location, short& c
  	if (std::find(methods.begin(), methods.end(), method) == methods.end())
     {
         // 'method' is not allowed, set 'code' to 405 and return true
-        code = 405;
+        Log::Msg(DEBUG, FUNC + "method not allowed");
+		code = 405;
         return false;
     }
     return true;
@@ -572,8 +578,8 @@ void	Response::buildResponse()
 {
     if (_reqError() || _buildBody())
         _response_body_str = Error::buildErrorPage(_status_code, _location_key, _server);
-    /* if (_cgi)
-       return ; */
+    if (_cgi_flag)
+       return ;
 	else if (_auto_index)
     {
 		if (_buildAutoindex(_target_file) == "")
@@ -628,7 +634,16 @@ void	Response::_setStatusLine()
     _response_content.append("\r\n");
 }
 
+string	Response::getStatusLineCgi()
+{
+	string	status_line = "";
+    status_line.append("HTTP/1.1 " + toString(_status_code) + " ");
+    // _response_content.append(statusCodeString(_status_code));
+	status_line.append(Error::getErrorDescription(_status_code));
+    status_line.append("\r\n");
 
+	return (status_line);
+}
 
 
 
@@ -639,9 +654,10 @@ int    Response::_buildBody()
         _status_code = 413;
         return (1);
     }
+	Log::Msg(DEBUG, FUNC + "before _handle target");
     if ( _handleTarget() )
         return (1);
-    if (_cgi || _auto_index)
+    if (_cgi_flag || _auto_index)
         return (0);
     if (_status_code)
 		return (0);
@@ -758,8 +774,8 @@ void   Response::clear()
     _response_body_str.clear();
     _location.clear();
     _status_code = 0;
-    _cgi = 0;
-    // _cgi_response_length = 0;
+    _cgi_flag = 0;
+    _cgi_response_length = 0;
     _auto_index = 0;
 }
 
@@ -864,5 +880,10 @@ std::string Response::removeBoundary(std::string& body, std::string& boundary, s
 
 // void      Response::setCgiState(int state)
 // {
-//     _cgi = state;
+//     _cgi_flag = state;
 // }
+
+void Response::setStatusCode(short code)
+{
+    _status_code = code;
+}

@@ -1,15 +1,24 @@
 #!/usr/bin/python3
 
 import datetime
-import os
 
-# Print HTTP headers
-print("Content-type: text/html")
-print()
+# Generate the HTML content with the current time
+html_content = """
+<html>
+<head>
+<title>Current Time</title>
+</head>
+<body>
+<h1>{}</h1>
+</body>
+</html>
+""".format(datetime.datetime.now().strftime("%H:%M:%S"))
 
-# Print the current time
-now = datetime.datetime.now()
-print("<html><body>")
-print("<h1>Current Time</h1>")
-print("<p>The current time is: {}</p>".format(now.strftime("%Y-%m-%d %H:%M:%S")))
-print("</body></html>")
+# Calculate the length of the HTML content
+content_length = len(html_content.encode('utf-8'))
+
+# Print headers
+print("Content-Type: text/html")
+
+# Print the HTML content
+print(html_content)
