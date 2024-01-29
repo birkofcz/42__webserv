@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 16:20:16 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/16 16:49:04 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/29 16:02:16 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class Error
 	public:
 		static string	getErrorDescription(short error_code);
 		static string	buildErrorPage(short error_code, string location_key, Server &server);
+		static string	instantErrorPage(short error_code);	
 };
 
 #endif 
