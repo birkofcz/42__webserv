@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/28 19:20:47 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/29 16:07:43 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void ServerManager::runServers()
 		// cout << "epoll wait iteration" << endl;
 		for (int i = 0; i < numEvents; ++i)
 		{
-			// There is incoming data from a client.
+			// There is incoming data from a client or a pipe.
 			// Client sends an HTTP request (e.g., GET, POST)for example.
 			if (triggeredEvents[i].events & (EPOLLIN | EPOLLHUP | EPOLLERR))
 			{
@@ -213,10 +213,19 @@ void ServerManager::runServers()
 					pid_t pid = waitpid(_clients_map[fd_client].response.cgi_object.getCgiPid(), &status, 0); // Wait for child process to terminate
 					if (pid == -1)
 					{
-						perror("waitpid");
-						exit(EXIT_FAILURE);
+						perror("waitpid = -1");
+						// exit(EXIT_FAILURE);
 					}
-					if (WIFEXITED(status))
+					if(WEXITSTATUS(status) != 0)
+					{
+						std::cerr << "cgi terminated with an error\n";
+						_clients_map[fd_client].response.setStatusCode(502);
+						close(_clients_map[fd_client].response.cgi_object.cgi_pipe_out_read_end);
+						_cgi_pipe_to_client_map.erase(fd);
+						//uzavrit read out pipe, jako v readcgi
+						// _clients_map[fd_client].response.setErrorResponse(502); //
+					}
+					else if (WIFEXITED(status))
 					{
 						_readCgiResponse(_clients_map[fd_client]);
 						_clients_map[fd_client].response.setStatusCode(200);

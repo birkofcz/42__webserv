@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 16:03:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/28 18:39:30 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:48:00 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,13 @@ void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc
 	this->_arguments_for_execve[2] = NULL;
 }
 
+
+static void handle_timeout(int signal)
+{
+	(void) signal;
+   	kill(getpid(), SIGTERM);
+}
+
 /* Pipe and execute CGI */
 void Cgi::execute(short& error_code)
 {
@@ -274,6 +281,10 @@ void Cgi::execute(short& error_code)
 	this->_cgi_pid = fork();
 	if (this->_cgi_pid == 0)
 	{
+		// Set up a timeout of 5 seconds
+		signal(SIGALRM, handle_timeout);
+		alarm(5);
+
 		dup2(cgi_stdin[0], STDIN_FILENO);
 		dup2(cgi_stdout[1], STDOUT_FILENO);
 		close(cgi_stdin[0]);

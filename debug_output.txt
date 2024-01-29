@@ -9242,3 +9242,2200 @@ Content-Type: text/html
 <h1>Hello, kkjoiu!</h1>
 
 
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /testloc1/ HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /testloc1/
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 2321
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 13:18:22 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		form {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>/location1/index.html</h1>
+		<div class="path">./content/www/location1/index.html</div>
+		
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
+		
+		
+		<!-- Form for POST CGI BASH script -->
+		
+		<h2>Enter Your Name for POST Cgi bash script:</h2>
+	   		 <form action="http://localhost:8000/cgi-bin/post_cgi.sh" method="post">
+				<label for="name">Name:</label><br>
+				<input type="text" id="name" name="name"><br><br>
+				<input type="submit" value="Submit">
+			 </form>
+			
+        <!-- Form for chunked POST request -->
+		 <form action="http://localhost:8000/upload_script.sh" method="post">
+			<label for="fileChunk">File Chunk:</label><br>
+			<input type="text" id="fileChunk" name="fileChunk" placeholder="Enter file chunk"><br><br>
+			<input type="submit" value="Send Chunked POST Request">
+		</form>
+
+
+		<form id="deleteForm">
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+			
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = "uploads/";
+				var filename = document.getElementById("filename").value.trim();
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						alert("DELETE request successful");
+						// Clear the input field after successful request
+						document.getElementById("filename").value = "";
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
+		
+		
+    </div>
+</body>
+</html>
+
+__body_str after PARSING DONE: 
+fileChunk=monster.png
+
+BUFFER BEFORE feed: 
+POST /upload_script.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 21
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+fileChunk=monster.png
+PRESENTING REQUEST data: 
+Method: POST
+Path: /upload_script.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 21
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: fileChunk=monster.png
+Body vector: f i l e C h u n k = m o n s t e r . p n g 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: application/x-sh
+Content-Length: 0
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 13:19:26 GMT
+
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /testloc1/ HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /testloc1/
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 2326
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 13:23:48 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		form {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>/location1/index.html</h1>
+		<div class="path">./content/www/location1/index.html</div>
+		
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
+		
+		
+		<!-- Form for POST CGI BASH script -->
+		
+		<h2>Enter Your Name for POST Cgi bash script:</h2>
+	   		 <form action="http://localhost:8000/cgi-bin/post_cgi.sh" method="post">
+				<label for="name">Name:</label><br>
+				<input type="text" id="name" name="name"><br><br>
+				<input type="submit" value="Submit">
+			 </form>
+			
+        <!-- Form for chunked POST request -->
+		 <form action="http://localhost:8000/cgi-bin/upload_cgi.sh" method="post">
+			<label for="fileChunk">File Chunk:</label><br>
+			<input type="text" id="fileChunk" name="fileChunk" placeholder="Enter file chunk"><br><br>
+			<input type="submit" value="Send Chunked POST Request">
+		</form>
+
+
+		<form id="deleteForm">
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+			
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = "uploads/";
+				var filename = document.getElementById("filename").value.trim();
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						alert("DELETE request successful");
+						// Clear the input field after successful request
+						document.getElementById("filename").value = "";
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
+		
+		
+    </div>
+</body>
+</html>
+
+__body_str after PARSING DONE: 
+fileChunk=monster.png
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/upload_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 21
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+fileChunk=monster.png
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/upload_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 21
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: fileChunk=monster.png
+Body vector: f i l e C h u n k = m o n s t e r . p n g 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Length: 129
+Content-type: text/html
+
+<h1>Upload Successful</h1>
+<p>The file 'uploaded_file' has been successfully uploaded as '20240129142352_10259.uploaded_file'.</p>
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /testloc1/ HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /testloc1/
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 2328
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 13:27:59 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		form {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>/location1/index.html</h1>
+		<div class="path">./content/www/location1/index.html</div>
+		
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
+		
+		
+		<!-- Form for POST CGI BASH script -->
+		
+		<h2>Enter Your Name for POST Cgi bash script:</h2>
+	   		 <form action="http://localhost:8000/cgi-bin/post_cgi.sh" method="post">
+				<label for="name">Name:</label><br>
+				<input type="text" id="name" name="name"><br><br>
+				<input type="submit" value="Submit">
+			 </form>
+			
+		<!-- Form for chunked POST request -->
+		<form action="http://localhost:8000/cgi-bin/upload_cgi.sh" method="post" enctype="multipart/form-data">
+			<label for="fileChunk">File Chunk:</label><br>
+			<input type="file" id="fileChunk" name="fileChunk" required><br><br>
+			<input type="submit" value="Send Chunked POST Request">
+		</form>
+
+
+
+		<form id="deleteForm">
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+			
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = "uploads/";
+				var filename = document.getElementById("filename").value.trim();
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						alert("DELETE request successful");
+						// Clear the input field after successful request
+						document.getElementById("filename").value = "";
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
+		
+		
+    </div>
+</body>
+</html>
+
+__body_str after PARSING DONE: 
+-----------------------------36921483463076025713053061213
+Content-Disposition: form-data; name="fileChunk"; filename="monster.png"
+Content-Type: image/png
+
+‰PNG
+
+   IHDR   2   2   ?ˆ±   	pHYs     šœ  
+„iTXtXML:com.adobe.xmp     <?xpacket begin="ï»¿" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c145 79.163499, 2018/08/13-16:40:22        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:photoshop="http://ns.adobe.com/photoshop/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CC 2019 (Windows)" xmp:CreateDate="2023-05-18T22:16:31+02:00" xmp:ModifyDate="2023-05-18T22:54:05+02:00" xmp:MetadataDate="2023-05-18T22:54:05+02:00" dc:format="image/png" photoshop:ColorMode="3" photoshop:ICCProfile="sRGB IEC61966-2.1" xmpMM:InstanceID="xmp.iid:9d29bd03-dd9c-be4d-b810-8e9a40bea33f" xmpMM:DocumentID="adobe:docid:photoshop:3e6f470d-ab2d-8948-986a-f11b2700a320" xmpMM:OriginalDocumentID="xmp.did:a8938e2a-b3c9-9849-9151-c8b8052ec580"> <photoshop:DocumentAncestors> <rdf:Bag> <rdf:li>xmp.did:a8938e2a-b3c9-9849-9151-c8b8052ec580</rdf:li> </rdf:Bag> </photoshop:DocumentAncestors> <xmpMM:History> <rdf:Seq> <rdf:li stEvt:action="created" stEvt:instanceID="xmp.iid:a8938e2a-b3c9-9849-9151-c8b8052ec580" stEvt:when="2023-05-18T22:16:31+02:00" stEvt:softwareAgent="Adobe Photoshop CC 2019 (Windows)"/> <rdf:li stEvt:action="converted" stEvt:parameters="from image/png to application/vnd.adobe.photoshop"/> <rdf:li stEvt:action="saved" stEvt:instanceID="xmp.iid:168c81e8-373c-2241-9c5d-df3c491340f5" stEvt:when="2023-05-18T22:46:55+02:00" stEvt:softwareAgent="Adobe Photoshop CC 2019 (Windows)" stEvt:changed="/"/> <rdf:li stEvt:action="saved" stEvt:instanceID="xmp.iid:ec039ca9-4d48-d141-a738-af16a89b1688" stEvt:when="2023-05-18T22:54:05+02:00" stEvt:softwareAgent="Adobe Photoshop CC 2019 (Windows)" stEvt:changed="/"/> <rdf:li stEvt:action="converted" stEvt:parameters="from application/vnd.adobe.photoshop to image/png"/> <rdf:li stEvt:action="derived" stEvt:parameters="converted from application/vnd.adobe.photoshop to image/png"/> <rdf:li stEvt:action="saved" stEvt:instanceID="xmp.iid:9d29bd03-dd9c-be4d-b810-8e9a40bea33f" stEvt:when="2023-05-18T22:54:05+02:00" stEvt:softwareAgent="Adobe Photoshop CC 2019 (Windows)" stEvt:changed="/"/> </rdf:Seq> </xmpMM:History> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:ec039ca9-4d48-d141-a738-af16a89b1688" stRef:documentID="xmp.did:a8938e2a-b3c9-9849-9151-c8b8052ec580" stRef:originalDocumentID="xmp.did:a8938e2a-b3c9-9849-9151-c8b8052ec580"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>l'  °IDAThíšy”_e™ç?wÿİ{{ıj¯¤RTö…ÁDV%4 4ŠÒÒHã¸â´
+J‹¶İíÚŠcc{Ní2í¸ô( ‹€@Â!aIRR•ªÔ¾ıößİ·ù#´-‚ÎœÖsfÎœyÎyÎ=÷÷½ïı¾ï÷yŞ÷|Ÿ+$IÂÿ&şŸş€?–ı ÿ·™|û#w½ì Šx–K^“I/ë ÖTürÅ4‘sEıì.E²5IéşìĞ‹ÊÊóÏ³{×®CU"Ì=ì½ı¿³çöo~H7•°¸fÓş@”vşÉ®¾S·’egn³=ÃÌ±	æO²õÂsPU‘F­ÁÔ¡!b? {ëV†ï»›¹ƒÃ\|óÍ,9‚RA)ôôñôOBP·¹ø†«Ÿ(ˆÿWH“8¦pÒ KÇ'…g¿zó×æ÷îyO&$²Ô"3Öó»O{í×¶ü_yø³_øà/?û•¯w¯Ì"¥ÒLîºÿ
+ØûèÃßzê=}¯Ûù÷«/yËƒªè“DÇş¸+ò{A$1ùp÷†Ÿ½ÿ}»YZ,j…<±ŸPÈk©Lg»¼Ô7üß¿ûå±§¿şàşÑR{‡A:•Á$³@"Š¸¡ÏâG/}òÑ‹+‡şæì¿úÔÍF©dh†?VÒü@â8¢tÒæNvüøïÜ“ıŒ1Ø„ˆv€ã	˜^Bª˜§§'¬—Vw¥©9NÃ#E$EÀĞdDI#WXNøï»7ÅÍò)×}ìâÜŠÌö~uş@@"IÂoz’ÄÄQL~`€…ÃGR?ÿ‹wÿ$H¼LûºA\Û%rBâ &#4$”0¡Zi¡Y–wYßS@‘$¦ª-4E&Šbºs&YUÁA¤}u?óO<vÑ¯®ßŞgÿñëÿ4?<4P\³â„?ˆ(ò›.
+"ùş~ÆÛsÆ.»Ä‘9{õºA’¬„’R˜«¶h¸>y3…©(øŸÊ’ƒo˜)…bZgU_‘¬¡R®Û4.KU‹fÓÁP”´J¾³ˆ2?¹mìáÇŞıƒ+Ş22tç];J'oB1L”Lto¢¢`Õjˆâÿ^b•K¥ö_ß$q„Ù»œúÔlf×-7ßWTcú)×›h’@±¦R±©×]r††ï‡ÌW›dT	¢ˆ8ˆ±‚„„ûÇ	Ã)I(vh:>Š$ã†™bË­…ñî÷½çñÓ>ùéKÍÎ_4l>²´Ğo/•‡7]şæ•BA”I’Aø=@dù¥0‰côîn¦‡‡ÍG?ñ±;UÏÉk]½ŒÏ•Ñ4±Òp<Ä8ÁĞd’8¦\·H)2}íY&—Ô,¶œªJh²H_Şà…™*¥¬AËò™¯4ÈibSÂP2‰ŒĞÑàÙ<ñù[ï,vuE¸¶Ü´›è½İ5­V½ïˆï|5¿zãÓ©®„²âÕ2„ô–\C"$¨ù,‹ccm»®»v<59¶¶Ô¿ŒĞˆH)¢"1¾Øbj©‰*I¶ë“ReòQ±½bÖÄ÷C‚ "g¨Da„íXOg1‹,
+d8JÈ¥T\/@7S”r¦€çŠ‚$“ËçÈÆajqß¾sO=vmùè¡K+G†œrE.­]7:?9 kl<ë4¢Vyqd’˜¶µëØwÛ7¾ONäûOÛ@Ã™«X¨’ˆ˜€'¬ìÊ‘Dsu›ºåÒô2	4Zùt
+Mq]Ÿ8IpıQ€şR–JË¡¯-ƒë…H²„&ØNˆœS)eò™K-¢(¡`¨ŠD{±ˆxT¦F¶Î<÷ìÖ±OŒŞuÇd(«aäMŸ½õÖŞ-›ÇìJiÇEJ
+£>±|î;¿’ÒTs¦ê #`ùõ¦CJ•ˆ€RÎ¤§˜ ¢á4Ü€ˆS•I¢ˆR!CÃöH©2q’ĞtÒºFÆPIbpıˆ¬®BÓò<œ BN0%—5¨Öm,ÇGS%dU&
+#Â UC-æÈ¤ÒX³³¹`iqcõÅÉ-•fÓ3Wo|pîÅäsßy5:2wÜúÉ·ÍÌ¶¯ßÔ.‰ÄqÂ|Í"Šcür‹¶tŠe&çªäÍ~8>¶Rµ<2zËrè.¥Ñ…–ãuÇC—%ò¦q|"±-×G"fêÔmMSH€±é%\Ûƒ  `jDqŒ—H™,)4RrÒW«-qlèÒ)§®aaö8v½ª–÷?}•&
+†FÙr™«Z4ı†²¼&bl?D¼ "!!­ÊLîR†”® ‰ë£HSÃr|š¶GFSˆˆhznÑ“5Hë³å&5Û#­Éè‘Ï±ñybUÅìí‰SF9Içf›~ä·šéÕËÛQ$‘F¥>ØwÖÙ?;éµ;–dÇªK1•ÉI'@%M”ES¥:S¦`j–OIWiKÄˆˆ€åù$ôäO¶,
+¨ŠˆíG4Z®QÌéèšDF“˜«˜š„¡i„QŒ(äUÛ£M•é(˜„qÌÒq›ñÉ9ÜŞN÷Ôw¾õ›.¿üocİ¬–GG)4ÀÌááO}ö–ûÓ†J(ä(?}Ø˜¾ûÎ¿Xó•¯ß(/ß¸…8)½±ëI#à3÷óÿº/ŒÉëuÛÃD:Ò)ü Äõ|ª¶G%H¢„"KIBËhYMÏ…&¤=¥²²»ÀbÍÂ]2š‚@‚,€¬«4[.`Wkœ¶ã”¡îKŞtaº»ob`ûN“…cãt,_Nÿ³ˆ£¤Öòcæê„ˆT\¹î5ÈŠ,#é:éÁ•<òµ¯îD07Û 'oâyC¥”3©Z®ïSw|‚(F“%*¶"	¤ë¶"J=mZ–‹eû¬ê+b©QS³}$I¦áx˜šŠÅ¤Ó)4#Ey||õYg¤:»yáî;Èóè†Î‘§Ÿb©ZeêÀÛĞ5dA c2¦Hz`Ùx˜×GB¢>3ÍôÈÈ &C[VG‘%^H&H’HÇÌ×m‚(&§kÈ¢€†,´\‚(FOi´åÓ(’€,€íz$ILE4è*˜ˆ’„ ¸QÂTİ"­)èªD{g	kfVzøóŸû|¦½—gŸÜÇß~òs<¹ûIRù#/ÇQEMé‰„¨Ä´-ë©õìØñSkfQÎ˜h¥"­¥r·³°°ÂLÉ¸~HŸ8DæM$©6-$Q o¨hŠHZWi¾øª à„’$ ˆsÕ‹-M‘¨Û¢("K–ãÓ^Lc*uÛ#I
+98‘„ÕVáîüê½_¸ù–ÎH*»¾û}ºVsÑŸàÌkŞ;+¤ÓÍF‹ÊB…ÌÀÀÂÊ56‰„¬dÓ,=¢ıèêk÷åZZo+Ğt}âÈ"«È´¥S &ôuHĞd	Ûqü¢¡‘144IÄ÷Cl?dl±NAW‘ Çö‰PS–±Pnâ‡~œ`Hàz!º #a˜i~ë·êÛÎì¿îs·\G[glÏPTr==CIc©¿i;ôlÙò€‘Ï,Î#Ö§jŒ=z` 53ÓßÛ×*‰È	Ì4ı0e¦ÜÅ…
+ƒ—^ôÕÎkï9~|	1
+‰¨Z’ ÓUâ$A‘DÒ††ª*Œç¡…†Ã‘ù:sU‹VËAO)4[.Õ¦CÇÌÕ]^8¾ˆï‡Të6ó•¡¤ çò4÷ì~·3üü?dWm 5¿Äì4§&‘tó¸k»8šNvåÚ_ÚÇ&ğÊUÄtW;éR>m*š,"	q³õ—|®¸¼ï~½³£ºıæOİxáMÃeŸúĞgÂ("ò\TY@Ü dªj1±XG–DÌ”BÆPq¢„ Ë˜¬4‘%C“ˆ(·\LYB‘D–š.-Ï'L4E"gª(šF¦­ÈØôşÊĞğ¶¦ !··±æOß€çûuËG–$Ò™´•Ê¤1²YDâ’8E§e£är#[.<ÿşşmÛ÷§;:kµg÷•âĞåÔë?p«¼zÓwÆÆ+È¢ˆ,
+Ó3… Š,Õ-ÊuË	I)m¦†&K4¼ U1u…\V§á‡X¶ƒUká6lf¦0S2…ŒÁBÙ¢iûÚ‰wNüà;ÿ.Ì·+D@y|ª;¥Iô"S÷Üuk¹Q£¼´ˆtùµï¢:v¬gì¡‡Ş«i*G§ë¬9ÿ¬ï½ö½Wÿ“$ëÓ‹ÃÃ#ûÿËmåæÌt¥áˆŠxú™wÇ(ŠªJGÖD–ü ¢bÙH,Ô-Æ+-zòiÖtåÈçÒøaH­j1_s9óm—ıÃiW]y]Ôªnnhùô|…HRĞ5…(Š02&­™™¬?6úş\WïĞÀÙç‹zjâĞİ÷^ÙU*pxßí«×ü°speY6Œ,a³µ2²mI¤gY{õõÿà§ÍB·ZqÊK#/6àŒígsÁG>NcaöŞ‰ıÏ>2üÄSç¦R
+¡)	’ ’( 1qÇëNu%È‰1Sµš­¡>]İùÚ®½ö”7¿í§‘$Ğ±fÅÅÏÿ·iòğ‘ÓÏoŒ
+*ÙR„j±ˆìÚéGnºågöìäg/úò·ÿªyøà}û[Y	@Óõ¼ŞQBÚ¶nåë§¸ï#Îìô@³å0ğš3ÜyáwÇcÕÊ8å2]™ùr“'üC†î¿‡ş-›öVFÇ®[õ”n‰€ €ëÀ‰=d´bsÉŸ¿ıoŞô©ÿ¼ó…‡w¿qìèTW=„™¹.¹àû§ğC_ıÅÃ„¾Kqã¯ë”­m¹ü²ÛòmæÂÄøÄiS£³éùJ%¥!(*Å¶îğ¡sFzlCcdô”rµÚ[w|6_|á¿×Œ‹÷}á«ì}æ¼Rg	Qq[­¬næ¨-TñD‰Á7\Â?½ƒÁÛxü®ûùçŸü‚“·_ğÑşnÑ‘…EÂ?Šñ‚ˆÙ…:+ûÚ|éÅ·ôœ¼•Íï¸òª– ‹5‹Xõæ·~™ &;Ğ^Ì‘¸.ÍJÕnÕ›\ğé›nï?êzçw¿½®{ãºÇ£r™0Šië(m/0~Ï½Wí;pz3‘È åãS½I#]sËÇ#¯Rí944(e24—*ËJë7}ßÓ3U»¼TĞôT!‰’V÷úõ¬X¿’nM¢sİZÏßùXùÀ¾•Ñcë{ºÛ°€Ç²qD1°§kî™oH÷/ßµT¯¯?ãÔï¬Z»²ºõmW|±tÊÉ{]«…\Ìƒr"{9õb#86~Ëbíùç/ÉªÔzæç÷^Ñ‘ÕñÂ×hïé Ù´qlŸLÑ±vÕc=gù¤ôÙûëÚºùîƒwÜñÄ÷tßó„Ã<òÆ¸²}àÁÖFÇÎ‹Ú»şujb¹XbíÙçáV[XÕ:J¡x°öÜÓ×g4•0IP/WxñÒÛ¾Ù¹fóæ{­jÃ¬œÓei¢ÿäMõÍo}ëîÌŠ‘f½J(Š¤R*vãÄÉÁLÈª‰»°DzÅŠC¡"—÷Ş³ëb]W1t…¡X:æ&„^˜Ûn¸æ&³¿sV:ï‚sHµwºµ‰IcjÏ3çû:H,+_:ß©ÖÖXz—×l6D3ÿLsr–ñû˜xî)¦F_$¨×J}Aã†ZË¦³”'v]Fç*)tó©µëŸXvúéY“ãÍ™	Šƒƒ'vq«²Œ  €,ŠhšŒİ°E´‘B5Ò(†U©²ê¢‹:¾{×¹µcc+J¥­ùEŒ­§ß;pÙ¥_:ıš«?RÚ¾ùhs~iÕêU,NÏCm~ÿŞ÷yÍjÚÄA"-„´mØôƒPI7\š¯…ÍÎÂ<Vy	§é\¿®¤Ÿ›2&g–¨HúÁ…–ç>±÷C’nÜ‘H©9ßvÓ9:OêGÕubQ„—”›DM•±-TM![( ÅQ’_q±uø®ûÿ¬·+cÛùÂÁUÛÏşëtOo+RB¢(@ÚxêfZÕ2r6?'dó»Z~lõêéb¾í^sùI?[<<ôÁ¶­ÛoÍtt»Q’ g‹”V¬%Û¹eöØ7UÏî¨Öš¢²ØuúömË—İ[9:ut×¯ê“ÇÙÿ,Z±ê¬3	‚D–NhŠIB*­“)åpš±— È:nÃ&T#_­’í8¼°w÷•R£Rô\—îíÛï^¾óu¿òÊ‹Ä¶ƒàÄÈB#$	A³Jz`ğ‘®|é³±ğuù¼ ×ş/$ıj|ßîF«V#/°ö¬×
+¡ÓÊx–µl!	ĞL‘®bÑ¹ê5	åLgÏå££LÌ,`óÀIÇ§‘t Ğ²iÓ‹”‡Çğl‡êÔ"c‚ˆ KxÕ
+í+úPÍzgBgÏî¥±‘A™„X3ZÅ•øµ&¡’ï^,H'$IA”*uüj…ÎŞÎU3{¬Ñ´B%—»¿rô0“‹[Û:ãßsiÍL­]++¤M¢(FŒ
+¥ÂX’k“²9T3EN„”©â6}Òé ’Ä'ÄµT>Cm|†±Ç!p=]GRN(Šª’f~b‚êÔ1ÖŸw­éãhŠ¼ĞDZ~ÈÒÌ¼<}ğq¢!é2²®ı–/œ(ôÍ$B˜ ‘!aÓW0YyÊ¼zAQâPv‚„‚(!Hqà‚fND‚€ßªÓ¹n¥Á“Dßó2&Í¹ydCGÌ¦©Ï2¶{?¢*“n3øÍ¢¬$KÙó‡#ŒB
++W’$q®aydÚò$/ìûÌ£}ïÛ{w^øáMïz×½©béÕKo‚  ÉKê¼k¹lzİyôŸs6›7Ñ·ãÚ7¬6`¦Tª•&¶fŞ¯ê*‘g!ë)Œ¶vRù¹înš–ËøÁaò]í4&çÛ½IPT™$ ‰ÿİ£M×MIÓÕù©9‚X 2·°Ò‰AQTZv@cìØêg¿yÛ=¾û‡+GôÿŞB 4*eÖq:ÛŞş.×%ß³³«‹Ê‘Ñ¾TâúSÇE";¸æ§f:ƒ—$DQôÒ¤ˆ@¦XdôÀ¤ÛÚh4[DŠ€bjDIòÒHÿn±&xÎV£Ô©¹‚úÀ®/~ùãÏ>¾i(I„¨Ê…bËbtÿ‘uî®ûèï"ˆ"nË&ô]Öo}-KG‡pêUÀ¬.á9ôæ¢I6­q`hœÌÊ5wæW¯{1¨VÈuu¢èÚËèr¢6iS^˜GÍf5éUö8HH÷õ=g—¯š|×©Zm©}ÛkN–G‡~¾$]½†¨	'-!kÿäœZ%c¯Dp­¥eË)]t1	!±DIBRUÊŸËŒïæ²5¥4FJ!‰"´Õ’]¹ö8ù¶6Œ¼FDü²Úğ’úG1qâT[ÈšòJ ¾‹jõşóÎ½}ú©zûæbCüõKª|¯ÓÙ{ÃâÒR¿pôàƒ§\ùÖwtôtk¹Lò2 Iœ¸.A,²~Ó&ò…çşº’Òqı 9»÷é£3³§7èíjG˜8ògµ]÷×Ûvî¼KV4|«LÌ+iC¢$’ïkìjES_Á†È÷8HåóÁñ§÷ĞÑÙ>»úÊ«>¹ÿ_2¸}Ûñ×^¹³)Ö>ñD5¢—{’$DÑ‰«}YF±€í;„Ä¿v×³ÑKE
+õ¦K'ª‚43véèpç‘¿ÿÊƒŞ±‘j±í%jı–'ê“qRèm'ÓV$£W%I‚ 
+´–Êx®[šA«…øt¯_;íîª†¾Kì¿‘~pm‹U[6³ñì×G!BòoûÌoÒC7R +eÛ‡\Fg©f¡iÚ²‡¿şáozá´İpÕÀŸ^ş={vúw~¤¬¤Èu¥°ë—*R¯0I‚¬ª¢H'®QŒS­€¨#ˆÂo¥ß$!_jCÓu|ÛÃ®·ğ,÷eî¶Ë¡çÔÓ~%`Ù®ç339‡º¬~Ó7®½æÊ·->ûÜ[Âù¤ Bô‚Wº"Ø‘e½‚}ÿ{YŒˆ¢ˆë¸,ÍÎĞ¨T_}†€–k“]»öW}§lØÓš9¾İèêyL\ûüèO^×ŸzòÏ7éö“ƒéc¿ˆjs)-_pãßÁIƒäw¯ÆÈ‰p‡ ôq]›(_u€¸YÇ(-¾qÇÓ_ú»oE!+_óá¯on}èÈówŞõéÊsÏô•NZ>¥id]'âW,¨ºFqâØòşó[@NäÊ(ŠÉ—Šf†(_½§ éì öš3¦c#5kê2³wÛú·ÿ§}Û65b?$ò#e)yE_ÂˆĞó‰£èO­³0ÉæÒt÷uáºî«5$ÁhËÒ{êæÿa®]Ssš~şæŠ¿üĞ£mııT&&I4ˆ_íQDğxI¬øcØÿÀXŠ†‘^'İ    IEND®B`‚
+-----------------------------36921483463076025713053061213--
+
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/upload_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: multipart/form-data; boundary=---------------------------36921483463076025713053061213
+Content-Length: 9327
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+-----------------------------36921483463076025713053061213
+Content-Disposition: form-data; name="fileChunk"; filename="monster.png"
+Content-Type: image/png
+
+‰PNG
+
+
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/upload_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 9327
+content-type: multipart/form-data; boundary=---------------------------36921483463076025713053061213
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:---------------------------36921483463076025713053061213
+Body str: -----------------------------36921483463076025713053061213
+Content-Disposition: form-data; name="fileChunk"; filename="monster.png"
+Content-Type: image/png
+
+‰PNG
+
+   IHDR   2   2   ?ˆ±   	pHYs     šœ  
+„iTXtXML:com.adobe.xmp     <?xpacket begin="ï»¿" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c145 79.163499, 2018/08/13-16:40:22        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:photoshop="http://ns.adobe.com/photoshop/1.0/" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmp:CreatorTool="Adobe Photoshop CC 2019 (Windows)" xmp:CreateDate="2023-05-18T22:16:31+02:00" xmp:ModifyDate="2023-05-18T22:54:05+02:00" xmp:MetadataDate="2023-05-18T22:54:05+02:00" dc:format="image/png" photoshop:ColorMode="3" photoshop:ICCProfile="sRGB IEC61966-2.1" xmpMM:InstanceID="xmp.iid:9d29bd03-dd9c-be4d-b810-8e9a40bea33f" xmpMM:DocumentID="adobe:docid:photoshop:3e6f470d-ab2d-8948-986a-f11b2700a320" xmpMM:OriginalDocumentID="xmp.did:a8938e2a-b3c9-9849-9151-c8b8052ec580"> <photoshop:DocumentAncestors> <rdf:Bag> <rdf:li>xmp.did:a8938e2a-b3c9-9849-9151-c8b8052ec580</rdf:li> </rdf:Bag> </photoshop:DocumentAncestors> <xmpMM:History> <rdf:Seq> <rdf:li stEvt:action="created" stEvt:instanceID="xmp.iid:a8938e2a-b3c9-9849-9151-c8b8052ec580" stEvt:when="2023-05-18T22:16:31+02:00" stEvt:softwareAgent="Adobe Photoshop CC 2019 (Windows)"/> <rdf:li stEvt:action="converted" stEvt:parameters="from image/png to application/vnd.adobe.photoshop"/> <rdf:li stEvt:action="saved" stEvt:instanceID="xmp.iid:168c81e8-373c-2241-9c5d-df3c491340f5" stEvt:when="2023-05-18T22:46:55+02:00" stEvt:softwareAgent="Adobe Photoshop CC 2019 (Windows)" stEvt:changed="/"/> <rdf:li stEvt:action="saved" stEvt:instanceID="xmp.iid:ec039ca9-4d48-d141-a738-af16a89b1688" stEvt:when="2023-05-18T22:54:05+02:00" stEvt:softwareAgent="Adobe Photoshop CC 2019 (Windows)" stEvt:changed="/"/> <rdf:li stEvt:action="converted" stEvt:parameters="from application/vnd.adobe.photoshop to image/png"/> <rdf:li stEvt:action="derived" stEvt:parameters="converted from application/vnd.adobe.photoshop to image/png"/> <rdf:li stEvt:action="saved" stEvt:instanceID="xmp.iid:9d29bd03-dd9c-be4d-b810-8e9a40bea33f" stEvt:when="2023-05-18T22:54:05+02:00" stEvt:softwareAgent="Adobe Photoshop CC 2019 (Windows)" stEvt:changed="/"/> </rdf:Seq> </xmpMM:History> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:ec039ca9-4d48-d141-a738-af16a89b1688" stRef:documentID="xmp.did:a8938e2a-b3c9-9849-9151-c8b8052ec580" stRef:originalDocumentID="xmp.did:a8938e2a-b3c9-9849-9151-c8b8052ec580"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?>l'  °IDAThíšy”_e™ç?wÿİ{{ıj¯¤RTö…ÁDV%4 4ŠÒÒHã¸â´
+J‹¶İíÚŠcc{Ní2í¸ô( ‹€@Â!aIRR•ªÔ¾ıößİ·ù#´-‚ÎœÖsfÎœyÎyÎ=÷÷½ïı¾ï÷yŞ÷|Ÿ+$IÂÿ&şŸş€?–ı ÿ·™|û#w½ì Šx–K^“I/ë ÖTürÅ4‘sEıì.E²5IéşìĞ‹ÊÊóÏ³{×®CU"Ì=ì½ı¿³çöo~H7•°¸fÓş@”vşÉ®¾S·’egn³=ÃÌ±	æO²õÂsPU‘F­ÁÔ¡!b? {ëV†ï»›¹ƒÃ\|óÍ,9‚RA)ôôñôOBP·¹ø†«Ÿ(ˆÿWH“8¦pÒ KÇ'…g¿zó×æ÷îyO&$²Ô"3Öó»O{í×¶ü_yø³_øà/?û•¯w¯Ì"¥ÒLîºÿ
+ØûèÃßzê=}¯Ûù÷«/yËƒªè“DÇş¸+ò{A$1ùp÷†Ÿ½ÿ}»YZ,j…<±ŸPÈk©Lg»¼Ô7üß¿ûå±§¿şàşÑR{‡A:•Á$³@"Š¸¡ÏâG/}òÑ‹+‡şæì¿úÔÍF©dh†?VÒü@â8¢tÒæNvüøïÜ“ıŒ1Ø„ˆv€ã	˜^Bª˜§§'¬—Vw¥©9NÃ#E$EÀĞdDI#WXNøï»7ÅÍò)×}ìâÜŠÌö~uş@@"IÂoz’ÄÄQL~`€…ÃGR?ÿ‹wÿ$H¼LûºA\Û%rBâ &#4$”0¡Zi¡Y–wYßS@‘$¦ª-4E&Šbºs&YUÁA¤}u?óO<vÑ¯®ßŞgÿñëÿ4?<4P\³â„?ˆ(ò›.
+"ùş~ÆÛsÆ.»Ä‘9{õºA’¬„’R˜«¶h¸>y3…©(øŸÊ’ƒo˜)…bZgU_‘¬¡R®Û4.KU‹fÓÁP”´J¾³ˆ2?¹mìáÇŞıƒ+Ş22tç];J'oB1L”Lto¢¢`Õjˆâÿ^b•K¥ö_ß$q„Ù»œúÔlf×-7ßWTcú)×›h’@±¦R±©×]r††ï‡ÌW›dT	¢ˆ8ˆ±‚„„ûÇ	Ã)I(vh:>Š$ã†™bË­…ñî÷½çñÓ>ùéKÍÎ_4l>²´Ğo/•‡7]şæ•BA”I’Aø=@dù¥0‰côîn¦‡‡ÍG?ñ±;UÏÉk]½ŒÏ•Ñ4±Òp<Ä8ÁĞd’8¦\·H)2}íY&—Ô,¶œªJh²H_Şà…™*¥¬AËò™¯4ÈibSÂP2‰ŒĞÑàÙ<ñù[ï,vuE¸¶Ü´›è½İ5­V½ïˆï|5¿zãÓ©®„²âÕ2„ô–\C"$¨ù,‹ccm»®»v<59¶¶Ô¿ŒĞˆH)¢"1¾Øbj©‰*I¶ë“ReòQ±½bÖÄ÷C‚ "g¨Da„íXOg1‹,
+d8JÈ¥T\/@7S”r¦€çŠ‚$“ËçÈÆajqß¾sO=vmùè¡K+G†œrE.­]7:?9 kl<ë4¢Vyqd’˜¶µëØwÛ7¾ONäûOÛ@Ã™«X¨’ˆ˜€'¬ìÊ‘Dsu›ºåÒô2	4Zùt
+Mq]Ÿ8IpıQ€şR–JË¡¯-ƒë…H²„&ØNˆœS)eò™K-¢(¡`¨ŠD{±ˆxT¦F¶Î<÷ìÖ±OŒŞuÇd(«aäMŸ½õÖŞ-›ÇìJiÇEJ
+£>±|î;¿’ÒTs¦ê #`ùõ¦CJ•ˆ€RÎ¤§˜ ¢á4Ü€ˆS•I¢ˆR!CÃöH©2q’ĞtÒºFÆPIbpıˆ¬®BÓò<œ BN0%—5¨Öm,ÇGS%dU&
+#Â UC-æÈ¤ÒX³³¹`iqcõÅÉ-•fÓ3Wo|pîÅäsßy5:2wÜúÉ·ÍÌ¶¯ßÔ.‰ÄqÂ|Í"Šcür‹¶tŠe&çªäÍ~8>¶Rµ<2zËrè.¥Ñ…–ãuÇC—%ò¦q|"±-×G"fêÔmMSH€±é%\Ûƒ  `jDqŒ—H™,)4RrÒW«-qlèÒ)§®aaö8v½ª–÷?}•&
+†FÙr™«Z4ı†²¼&bl?D¼ "!!­ÊLîR†”® ‰ë£HSÃr|š¶GFSˆˆhznÑ“5Hë³å&5Û#­Éè‘Ï±ñybUÅìí‰SF9Içf›~ä·šéÕËÛQ$‘F¥>ØwÖÙ?;éµ;–dÇªK1•ÉI'@%M”ES¥:S¦`j–OIWiKÄˆˆ€åù$ôäO¶,
+¨ŠˆíG4Z®QÌéèšDF“˜«˜š„¡i„QŒ(äUÛ£M•é(˜„qÌÒq›ñÉ9ÜŞN÷Ôw¾õ›.¿üocİ¬–GG)4ÀÌááO}ö–ûÓ†J(ä(?}Ø˜¾ûÎ¿Xó•¯ß(/ß¸…8)½±ëI#à3÷óÿº/ŒÉëuÛÃD:Ò)ü Äõ|ª¶G%H¢„"KIBËhYMÏ…&¤=¥²²»ÀbÍÂ]2š‚@‚,€¬«4[.`Wkœ¶ã”¡îKŞtaº»ob`ûN“…cãt,_Nÿ³ˆ£¤Öòcæê„ˆT\¹î5ÈŠ,#é:éÁ•<òµ¯îD07Û 'oâyC¥”3©Z®ïSw|‚(F“%*¶"	¤ë¶"J=mZ–‹eû¬ê+b©QS³}$I¦áx˜šŠÅ¤Ó)4#Ey||õYg¤:»yáî;Èóè†Î‘§Ÿb©ZeêÀÛĞ5dA c2¦Hz`Ùx˜×GB¢>3ÍôÈÈ &C[VG‘%^H&H’HÇÌ×m‚(&§kÈ¢€†,´\‚(FOi´åÓ(’€,€íz$ILE4è*˜ˆ’„ ¸QÂTİ"­)èªD{g	kfVzøóŸû|¦½—gŸÜÇß~òs<¹ûIRù#/ÇQEMé‰„¨Ä´-ë©õìØñSkfQÎ˜h¥"­¥r·³°°ÂLÉ¸~HŸ8DæM$©6-$Q o¨hŠHZWi¾øª à„’$ ˆsÕ‹-M‘¨Û¢("K–ãÓ^Lc*uÛ#I
+98‘„ÕVáîüê½_¸ù–ÎH*»¾û}ºVsÑŸàÌkŞ;+¤ÓÍF‹ÊB…ÌÀÀÂÊ56‰„¬dÓ,=¢ıèêk÷åZZo+Ğt}âÈ"«È´¥S &ôuHĞd	Ûqü¢¡‘144IÄ÷Cl?dl±NAW‘ Çö‰PS–±Pnâ‡~œ`Hàz!º #a˜i~ë·êÛÎì¿îs·\G[glÏPTr==CIc©¿i;ôlÙò€‘Ï,Î#Ö§jŒ=z` 53ÓßÛ×*‰È	Ì4ı0e¦ÜÅ…
+ƒ—^ôÕÎkï9~|	1
+‰¨Z’ ÓUâ$A‘DÒ††ª*Œç¡…†Ã‘ù:sU‹VËAO)4[.Õ¦CÇÌÕ]^8¾ˆï‡Të6ó•¡¤ çò4÷ì~·3üü?dWm 5¿Äì4§&‘tó¸k»8šNvåÚ_ÚÇ&ğÊUÄtW;éR>m*š,"	q³õ—|®¸¼ï~½³£ºıæOİxáMÃeŸúĞgÂ("ò\TY@Ü dªj1±XG–DÌ”BÆPq¢„ Ë˜¬4‘%C“ˆ(·\LYB‘D–š.-Ï'L4E"gª(šF¦­ÈØôşÊĞğ¶¦ !··±æOß€çûuËG–$Ò™´•Ê¤1²YDâ’8E§e£är#[.<ÿşşmÛ÷§;:kµg÷•âĞåÔë?p«¼zÓwÆÆ+È¢ˆ,
+Ó3… Š,Õ-ÊuË	I)m¦†&K4¼ U1u…\V§á‡X¶ƒUká6lf¦0S2…ŒÁBÙ¢iûÚ‰wNüà;ÿ.Ì·+D@y|ª;¥Iô"S÷Üuk¹Q£¼´ˆtùµï¢:v¬gì¡‡Ş«i*G§ë¬9ÿ¬ï½ö½Wÿ“$ëÓ‹ÃÃ#ûÿËmåæÌt¥áˆŠxú™wÇ(ŠªJGÖD–ü ¢bÙH,Ô-Æ+-zòiÖtåÈçÒøaH­j1_s9óm—ıÃiW]y]Ôªnnhùô|…HRĞ5…(Š02&­™™¬?6úş\WïĞÀÙç‹zjâĞİ÷^ÙU*pxßí«×ü°speY6Œ,a³µ2²mI¤gY{õõÿà§ÍB·ZqÊK#/6àŒígsÁG>NcaöŞ‰ıÏ>2üÄSç¦R
+¡)	’ ’( 1qÇëNu%È‰1Sµš­¡>]İùÚ®½ö”7¿í§‘$Ğ±fÅÅÏÿ·iòğ‘ÓÏoŒ
+*ÙR„j±ˆìÚéGnºågöìäg/úò·ÿªyøà}û[Y	@Óõ¼ŞQBÚ¶nåë§¸ï#Îìô@³å0ğš3ÜyáwÇcÕÊ8å2]™ùr“'üC†î¿‡ş-›öVFÇ®[õ”n‰€ €ëÀ‰=d´bsÉŸ¿ıoŞô©ÿ¼ó…‡w¿qìèTW=„™¹.¹àû§ğC_ıÅÃ„¾Kqã¯ë”­m¹ü²ÛòmæÂÄøÄiS£³éùJ%¥!(*Å¶îğ¡sFzlCcdô”rµÚ[w|6_|á¿×Œ‹÷}á«ì}æ¼Rg	Qq[­¬næ¨-TñD‰Á7\Â?½ƒÁÛxü®ûùçŸü‚“·_ğÑşnÑ‘…EÂ?Šñ‚ˆÙ…:+ûÚ|éÅ·ôœ¼•Íï¸òª– ‹5‹Xõæ·~™ &;Ğ^Ì‘¸.ÍJÕnÕ›\ğé›nï?êzçw¿½®{ãºÇ£r™0Šië(m/0~Ï½Wí;pz3‘È åãS½I#]sËÇ#¯Rí944(e24—*ËJë7}ßÓ3U»¼TĞôT!‰’V÷úõ¬X¿’nM¢sİZÏßùXùÀ¾•Ñcë{ºÛ°€Ç²qD1°§kî™oH÷/ßµT¯¯?ãÔï¬Z»²ºõmW|±tÊÉ{]«…\Ìƒr"{9õb#86~Ëbíùç/ÉªÔzæç÷^Ñ‘ÕñÂ×hïé Ù´qlŸLÑ±vÕc=gù¤ôÙûëÚºùîƒwÜñÄ÷tßó„Ã<òÆ¸²}àÁÖFÇÎ‹Ú»şujb¹XbíÙçáV[XÕ:J¡x°öÜÓ×g4•0IP/WxñÒÛ¾Ù¹fóæ{­jÃ¬œÓei¢ÿäMõÍo}ëîÌŠ‘f½J(Š¤R*vãÄÉÁLÈª‰»°DzÅŠC¡"—÷Ş³ëb]W1t…¡X:æ&„^˜Ûn¸æ&³¿sV:ï‚sHµwºµ‰IcjÏ3çû:H,+_:ß©ÖÖXz—×l6D3ÿLsr–ñû˜xî)¦F_$¨×J}Aã†ZË¦³”'v]Fç*)tó©µëŸXvúéY“ãÍ™	Šƒƒ'vq«²Œ  €,ŠhšŒİ°E´‘B5Ò(†U©²ê¢‹:¾{×¹µcc+J¥­ùEŒ­§ß;pÙ¥_:ıš«?RÚ¾ùhs~iÕêU,NÏCm~ÿŞ÷yÍjÚÄA"-„´mØôƒPI7\š¯…ÍÎÂ<Vy	§é\¿®¤Ÿ›2&g–¨HúÁ…–ç>±÷C’nÜ‘H©9ßvÓ9:OêGÕubQ„—”›DM•±-TM![( ÅQ’_q±uø®ûÿ¬·+cÛùÂÁUÛÏşëtOo+RB¢(@ÚxêfZÕ2r6?'dó»Z~lõêéb¾í^sùI?[<<ôÁ¶­ÛoÍtt»Q’ g‹”V¬%Û¹eöØ7UÏî¨Öš¢²ØuúömË—İ[9:ut×¯ê“ÇÙÿ,Z±ê¬3	‚D–NhŠIB*­“)åpš±— È:nÃ&T#_­’í8¼°w÷•R£Rô\—îíÛï^¾óu¿òÊ‹Ä¶ƒàÄÈB#$	A³Jz`ğ‘®|é³±ğuù¼ ×ş/$ıj|ßîF«V#/°ö¬×
+¡ÓÊx–µl!	ĞL‘®bÑ¹ê5	åLgÏå££LÌ,`óÀIÇ§‘t Ğ²iÓ‹”‡Çğl‡êÔ"c‚ˆ KxÕ
+í+úPÍzgBgÏî¥±‘A™„X3ZÅ•øµ&¡’ï^,H'$IA”*uüj…ÎŞÎU3{¬Ñ´B%—»¿rô0“‹[Û:ãßsiÍL­]++¤M¢(FŒ
+¥ÂX’k“²9T3EN„”©â6}Òé ’Ä'ÄµT>Cm|†±Ç!p=]GRN(Šª’f~b‚êÔ1ÖŸw­éãhŠ¼ĞDZ~ÈÒÌ¼<}ğq¢!é2²®ı–/œ(ôÍ$B˜ ‘!aÓW0YyÊ¼zAQâPv‚„‚(!Hqà‚fND‚€ßªÓ¹n¥Á“Dßó2&Í¹ydCGÌ¦©Ï2¶{?¢*“n3øÍ¢¬$KÙó‡#ŒB
++W’$q®aydÚò$/ìûÌ£}ïÛ{w^øáMïz×½©béÕKo‚  ÉKê¼k¹lzİyôŸs6›7Ñ·ãÚ7¬6`¦Tª•&¶fŞ¯ê*‘g!ë)Œ¶vRù¹înš–ËøÁaò]í4&çÛ½IPT™$ ‰ÿİ£M×MIÓÕù©9‚X 2·°Ò‰AQTZv@cìØêg¿yÛ=¾û‡+GôÿŞB 4*eÖq:ÛŞş.×%ß³³«‹Ê‘Ñ¾TâúSÇE";¸æ§f:ƒ—$DQôÒ¤ˆ@¦XdôÀ¤ÛÚh4[DŠ€bjDIòÒHÿn±&xÎV£Ô©¹‚úÀ®/~ùãÏ>¾i(I„¨Ê…bËbtÿ‘uî®ûèï"ˆ"nË&ô]Öo}-KG‡pêUÀ¬.á9ôæ¢I6­q`hœÌÊ5wæW¯{1¨VÈuu¢èÚËèr¢6iS^˜GÍf5éUö8HH÷õ=g—¯š|×©Zm©}ÛkN–G‡~¾$]½†¨	'-!kÿäœZ%c¯Dp­¥eË)]t1	!±DIBRUÊŸËŒïæ²5¥4FJ!‰"´Õ’]¹ö8ù¶6Œ¼FDü²Úğ’úG1qâT[ÈšòJ ¾‹jõşóÎ½}ú©zûæbCüõKª|¯ÓÙ{ÃâÒR¿pôàƒ§\ùÖwtôtk¹Lò2 Iœ¸.A,²~Ó&ò…çşº’Òqı 9»÷é£3³§7èíjG˜8ògµ]÷×Ûvî¼KV4|«LÌ+iC¢$’ïkìjES_Á†È÷8HåóÁñ§÷ĞÑÙ>»úÊ«>¹ÿ_2¸}Ûñ×^¹³)Ö>ñD5¢—{’$DÑ‰«}YF±€í;„Ä¿v×³ÑKE
+õ¦K'ª‚43véèpç‘¿ÿÊƒŞ±‘j±í%jı–'ê“qRèm'ÓV$£W%I‚ 
+´–Êx®[šA«…øt¯_;íîª†¾Kì¿‘~pm‹U[6³ñì×G!BòoûÌoÒC7R +eÛ‡\Fg©f¡iÚ²‡¿şáozá´İpÕÀŸ^ş={vúw~¤¬¤Èu¥°ë—*R¯0I‚¬ª¢H'®QŒS­€¨#ˆÂo¥ß$!_jCÓu|ÛÃ®·ğ,÷eî¶Ë¡çÔÓ~%`Ù®ç339‡º¬~Ó7®½æÊ·->ûÜ[Âù¤ Bô‚Wº"Ø‘e½‚}ÿ{YŒˆ¢ˆë¸,ÍÎĞ¨T_}†€–k“]»öW}§lØÓš9¾İèêyL\ûüèO^×ŸzòÏ7éö“ƒéc¿ˆjs)-_pãßÁIƒäw¯ÆÈ‰p‡ ôq]›(_u€¸YÇ(-¾qÇÓ_ú»oE!+_óá¯on}èÈówŞõéÊsÏô•NZ>¥id]'âW,¨ºFqâØòşó[@NäÊ(ŠÉ—Šf†(_½§ éì öš3¦c#5kê2³wÛú·ÿ§}Û65b?$ò#e)yE_ÂˆĞó‰£èO­³0ÉæÒt÷uáºî«5$ÁhËÒ{êæÿa®]Ssš~şæŠ¿üĞ£mııT&&I4ˆ_íQDğxI¬øcØÿÀXŠ†‘^'İ    IEND®B`‚
+-----------------------------36921483463076025713053061213--
+
+Body vector: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 3 6 9 2 1 4 8 3 4 6 3 0 7 6 0 2 5 7 1 3 0 5 3 0 6 1 2 1 3  
+ C o n t e n t - D i s p o s i t i o n :   f o r m - d a t a ;   n a m e = " f i l e C h u n k " ;   f i l e n a m e = " m o n s t e r . p n g "  
+ C o n t e n t - T y p e :   i m a g e / p n g  
+  
+ ‰ P N G  
+  
+        I H D R       2       2          ? ˆ ±       	 p H Y s                š œ      
+ „ i T X t X M L : c o m . a d o b e . x m p           < ? x p a c k e t   b e g i n = " ï » ¿ "   i d = " W 5 M 0 M p C e h i H z r e S z N T c z k c 9 d " ? >   < x : x m p m e t a   x m l n s : x = " a d o b e : n s : m e t a / "   x : x m p t k = " A d o b e   X M P   C o r e   5 . 6 - c 1 4 5   7 9 . 1 6 3 4 9 9 ,   2 0 1 8 / 0 8 / 1 3 - 1 6 : 4 0 : 2 2                 " >   < r d f : R D F   x m l n s : r d f = " h t t p : / / w w w . w 3 . o r g / 1 9 9 9 / 0 2 / 2 2 - r d f - s y n t a x - n s # " >   < r d f : D e s c r i p t i o n   r d f : a b o u t = " "   x m l n s : x m p = " h t t p : / / n s . a d o b e . c o m / x a p / 1 . 0 / "   x m l n s : d c = " h t t p : / / p u r l . o r g / d c / e l e m e n t s / 1 . 1 / "   x m l n s : p h o t o s h o p = " h t t p : / / n s . a d o b e . c o m / p h o t o s h o p / 1 . 0 / "   x m l n s : x m p M M = " h t t p : / / n s . a d o b e . c o m / x a p / 1 . 0 / m m / "   x m l n s : s t E v t = " h t t p : / / n s . a d o b e . c o m / x a p / 1 . 0 / s T y p e / R e s o u r c e E v e n t # "   x m l n s : s t R e f = " h t t p : / / n s . a d o b e . c o m / x a p / 1 . 0 / s T y p e / R e s o u r c e R e f # "   x m p : C r e a t o r T o o l = " A d o b e   P h o t o s h o p   C C   2 0 1 9   ( W i n d o w s ) "   x m p : C r e a t e D a t e = " 2 0 2 3 - 0 5 - 1 8 T 2 2 : 1 6 : 3 1 + 0 2 : 0 0 "   x m p : M o d i f y D a t e = " 2 0 2 3 - 0 5 - 1 8 T 2 2 : 5 4 : 0 5 + 0 2 : 0 0 "   x m p : M e t a d a t a D a t e = " 2 0 2 3 - 0 5 - 1 8 T 2 2 : 5 4 : 0 5 + 0 2 : 0 0 "   d c : f o r m a t = " i m a g e / p n g "   p h o t o s h o p : C o l o r M o d e = " 3 "   p h o t o s h o p : I C C P r o f i l e = " s R G B   I E C 6 1 9 6 6 - 2 . 1 "   x m p M M : I n s t a n c e I D = " x m p . i i d : 9 d 2 9 b d 0 3 - d d 9 c - b e 4 d - b 8 1 0 - 8 e 9 a 4 0 b e a 3 3 f "   x m p M M : D o c u m e n t I D = " a d o b e : d o c i d : p h o t o s h o p : 3 e 6 f 4 7 0 d - a b 2 d - 8 9 4 8 - 9 8 6 a - f 1 1 b 2 7 0 0 a 3 2 0 "   x m p M M : O r i g i n a l D o c u m e n t I D = " x m p . d i d : a 8 9 3 8 e 2 a - b 3 c 9 - 9 8 4 9 - 9 1 5 1 - c 8 b 8 0 5 2 e c 5 8 0 " >   < p h o t o s h o p : D o c u m e n t A n c e s t o r s >   < r d f : B a g >   < r d f : l i > x m p . d i d : a 8 9 3 8 e 2 a - b 3 c 9 - 9 8 4 9 - 9 1 5 1 - c 8 b 8 0 5 2 e c 5 8 0 < / r d f : l i >   < / r d f : B a g >   < / p h o t o s h o p : D o c u m e n t A n c e s t o r s >   < x m p M M : H i s t o r y >   < r d f : S e q >   < r d f : l i   s t E v t : a c t i o n = " c r e a t e d "   s t E v t : i n s t a n c e I D = " x m p . i i d : a 8 9 3 8 e 2 a - b 3 c 9 - 9 8 4 9 - 9 1 5 1 - c 8 b 8 0 5 2 e c 5 8 0 "   s t E v t : w h e n = " 2 0 2 3 - 0 5 - 1 8 T 2 2 : 1 6 : 3 1 + 0 2 : 0 0 "   s t E v t : s o f t w a r e A g e n t = " A d o b e   P h o t o s h o p   C C   2 0 1 9   ( W i n d o w s ) " / >   < r d f : l i   s t E v t : a c t i o n = " c o n v e r t e d "   s t E v t : p a r a m e t e r s = " f r o m   i m a g e / p n g   t o   a p p l i c a t i o n / v n d . a d o b e . p h o t o s h o p " / >   < r d f : l i   s t E v t : a c t i o n = " s a v e d "   s t E v t : i n s t a n c e I D = " x m p . i i d : 1 6 8 c 8 1 e 8 - 3 7 3 c - 2 2 4 1 - 9 c 5 d - d f 3 c 4 9 1 3 4 0 f 5 "   s t E v t : w h e n = " 2 0 2 3 - 0 5 - 1 8 T 2 2 : 4 6 : 5 5 + 0 2 : 0 0 "   s t E v t : s o f t w a r e A g e n t = " A d o b e   P h o t o s h o p   C C   2 0 1 9   ( W i n d o w s ) "   s t E v t : c h a n g e d = " / " / >   < r d f : l i   s t E v t : a c t i o n = " s a v e d "   s t E v t : i n s t a n c e I D = " x m p . i i d : e c 0 3 9 c a 9 - 4 d 4 8 - d 1 4 1 - a 7 3 8 - a f 1 6 a 8 9 b 1 6 8 8 "   s t E v t : w h e n = " 2 0 2 3 - 0 5 - 1 8 T 2 2 : 5 4 : 0 5 + 0 2 : 0 0 "   s t E v t : s o f t w a r e A g e n t = " A d o b e   P h o t o s h o p   C C   2 0 1 9   ( W i n d o w s ) "   s t E v t : c h a n g e d = " / " / >   < r d f : l i   s t E v t : a c t i o n = " c o n v e r t e d "   s t E v t : p a r a m e t e r s = " f r o m   a p p l i c a t i o n / v n d . a d o b e . p h o t o s h o p   t o   i m a g e / p n g " / >   < r d f : l i   s t E v t : a c t i o n = " d e r i v e d "   s t E v t : p a r a m e t e r s = " c o n v e r t e d   f r o m   a p p l i c a t i o n / v n d . a d o b e . p h o t o s h o p   t o   i m a g e / p n g " / >   < r d f : l i   s t E v t : a c t i o n = " s a v e d "   s t E v t : i n s t a n c e I D = " x m p . i i d : 9 d 2 9 b d 0 3 - d d 9 c - b e 4 d - b 8 1 0 - 8 e 9 a 4 0 b e a 3 3 f "   s t E v t : w h e n = " 2 0 2 3 - 0 5 - 1 8 T 2 2 : 5 4 : 0 5 + 0 2 : 0 0 "   s t E v t : s o f t w a r e A g e n t = " A d o b e   P h o t o s h o p   C C   2 0 1 9   ( W i n d o w s ) "   s t E v t : c h a n g e d = " / " / >   < / r d f : S e q >   < / x m p M M : H i s t o r y >   < x m p M M : D e r i v e d F r o m   s t R e f : i n s t a n c e I D = " x m p . i i d : e c 0 3 9 c a 9 - 4 d 4 8 - d 1 4 1 - a 7 3 8 - a f 1 6 a 8 9 b 1 6 8 8 "   s t R e f : d o c u m e n t I D = " x m p . d i d : a 8 9 3 8 e 2 a - b 3 c 9 - 9 8 4 9 - 9 1 5 1 - c 8 b 8 0 5 2 e c 5 8 0 "   s t R e f : o r i g i n a l D o c u m e n t I D = " x m p . d i d : a 8 9 3 8 e 2 a - b 3 c 9 - 9 8 4 9 - 9 1 5 1 - c 8 b 8 0 5 2 e c 5 8 0 " / >   < / r d f : D e s c r i p t i o n >   < / r d f : R D F >   < / x : x m p m e t a >   < ? x p a c k e t   e n d = " r " ? >   l '      ° I D A T h  í š y ” _ e ™ ç ? w ÿ İ {  { ı j ¯ ¤ R T ö …   Á D V % 4   4 Š Ò   Ò H ã  ¸ â ´ 
+ J ‹ ¶ İ í Ú Š c c { N  í 2 í ¸ ô (   ‹ € @ Â   ! a I R  R • ª Ô ¾ ı ö ß İ · ù # ´ - ‚ Î œ Ö s f Î œ y Î y Î = ÷  ÷ ½ ï ı ¾ ï ÷ y Ş ÷ | Ÿ + $ I Â ÿ  & ş Ÿ ş € ? – ı    ÿ · ™ | û # w ½ ì    Š x – K ^ “ I / ë   Ö T ü r  Å 4 ‘ s E  ı ì . E ²  5 I é ş ì Ğ ‹ Ê Ê ó Ï ³ { × ® C U " Ì  = ì ½ ı ¿  ³ ç ö o ~ H 7 • ° ¸ f Ó ş @ ”   v ş É ® ¾ S ·  ’ e  g n  ³ = Ã Ì ± 	 æ  O ² õ Â s P U ‘ F ­ Á Ô ¡ ! b ?   { ë V † ï » › ¹ ƒ Ã \ | ó Í ,  9 ‚  R A  ) ô ô ñ ô O  B P · ¹ ø † «   Ÿ ( ˆ  ÿ W H “ 8 ¦ p Ò   K Ç ' … g ¿ z ó × æ ÷ î y O  & $ ² Ô "  3 Ö ó »   O { í × ¶  ü  _ y ø ³ _ ø à / ? û • ¯ w ¯ Ì " ¥ Ò L î º ÿ 
+  Ø û è Ã  ß z ê = } ¯ Û ù ÷ « / y Ë ƒ ª è “ D Ç ş ¸ + ò { A $ 1 ù     p ÷ † Ÿ ½ ÿ } » Y Z , j … < ± Ÿ P È k © L g  » ¼ Ô 7 ü ß ¿ û å ± §  ¿ ş à ş Ñ R { ‡ A : • Á  $  ³ @ " Š ¸ ¡ Ï â  G /  } ò Ñ ‹ +  ‡ ş æ ì ¿ ú Ô Í F ©  d h † ? V Ò ü  @  â 8 ¢ t Ò  æ  N v ü ø  ï Ü “  ı Œ 1 Ø   „ ˆ v € ã 	 ˜ ^ B ª ˜ § §  ' ¬ —  V w ¥ © 9  N Ã #  E $ E À Ğ d D I # W X N  ø   ï » 7 Å Í ò )  × } ì â Ü Š  Ì ö  ~ u  ş @ @ " I Â o z ’ Ä Ä Q L ~ ` € … Ã G R ? ÿ ‹ w ÿ $ H ¼ L û º A \ Û % r B â   &  # 4 $ ” 0 ¡ Z i ¡  Y – w  Y ß S @ ‘ $ ¦ ª - 4 E & Š b º s & Y U Á A ¤ } u ? ó O < v Ñ ¯ ®  ß Ş g ÿ ñ ë ÿ 4 ? < 4 P \ ³  â „ ?   ˆ ( ò › . 
+ " ù ş ~ Æ  Û s Æ  . » Ä ‘   9 { õ º A ’ ¬ „ ’ R ˜ « ¶ h ¸ > y 3 … © ( ø  Ÿ Ê ’ ƒ o  ˜ ) … b Z g U _ ‘ ¬ ¡ R ® Û 4  . K U ‹ f Ó Á P  ” ´ J ¾ ³ ˆ 2 ? ¹ m ì á Ç Ş ı ƒ + Ş 2 2 t ç ] ; J ' o B 1 L ” L  t o  ¢ ¢ ` Õ j ˆ â ÿ ^ b • K ¥ ö _ ß $ q „ Ù » œ ú Ô l f × - 7 ß W T c ú   ) × › h ’ @ ±  ¦ R ± © × ] r † † ï ‡ Ì W › d T 	 ¢ ˆ 8 ˆ ± ‚  „ „    û Ç  	 Ã  ) I ( v  h : > Š $ ã †  ™ b  Ë   ­ …  ñ î ÷ ½ ç ñ Ó > ù é K Í  Î _ 4   l > ² ´ Ğ o / • ‡ 7 ] ş æ  • B  A ” I ’  A ø = @ d ù ¥ 0 ‰ c ô î n ¦ ‡ ‡ Í G ? ñ ± ; U Ï É k ] ½ Œ Ï • Ñ 4  ±  Ò p < Ä 8 Á Ğ d ’ 8 ¦ \ · H ) 2 } í Y & —  Ô ,  ¶ œ  ª J h ² H _ Ş à … ™ * ¥ ¬ A Ë ò ™ ¯ 4 È  i b S Â P  2 ‰ Œ Ğ Ñ  à Ù < ñ ù [ ï , v u E ¸ ¶ Ü ´ › è ½ İ 5 ­ V ½ ï ˆ ï | 5 ¿ z ã Ó © ®  „  ²  â Õ 2 „ ô –  \ C " $ ¨ ù , ‹ c c m » ® » v < 5 9 ¶ ¶ Ô ¿ Œ Ğ  ˆ  H )  ¢ " 1 ¾ Ø b j © ‰ * I    ¶ ë “ R e ò   Q  ± ½  b Ö Ä ÷ C ‚   " g ¨ D a „ í  X  O g 1 ‹ , 
+ d   8 J È ¥ T \ / @ 7 S ” r ¦ € ç Š ‚ $ “ Ë ç È Æ a j q ß ¾  s O = v m ù è ¡ K + G †  œ r E . ­ ] 7 : ? 9    k l < ë 4 ¢ V    y q d  ’ ˜ ¶ µ ë Ø w Û 7 ¾  O N ä û O Û @ Ã  ™ « X ¨ ’ ˆ ˜ €  ' ¬ ì Ê ‘ D  s u › º å Ò ô  2 	 4 Z  ù t 
+ M  q ] Ÿ 8 I p ı  Q € ş R – J Ë ¡ ¯ - ƒ ë … H ² „  & Ø N ˆ œ S ) e    ò ™   K - ¢ ( ¡ `  ¨ Š D { ± ˆ  x T ¦ F ¶ Î < ÷ ì Ö ±  O Œ Ş u Ç d ( «   a ä M Ÿ ½ õ Ö Ş - › Ç ì J  i Ç E   J 
+ £  > ± | î  ; ¿ ’ Ò T s ¦ ê   # ` ù  õ ¦ C J • ˆ € R Î ¤ § ˜    ¢ á  4 Ü € ˆ  S • I ¢ ˆ R ! C Ã ö H © 2 q ’ Ğ t  Ò º F Æ P I b p ı ˆ ¬ ® B  Ó ò < œ   B  N 0 % — 5 ¨ Ö m , Ç G S % d U & 
+ # Â    U C - æ È ¤ Ò X ³ ³ ¹ ` i q c õ Å É - • f Ó 3 W o | p î Å  ä s ß y 5 : 2 w Ü ú É · Í  Ì ¶ ¯ ß Ô  . ‰ Ä q Â | Í " Š c ü r ‹ ¶ t Š e   & ç ª ä Í  ~   8 > ¶  R µ < 2 z  Ë r è . ¥ Ñ  … – ã   u Ç C — %   ò ¦  q | " ±   - × G  "  f  ê Ô m  M S H € ± é % \ Û ƒ     ` j D q Œ —  H ™ , )  4  R r Ò W « - q l è  Ò ) § ® a a ö 8 v ½ ª – ÷ ? } • & 
+  † F Ù r ™ « Z 4 ı  †  ² ¼  &  b l ? D  ¼   " ! ! ­ Ê  L  î R † ” ®   ‰   ë £ H   S Ã r | š ¶ G F S ˆ  ˆ  h z  n  Ñ “ 5 H ë    ³ å & 5 Û # ­ É è ‘ Ï ± ñ y b U Å ì í  ‰ S F 9 I ç  f › ~ ä · š é Õ Ë Û Q $ ‘ F ¥ > Ø w Ö Ù ? ; é µ ; – d Ç ª  K 1 • É I ' @  % M ” E S ¥ : S ¦ ` j  – O I W i K  Ä ˆ ˆ € å ù  $ ô ä O  ¶ , 
+ ¨ Š ˆ í G 4 Z  ®  Q Ì é è š D F “ ˜ «  ˜ š „ ¡ i „ Q Œ (  ä   U Û £ M • é ( ˜ „ q Ì Ò q › ñ É 9 Ü Ş N ÷ Ô w ¾ õ  › . ¿ ü o c İ ¬ – G G )  4 À Ì á á  O } ö – û Ó † J ( ä ( ? } Ø ˜ ¾ û Î ¿ X ó • ¯ ß ( / ß ¸ … 8  ) ½ ± ë I # à 3 ÷  ó  ÿ º / Œ É ë  u Û Ã  D : Ò )   ü   Ä õ | ª ¶ G  % H ¢ „ " K  I B Ë  h Y    M Ï … & ¤   = ¥ ² ² » À b Í Â  ] 2 š ‚ @ ‚ , € ¬ « 4 [ .   ` W k œ ¶ ã ” ¡ î K Ş t a º » o b ` û   N “ … c ã t , _ N ÿ  ³ ˆ £ ¤ Ö ò c æ  ê „ ˆ T \   ¹ î 5  È Š , # é : é Á • < ò µ ¯  î D 0 7 Û   ' o â   y C ¥ ” 3 © Z  ® ï S w | ‚ ( F “ %   * ¶  " 	 ¤ ë  ¶  " J  = m  Z – ‹ e û ¬ ê + b ©  Q  S ³ }   $ I ¦ á x ˜ š Š  Å ¤ Ó ) 4 # E y | | õ Y g   ¤ : » y á î ; È  ó è † Î ‘ § Ÿ b © Z e ê À  Û Ğ 5 d A    c 2 ¦ H z ` Ù x ˜    × G B ¢ > 3 Í ô È È   & C [ V G ‘ %  ^ H  & H ’ H  Ç Ì × m ‚ ( & § k È ¢ €  † , ´ \ ‚ ( F O i ´ å Ó ( ’ € , € í z $ I L  E 4    è * ˜ ˆ ’ „    ¸ Q Â T İ " ­ ) è ª D { g 	 k f V z ø ó Ÿ û | ¦ ½ — g Ÿ Ü Ç ß ~ ò s < ¹ û I R ù   # /  Ç Q E M é ‰  „ ¨ Ä ´ - ë © õ ì Ø ñ S k f  Q Î ˜ h ¥ " ­ ¥ r · ³ ° ° Â L É ¸ ~ H  Ÿ 8 D æ M  $  © 6 - $ Q   o ¨ h Š H Z W i ¾  ø ª   à „  ’ $   ˆ  s Õ  ‹ -  M ‘ ¨ Û  ¢ ( " K  – ã Ó ^ L c  * u Û # I  
+ 9  8  ‘ „ Õ  V á î  ü ê ½ _ ¸ ù – Î   H  * » ¾ û } º  V s Ñ  Ÿ à Ì k Ş ; + ¤ Ó  Í F ‹ Ê B … Ì À À  Â Ê 5 6 ‰ „ ¬ d Ó ,  = ¢ ı è ê k ÷  å Z Z o + Ğ t } â È " « È ´ ¥ S       & ô u  H  Ğ d 	 Û  q ü  ¢ ¡ ‘ 1 4 4 I Ä ÷ C l ? d l ± N A W ‘   Ç ö ‰  P S  –  ± P n â ‡  ~ œ ` H   à z ! º    # a ˜ i  ~ ë  · ê Û Î ì ¿ î s · \  G   [ g l Ï  P T r = = C I c © ¿ i ; ô l Ù ò € ‘ Ï  , Î # Ö § j Œ = z `   5 3 Ó ß Û ×  * ‰ È 	 Ì 4 ı 0 e ¦ Ü Å … 
+ ƒ — ^ ô Õ Î  k ï 9 ~ | 	 1 
+ ‰  ¨ Z  ’    Ó U â $ A ‘ D Ò † † ª *  Œ  ç ¡ … † Ã ‘ ù : s U ‹ V Ë A O ) 4 [ . Õ ¦ C  Ç Ì Õ ] ^ 8 ¾ ˆ ï ‡ T ë 6 ó •  ¡ ¤   ç ò 4 ÷ ì ~ · 3 ü ü ? d W m   5 ¿ Ä ì   4 § & ‘ t ó ¸ k » 8 š N v å Ú _ Ú Ç & ğ Ê U Ä t W ; é R > m  * š , "  	 q  ³ õ  — | ® ¸ ¼ ï ~ ½ ³ £ º ı æ O İ x á M   Ã e Ÿ ú Ğ g Â ( " ò \ T Y @   Ü   d ª j 1 ± X G – D Ì ” B Æ P q ¢ „    Ë  ˜ ¬ 4 ‘ %  C “ ˆ  ( · \ L Y B ‘ D – š . - Ï ' L  4 E " g ª ( š F ¦ ­ È Ø   ô ş Ê Ğ ğ ¶ ¦   ! · · ± æ O ß € ç û  u Ë G – $ Ò ™ ´ • Ê ¤ 1 ² Y D â  ’ 8    E  § e £ ä r # [ . < ÿ ş ş m Û ÷ § ; : k µ g ÷ • â Ğ å Ô ë ? p « ¼ z Ó w Æ Æ + È ¢ ˆ , 
+  Ó   3 …   Š , Õ - Ê u  Ë 	 I )  m ¦ † & K 4 ¼   U  1 u … \ V § á ‡ X ¶ ƒ U k á 6 l f ¦  0 S 2 … Œ Á B Ù ¢ i û  Ú ‰ w N ü à ; ÿ  . Ì · +   D @ y | ª ; ¥ I ô  " S ÷ Ü u k ¹ Q £ ¼ ´ ˆ t ù µ ï ¢ : v ¬ g ì ¡ ‡ Ş « i * G § ë ¬ 9 ÿ ¬ ï ½ ö ½ W ÿ “ $ ë Ó ‹ Ã Ã # û ÿ Ë m å æ Ì t ¥ á  ˆ Š   x ú ™ w  Ç ( Š    ª J G Ö D –  ü   ¢ b Ù H  , Ô - Æ + - z ò i Ö t å È ç Ò ø a H ­ j 1 _ s 9 ó m — ı Ã i W ] y ] Ô ª n   n h ù ô | … H R Ğ 5 … ( Š 0 2 & ­ ™ ™ ¬ ? 6 ú ş \ W ï Ğ À Ù ç  ‹ z j â Ğ İ ÷ ^ Ù U * p x ß   í « × ü ° s p e Y 6 Œ , a ³ µ 2 ² m  I ¤ g Y { õ õ  ÿ à § Í B  · Z  q Ê K # / 6 à Œ í g s Á G > N c a ö Ş ‰ ı Ï > 2 ü Ä S ç ¦ R 
+   ¡ ) 	 ’   ’ (   1 q  Ç ë   N   u % È  ‰ 1 S µ  š ­ ¡  > ] İ ù Ú   ® ½ ö ” 7 ¿ í § ‘ $ Ğ ± f Å Å Ï ÿ ·   i ò ğ ‘  Ó Ï  o Œ 
+ * Ù R  „  j ± ˆ ì Ú é G n º å g ö ì ä g / ú ò · ÿ ª y ø à   } û [  Y 	 @ Ó õ ¼ Ş Q B Ú ¶ n å ë §  ¸ ï # Î ì ô @ ³ å 0 ğ š 3   Ü y á w  Ç  c Õ Ê 8 å 2 ]  ™ ù r “ '  ü C † î ¿ ‡ ş - › ö V F Ç ®  [ õ ” n   ‰ €   € ë  À ‰ = d ´ b s É Ÿ ¿ ı o Ş ô © ÿ ¼ ó … ‡ w ¿ q ì è T W = „ ™ ¹   . ¹ à û §  ğ C _  ı Å Ã „ ¾ K q ã  ¯ ë ” ­  m ¹ ü ² Û ò m æ Â Ä ø Ä i S £ ³ é ù J  % ¥ ! ( * Å ¶  î ğ ¡ s F  z l C c d ô ” r µ Ú [ w | 6 _ | á ¿   × Œ ‹ ÷ } á «   ì } æ ¼ R g 	 Q  q [ ­ ¬ n æ ¨ - T ñ D ‰ Á 7 \ Â  ? ½ ƒ Á  Û x ü ® û ù ç Ÿ ü ‚  “ ·  _ ğ Ñ  ş n Ñ  ‘ …  E   Â  ? Š ñ ‚ ˆ Ù … : +  û  Ú | é Å · ô œ ¼ • Í ï ¸ ò ª –   ‹ 5 ‹  X õ æ · ~ ™   & ; Ğ  ^ Ì ‘ ¸ . Í J Õ n Õ › \ ğ é › n  ï  ? ê z ç w ¿ ½ ® { ã º Ç £ r ™ 0 Š i ë (  m / 0 ~ Ï ½ W  í ; p z 3 ‘ È   å ã S ½ I  # ] s Ë Ç # ¯ R í  9 4 4 ( e 2 4 — * Ë J ë 7 } ß Ó 3 U » ¼ T Ğ ô T ! ‰ ’ V ÷ ú õ ¬ X ¿ ’ n M ¢ s İ Z  Ï ß ù X ù À ¾  • Ñ c ë { º Û °  €   Ç ² q D 1 °  § k î ™  o H ÷ / ß µ T ¯  ¯ ? ã Ô ï ¬ Z » ² º õ m W | ± t Ê É { ] « … \ Ì ƒ r " { 9 õ  b  # 8 6 ~ Ë b í ù ç / É ª Ô z æ ç ÷ ^ Ñ ‘ Õ ñ Â  ×  h ï é   Ù ´ q l Ÿ L  Ñ ± v Õ c = g  ù ¤ ô Ù û   ë Ú º ù î ƒ w Ü ñ  Ä ÷ t ß ó „ Ã  < ò Æ ¸ ²   } à Á  Ö F Ç Î ‹ Ú » ş u j b  ¹ X b í Ù ç á V [ X Õ : J ¡ x ° ö Ü Ó × g 4 • 0 I P   / W x ñ Ò Û ¾ Ù ¹ f ó æ { ­ j Ã ¬   œ Ó e i ¢ ÿ ä M õ Í o } ë î Ì Š  ‘ f ½ J      ( Š ¤ R * v ã Ä É Á L  È ª ‰ » ° D z Å Š C ¡ " — ÷ Ş ³ ë b ] W 1 t  …  ¡ X : æ & „ ^  ˜ Û n ¸ æ & ³ ¿ s V : ï ‚ s H µ w º µ ‰ I c j Ï 3 ç  û : H , + _   : ß © Ö Ö X  z — × l 6 D 3 ÿ L s r – ñ  û ˜ x î ) ¦ F _ $ ¨ × J } A ã † Z Ë ¦ ³ ” ' v ] F ç * ) t ó ©  µ ë Ÿ X v ú é  Y “ ã  Í ™ 	 Š ƒ ƒ ' v q «  ² Œ      € , Š h š Œ İ °  E  ´ ‘ B 5 Ò ( †  U © ² ê ¢ ‹  : ¾ { × ¹ µ c c + J ¥  ­ ù E Œ ­ § ß ; p Ù ¥ _ : ı š « ? R Ú ¾ ù h s ~  i Õ ê U , N Ï  C m ~ ÿ Ş ÷ y Í  j Ú Ä A " - „ ´ m Ø ô ƒ P I  7 \ š ¯ … Í  Î Â < V y 	 § é    \ ¿ ® ¤ Ÿ › 2  & g – ¨ H ú Á … – ç  > ± ÷ C ’ n Ü ‘ H © 9 ß v  Ó 9 : O ê G Õ u b Q „ — ” ›   D  M • ±  - T M ! [ (     Å  Q  ’ _ q   ± u ø ® û ÿ ¬ · +  c Û  ù Â Á U Û Ï ş ë t O o + R B ¢ ( @ Ú x ê f Z Õ 2 r 6 ? ' d ó » Z ~ l  õ ê é b ¾ í ^ s ù I ? [ < < ô Á ¶ ­ Û o Í t t » Q ’   g ‹ ” V ¬ % Û ¹  e ö Ø 7 U Ï î   ¨ Ö š  ¢ ² Ø u ú ö  m Ë — İ [  9 : u t × ¯ ê  “ Ç  Ù ÿ , Z  ± ê ¬ 3 	 ‚  D – N h Š I B * ­ “ ) å p š  ± —   È : n Ã &   T #  _ ­ ’ í  8 ¼ ° w ÷ • R £ R ô \ — î í Û ï ^ ¾ ó u ¿ ò Ê ‹ Ä ¶ ƒ à Ä È B  # $ 	 A ³ J z ` ğ ‘ ® | é  ³ ± ğ u  ù ¼   × ş /  $ ı j | ß î F « V #  / ° ö ¬ ×  
+  ¡ Ó Ê x – µ l ! 	 Ğ L ‘ ® b  Ñ ¹ ê  5 	 å L g Ï  å £ £ L Ì , `  ó À I Ç § ‘ t       Ğ ² i  Ó ‹ ” ‡ Ç ğ l ‡ ê Ô " c ‚ ˆ   K x Õ 
+ í + ú P Í  z g  B g Ï î ¥ ± ‘ A ™ „ X 3 Z Å  • ø µ & ¡  ’ ï ^  , H ' $ I A ”  * u ü j … Î Ş Î  U 3 { ¬ Ñ ´ B % — » ¿ r ô 0 “ ‹  [ Û :  ã  ß s i Í L ­  ] + + ¤ M ¢ ( F Œ  
+ ¥ Â X ’ k  “ ² 9 T 3 E N „ ” © â 6 } Ò é    ’ Ä ' Ä µ T > C m | † ± Ç  ! p =  ] G R N ( Š ª ’ f ~ b ‚ ê Ô 1 Ö Ÿ w  ­ é ã h Š ¼ Ğ  D Z ~ È Ò Ì ¼ < } ğ  q ¢ ! é 2 ² ® ı –  / œ ( ô  Í  $ B ˜   ‘  ! a  Ó W 0 Y y Ê  ¼ z  A Q  â P v ‚ „ ‚ ( ! H  q à ‚ f N D ‚ € ß ª Ó ¹ n  ¥ Á “  D  ß ó  2 & Í ¹ y d C G Ì ¦ ©  Ï 2 ¶ { ? ¢ * “ n 3 ø Í ¢ ¬ $ K  Ù  ó ‡  # Œ B 
+ + W ’ $ q ® a y d Ú ò $ / ì û Ì £  } ï Û { w ^ ø á M ï z × ½ © b é Õ K o ‚      É K ê ¼ k ¹ l z İ y ô Ÿ s 6  › 7 Ñ · ã  Ú 7 ¬    6  ` ¦ T ª • & ¶ f Ş ¯ ê * ‘ g ! ë ) Œ ¶ v R ù  ¹ î n š – Ë ø Á a ò ] í 4 & ç  Û ½  I  P T ™ $    ‰ ÿ İ £  M × M I Ó Õ ù © 9 ‚ X   2 · ° Ò ‰ A Q T Z v @ c ì Ø ê g ¿ y Û =  ¾ û  ‡ + G  ô ÿ Ş B    4 * e Ö  q : Û Ş ş .  × % ß ³  ³ « ‹ Ê ‘ Ñ ¾ T  â ú   S Ç E " ; ¸ æ § f : ƒ — $ D Q ô Ò ¤ ˆ  @ ¦ X d ô À  ¤ Û Ú h 4 [ D Š € b j D I ò Ò H ÿ n ± &  x Î V £ Ô © ¹ ‚ ú À ® / ~ ù  ã Ï >  ¾ i  ( I „ ¨ Ê  …  b Ë b t ÿ ‘ u î  ® û è ï  " ˆ " n Ë & ô ] Ö o } - K G ‡ p ê U  À ¬ . á  9 ô æ  ¢ I 6 ­ q ` h œ Ì Ê 5 w æ W ¯ { 1 ¨ V È u u ¢ è Ú Ë è r ¢ 6 i S ^ ˜ G Í f  5   é U  ö 8 H H ÷ õ = g —  ¯ š  | × ©  Z m © } Û k N – G ‡ ~ ¾  $ ] ½ † ¨ 	  ' - !  k ÿ ä œ Z  % c ¯  D  p ­  ¥ e Ë ) ] t 1 	 !  ±  D I B R U Ê  Ÿ Ë Œ ï  æ ² 5 ¥ 4 F J ! ‰ " ´ Õ   ’ ] ¹   ö 8 ù ¶ 6 Œ ¼ F D ü ² Ú  ğ ’ ú  G 1 q  â T [ È š ò J   ¾ ‹ j  õ ş ó Î ½ } ú ©  z û æ b C  ü õ K ª | ¯ Ó Ù { Ã â Ò R ¿ p ô à ƒ § \ ù Ö w t ô t  k ¹ L ò 2     I œ  ¸ . A , ² ~ Ó & ò …   ç ş º  ’ Ò q ı   9 » ÷ é £ 3 ³  § 7  è í j G ˜ 8 ò g µ ] ÷ × Û v î ¼ K V 4 | « L Ì + i C  ¢ $ ’ ï k   ì j  E S _ Á † È ÷  8 H å ó Á ñ § ÷ Ğ Ñ Ù > » ú Ê « > ¹ ÿ  _ 2 ¸ } Û ñ  × ^ ¹ ³  ) Ö  > ñ D 5  ¢ —  { ’ $ D Ñ ‰  « } Y  F ± € í ; „ Ä ¿ v × ³ Ñ K E 
+    õ ¦ K  '  ª ‚ 4 3 v é è   p ç ‘ ¿ ÿ Ê ƒ Ş ± ‘  j ± í % j ı –  ' ê “ q  R è m ' Ó V $  £ W %  I ‚   
+ ´ – Ê x ® [   š A « …  ø t ¯ _ ;  í î ª † ¾ K ì  ¿ ‘ ~  p m ‹ U [ 6 ³ ñ ì ×  G ! B  ò o û Ì o Ò C 7 R   + e Û ‡ \ F g © f ¡  i Ú ²   ‡  ¿ ş á  o z á ´  İ p Õ À Ÿ ^ ş = { v ú w ~ ¤ ¬ ¤ È u ¥ ° ë  — * R ¯  0 I ‚ ¬ ª  ¢ H   ' ® Q Œ S ­ € ¨ # ˆ   Â o ¥ ß $ ! _ j C Ó u | Û Ã ® · ğ , ÷ e î ¶   Ë ¡ ç Ô Ó ~  % ` Ù  ® ç 3 3 9 ‡  º ¬ ~ Ó  7 ® ½ æ Ê · - > û Ü [ Â ù  ¤   B ô ‚ W º  " Ø  ‘ e ½ ‚ } ÿ  { Y Œ ˆ ¢ ˆ ë ¸ , Í Î Ğ ¨ T _ } † € – k “ ] » ö W } § l Ø Ó š 9 ¾ İ è ê y L  \ û ü è  O ^ × Ÿ z ò Ï 7  é ö “ ƒ é c ¿ ˆ j s ) - _ p ã ß Á  I   ƒ ä w ¯ Æ   È ‰ p ‡   ô q ] › (  _ u € ¸ Y Ç (   -  ¾ q Ç Ó _ ú » o E ! + _ ó á  ¯ o n } è È ó w Ş õ é Ê s Ï ô • N Z > ¥  i d ] '  â W  ,  ¨ º F  q â Ø ò  ş  ó [ @ N ä Ê ( Š É — Š  f † (  _ ½ §    é ì   ö š 3 ¦ c # 5 k ê 2 ³  w Û ú · ÿ §  } Û 6 5 b ? $ ò #  e  ) y E _ Â ˆ Ğ ó ‰ £ è  O ­  ³ 0  É æ Ò t ÷ u á º î « 5  $ Á h Ë Ò { ê æ ÿ a ® ] S s š  ~ ş   æ Š ¿ ü Ğ £ m ı ı T & & I 4 ˆ _ í   Q D ğ  x I ¬ ø c Ø ÿ  À X Š † ‘ ^ ' İ         I E N D ® B ` ‚  
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 3 6 9 2 1 4 8 3 4 6 3 0 7 6 0 2 5 7 1 3 0 5 3 0 6 1 2 1 3 - -  
+ 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Length: 129
+Content-type: text/html
+
+<h1>Upload Successful</h1>
+<p>The file 'uploaded_file' has been successfully uploaded as '20240129142809_21737.uploaded_file'.</p>
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /testloc1/ HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /testloc1/
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 2330
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 14:02:27 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		form {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>/location1/index.html</h1>
+		<div class="path">./content/www/location1/index.html</div>
+		
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
+		
+		
+		<!-- Form for POST CGI BASH script -->
+		
+		<h2>Enter Your Name for POST Cgi bash script:</h2>
+	   		 <form action="http://localhost:8000/cgi-bin/post_cgi.sh" method="post">
+				<label for="name">Name:</label><br>
+				<input type="text" id="name" name="name"><br><br>
+				<input type="submit" value="Submit">
+			 </form>
+			
+		<!-- Form for chunked POST request 
+		<form action="http://localhost:8000/cgi-bin/upload_cgi.sh" method="post" enctype="multipart/form-data">
+			<label for="fileChunk">File Chunk:</label><br>
+			<input type="file" id="fileChunk" name="fileChunk" required><br><br>
+			<input type="submit" value="Send Chunked POST Request">
+		</form>
+		-->
+
+
+		<form id="deleteForm">
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+			
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = "uploads/";
+				var filename = document.getElementById("filename").value.trim();
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						alert("DELETE request successful");
+						// Clear the input field after successful request
+						document.getElementById("filename").value = "";
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
+		
+		
+    </div>
+</body>
+</html>
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /favicon.ico HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: image/avif,image/webp,*/*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Sec-Fetch-Dest: image
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /favicon.ico
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: image/avif,image/webp,*/*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: image
+sec-fetch-mode: no-cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 612
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 14:02:27 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</index></title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>404 Not Found</h1>
+		<p>------------ this is a custom error page  ------------ </p>
+		<div class="path">./content/www/error_pages/404.html</div>
+    </div>
+</body>
+</html>
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /favicon.ico HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: image/avif,image/webp,*/*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Referer: http://localhost:8000/
+Sec-Fetch-Dest: image
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /favicon.ico
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: image/avif,image/webp,*/*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+referer: http://localhost:8000/
+sec-fetch-dest: image
+sec-fetch-mode: no-cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 101
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 14:06:40 GMT
+
+<html>
+<head><title>404 Not Found </title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /favicon.ico HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: image/avif,image/webp,*/*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Sec-Fetch-Dest: image
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /favicon.ico
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: image/avif,image/webp,*/*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: image
+sec-fetch-mode: no-cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 101
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 14:06:48 GMT
+
+<html>
+<head><title>404 Not Found </title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /cgi-bin/time.py HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /cgi-bin/time.py
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Length: 90
+Content-Type: text/html
+
+<html>
+<head>
+<title>Current Time</title>
+</head>
+<body>
+<h1>15:13:28</h1>
+</body>
+</html>
+
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /cgi-bin/time.py HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /cgi-bin/time.py
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /favicon.ico HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: image/avif,image/webp,*/*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Sec-Fetch-Dest: image
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /favicon.ico
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: image/avif,image/webp,*/*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: image
+sec-fetch-mode: no-cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 101
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 14:31:41 GMT
+
+<html>
+<head><title>404 Not Found </title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=TOM
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=TOM
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=TOM
+Body vector: n a m e = T O M 
+
+__body_str after PARSING DONE: 
+name=XXX
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=XXX
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=XXX
+Body vector: n a m e = X X X 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Length: 21
+Content-Type: text/html
+
+<h1>Hello, XXX!</h1>
+
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /testloc1/ HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /testloc1/
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 2330
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 14:58:45 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		form {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>/location1/index.html</h1>
+		<div class="path">./content/www/location1/index.html</div>
+		
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
+		
+		
+		<!-- Form for POST CGI BASH script -->
+		
+		<h2>Enter Your Name for POST Cgi bash script:</h2>
+	   		 <form action="http://localhost:8000/cgi-bin/post_cgi.sh" method="post">
+				<label for="name">Name:</label><br>
+				<input type="text" id="name" name="name"><br><br>
+				<input type="submit" value="Submit">
+			 </form>
+			
+		<!-- Form for chunked POST request 
+		<form action="http://localhost:8000/cgi-bin/upload_cgi.sh" method="post" enctype="multipart/form-data">
+			<label for="fileChunk">File Chunk:</label><br>
+			<input type="file" id="fileChunk" name="fileChunk" required><br><br>
+			<input type="submit" value="Send Chunked POST Request">
+		</form>
+		-->
+
+
+		<form id="deleteForm">
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+			
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = "uploads/";
+				var filename = document.getElementById("filename").value.trim();
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						alert("DELETE request successful");
+						// Clear the input field after successful request
+						document.getElementById("filename").value = "";
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
+		
+		
+    </div>
+</body>
+</html>
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /favicon.ico HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: image/avif,image/webp,*/*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Sec-Fetch-Dest: image
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: same-origin
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /favicon.ico
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: image/avif,image/webp,*/*
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+host: localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: image
+sec-fetch-mode: no-cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 612
+Connection: keep-alive
+Server: [TS]erver
+Date: Mon, 29 Jan 2024 14:58:45 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</index></title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>404 Not Found</h1>
+		<p>------------ this is a custom error page  ------------ </p>
+		<div class="path">./content/www/error_pages/404.html</div>
+    </div>
+</body>
+</html>
+
+
+BUFFER BEFORE feed: 
+
+__body_str after PARSING DONE: 
+name=XXX
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+Origin: http://localhost:8000
+Connection: keep-alive
+Referer: http://localhost:8000/testloc1/
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+name=XXX
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.5
+connection: keep-alive
+content-length: 8
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0
+_boundary:
+Body str: name=XXX
+Body vector: n a m e = X X X 
+
