@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 14:57:02 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/07 13:22:02 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/23 15:13:00 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Location::Location()
 	_autoindex = false;
 	_error_pages = std::map<int, string>();
 	_client_max_body_size = CLIENT_MAX_BODY_SIZE_LIMIT;
-	_cgi = std::map<string, string>();
+	_cgi_map = std::map<string, string>();
 	_upload_path = "";
 
 }
@@ -59,7 +59,7 @@ Location::setIndex(std::vector<string> index)
 void
 Location::setCgi(std::map<string, string> cgi)
 {
-	_cgi = cgi;
+	_cgi_map = cgi;
 }
 
 void
@@ -121,7 +121,7 @@ Location::getIndex()
 std::map<string, string>
 Location::getCgi()
 {
-	return (_cgi);
+	return (_cgi_map);
 }
 
 bool
@@ -147,3 +147,23 @@ Location::getUploadPath()
 {
 	return (_upload_path);
 }
+
+
+string	Location::getCgiPath(string key)
+{
+	for (std::map<std::string, std::string>::iterator it = _cgi_map.begin(); it != _cgi_map.end(); ++it)
+	{
+		if (it->first == key)
+		{
+			return it->second; // Return the value associated with the key
+		}
+	}
+
+	// std::map<std::string, std::string>::iterator it = _cgi_map.find(key);
+    // if (it != _cgi_map.end())
+    // {
+    //     return it->second; // Return the value associated with the key
+    // }
+	// If key is not found, you might want to return a default value or handle it appropriately
+	return "";
+};

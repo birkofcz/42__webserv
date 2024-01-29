@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/18 17:24:51 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/28 17:45:05 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "Mime.hpp"
 # include "Error.hpp"
 # include "Log.hpp"
+# include "Cgi.hpp"
 
 # include <sys/stat.h>
 # include <algorithm>
@@ -54,8 +55,14 @@ class Response
 		// int getCgiState();
 		// void setCgiState(int);
 		// void setErrorResponse(short code);
-
-		// CgiHandler _cgi_obj;
+		bool	getCgiFlag ()
+		{
+			return (this->_cgi_flag);
+		}
+		string	getStatusLineCgi();
+		void setStatusCode(short code);
+		
+		Cgi cgi_object;
 
 		std::string removeBoundary(std::string& body, std::string& boundary, std::string& filename); //proc public
 	
@@ -73,9 +80,9 @@ class Response
 		std::string _location; //for Header
 		short _status_code; //  200(for a successful response).
 		// // // char *_res; co to je?
-		int _cgi;
-		// int _cgi_fd[2];
-		// size_t _cgi_response_length;
+		bool _cgi_flag;
+		// int _cgi_fd[2]; smazat
+		size_t _cgi_response_length;
 		bool _auto_index; //automatic generation of directory listings when a client requests a directory that does not contain an index file 
 
 		// private methods

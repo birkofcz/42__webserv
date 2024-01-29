@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 17:07:44 by sbenes            #+#    #+#             */
-/*   Updated: 2023/12/30 14:27:36 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/23 16:15:48 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ class Location
 	private:
 		string						_path;
 		std::vector<int>			_allowed_methods; // GET, POST, DELETE, NONE
-		string						_root;
-		std::vector<string>			_index;
-		std::map<string, string>	_cgi;
+		string						_root; // if not specified, getRoot should give value of server
+		std::vector<string>			_index; // rozhodnout se jak s tim zachazet
+		std::map<string, string>	_cgi_map;
 		bool						_autoindex;
 		std::map<int, string>		_error_pages; // 404, /404.html
 		size_t						_client_max_body_size;
@@ -51,13 +51,14 @@ class Location
 
 		string						getPath() const;
 		std::vector<int>			getAllowedMethods();
-		string						getRoot();
+		string						getRoot();  // if not specified, getRoot should give value of server
 		std::vector<string>			getIndex();
 		std::map<string, string>	getCgi();
 		bool						getAutoindex();
 		std::map<int, string>		getErrorPages();
 		size_t						getClientMaxBodySize();
 		string						getUploadPath();
+		string	getCgiPath(string key);
 };	
 
 
