@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/06 14:59:42 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/28 16:21:36 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ class Server
 	private:
 		string						_name;
 		std::vector<int>			_ports;
+		in_addr_t					_host; 
 		std::vector<string>			_server_names;
 		string						_root;
 		std::vector<string>			_index;
@@ -73,7 +74,6 @@ class Server
 
 		int							_socket_fd;
 		struct sockaddr_in			_server_address;
-		in_addr_t					_host; //needs to extract from config
 
 		std::vector<Location>		_locations;	//vector of locations as per config file for a particular server
 		

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Request and Response Viewer</title>
+    <style>
+        .container {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .info-box {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Request and Response Viewer</h1>
+        <div class="info-box">
+            <h2>Request Details</h2>
+            <pre id="requestDetails"></pre>
+        </div>
+        <div class="info-box">
+            <h2>Response Details</h2>
+            <pre id="responseDetails"></pre>
+        </div>
+    </div>
+
+    <script>
+       function fetchAndDisplayData() 
+	   {
+  
+        fetch('../../../../data/request_temp.txt')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('requestDetails').textContent = data;
+            })
+            .catch(error => console.error('Error fetching request details:', error));
+
+        fetch('../../../../data/response_temp.txt')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('responseDetails').textContent = data;
+            })
+            .catch(error => console.error('Error fetching response details:', error));
+    }
+
+
+        //setInterval(fetchAndDisplayData, 5000); // Poll every 5 seconds
+	fetchAndDisplayData();
+    </script>
+</body>
+</html>
