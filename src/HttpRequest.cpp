@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/23 14:56:53 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/29 17:36:10 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,10 @@ void	HttpRequest::setBody(std::string body)
 	_body_str = body;
 }
 
-
-
+void HttpRequest::setErrorCode(short code)
+{
+	_error_code = code;
+};
 void	HttpRequest::setHeader(std::string &header_name, std::string &value)
 {
 	static const char* spaces = " \t";

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 16:03:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/29 15:48:00 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/29 16:33:15 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,8 @@ void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc
 static void handle_timeout(int signal)
 {
 	(void) signal;
-   	kill(getpid(), SIGTERM);
+	exit(1);
+   	// kill(getpid(), SIGTERM);
 }
 
 /* Pipe and execute CGI */
