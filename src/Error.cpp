@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 16:20:36 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/30 16:26:09 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 15:20:34 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,13 +357,14 @@ Error::instantErrorPage(short error_code)
 		else
 			description = error_description[error_code];
 
+		string lenght(toString(163 + description.length()));
 		error_page += "HTTP/1.1 ";
 		error_page += ecode;
 		error_page += " ";
 		error_page += description;
 		error_page += "\r\n";
 		error_page += "Content-Type: text/html\r\n";
-		error_page += "Content-Length: 165\r\n";
+		error_page += "Content-Length: " + lenght + "\r\n";
 		error_page += "\r\n";
 		error_page += "<html>\r\n<head><title>";
 		error_page += ecode;
