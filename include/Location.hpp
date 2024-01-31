@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 17:07:44 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/23 16:15:48 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:34:37 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ class Location
 		std::map<int, string>		getErrorPages();
 		size_t						getClientMaxBodySize();
 		string						getUploadPath();
-		string	getCgiPath(string key);
+		string						getCgiPath(string key);
 };	
 
 

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/29 17:36:06 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:28:50 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,7 @@ class HttpRequest
 		std::string                                 getServerName();
 		std::string									getServerPort();
 		std::string&								getBoundary();
-		size_t 										getBodyLen()
-		{
-			return (_body_length);
-		}
+		size_t 										getBodyLen();
 		bool										getMultiformFlag();
 
 		void setMethod(HttpMethod&);

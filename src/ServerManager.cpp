@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/29 17:35:44 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/31 14:36:30 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,12 +241,12 @@ void ServerManager::runServers()
 					else if (WIFSIGNALED(status))
 					{
 						printf("ChildXXXX process terminated by signal: %d\n", WTERMSIG(status));
-						// _clients_map[fd_client].response._response_content.append(Error::instantErrorPage(502));
-						_clients_map[fd_client].response.clear();
-						_clients_map[fd_client].request.setErrorCode(502);
+						_clients_map[fd_client].response._response_content.append(Error::instantErrorPage(502));
+						// _clients_map[fd_client].response.clear();
+						// _clients_map[fd_client].request.setErrorCode(502);
 						// cout << _clients_map[fd_client].response ;
-		
-						_clients_map[fd_client].response.buildResponse();
+						// _clients_map[fd_client].response.buildResponse();
+						
 						close(_clients_map[fd_client].response.cgi_object.cgi_pipe_out_read_end);
 						_cgi_pipe_to_client_map.erase(fd);
 					}

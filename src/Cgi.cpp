@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 16:03:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/29 16:33:15 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:39:16 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,6 @@ void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc
 	*/
 	this->_environment["SCRIPT_NAME"] = this->_cgi_path;
     this->_environment["SCRIPT_FILENAME"] = this->_cgi_path.substr(poz + 8, this->_cgi_path.size());
-	//((poz < 0 || (size_t)(poz + 8) > this->_cgi_path.size()) ? "" : this->_cgi_path.substr(poz + 8, this->_cgi_path.size())); // check dif cases after put right parametr from the response
     this->_environment["PATH_INFO"] = getPathInfo();
     this->_environment["PATH_TRANSLATED"] = it_loc->getRoot() + (this->_environment["PATH_INFO"] == "" ? "/" : this->_environment["PATH_INFO"]);
     // this->_environment["QUERY_STRING"] = decode(req.getQuery());
@@ -249,23 +248,20 @@ static void handle_timeout(int signal)
 }
 
 /* Pipe and execute CGI */
-void Cgi::execute(short& error_code)
+int Cgi::execute(short& error_code)
 {
-	
-
 	int cgi_stdout[2];
 	int cgi_stdin[2];
-
 	if (this->_arguments_for_execve[0] == NULL || this->_arguments_for_execve[1] == NULL)
 	{
 		error_code = 500;
-		return ;
+		return 1;
 	}
 
     if (pipe(cgi_stdin) == -1)
     {
         error_code = 500;
-        return ;
+        return 1;
     }
 	
 	if (pipe(cgi_stdout) < 0)
@@ -274,7 +270,7 @@ void Cgi::execute(short& error_code)
 		close(cgi_stdin[0]);
 		close(cgi_stdin[1]);
 		error_code = 500;
-		return ;
+		return 1;
 	}
 	//	set cgi_in
 	Log::Msg(DEBUG, FUNC + "before forking");
@@ -303,6 +299,7 @@ void Cgi::execute(short& error_code)
 		cgi_pipe_out_read_end = cgi_stdout[0];
 		close(cgi_stdout[1]);
 		Log::Msg(DEBUG, FUNC + "parent after forking");
+		return 0;
 	}
 	else
 	{
@@ -310,6 +307,7 @@ void Cgi::execute(short& error_code)
 		close(cgi_stdout[1]);
         std::cout << "Fork failed" << std::endl;
 		error_code = 500;
+		return 1;
 	}
 }
 

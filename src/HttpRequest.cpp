@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/29 17:36:10 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:10:26 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ HttpRequest::HttpRequest()
 	_method_str[::GET] = "GET";
 	_method_str[::POST] = "POST";
 	_method_str[::DELETE] = "DELETE";
-	// _method_str[::PUT] = "PUT";
+	//_method_str[::PUT] = "PUT";
 	_method_str[::HEAD] = "HEAD";
 	_method = NONE;
 	_path = "";
@@ -53,7 +53,14 @@ HttpMethod&		HttpRequest::getMethod() { return (_method); }
 std::string&	HttpRequest::getPath() { return (_path); }
 std::string&	HttpRequest::getQuery() { return (_query); }
 // std::string&	HttpRequest::getFragment() { return (_fragment); }
-
+std::string		HttpRequest::getMethodStr() { return (_method_str[_method]); }
+std::string&	HttpRequest::getBody() { return (_body_str); }
+std::string		HttpRequest::getServerName() { return (this->_server_name); }
+std::string		HttpRequest::getServerPort() { return (this->_server_port); }
+bool			HttpRequest::getMultiformFlag() { return (this->_multiform_flag); }
+std::string&	HttpRequest::getBoundary() { return (this->_boundary); }
+short	HttpRequest::getErrorCode() { return (_error_code); }
+size_t	HttpRequest::getBodyLen() {	return (_body_length); }
 std::string		HttpRequest::getHeader(const std::string& name)
 {
     return (_request_headers[name]);
@@ -64,27 +71,17 @@ const std::map<std::string, std::string>&	HttpRequest::getHeaders() const
 	return (this->_request_headers);
 }
 
-std::string		HttpRequest::getMethodStr() { return (_method_str[_method]); }
-std::string&	HttpRequest::getBody() { return (_body_str); }
-std::string		HttpRequest::getServerName() { return (this->_server_name); }
-std::string		HttpRequest::getServerPort() { return (this->_server_port); }
-bool			HttpRequest::getMultiformFlag() { return (this->_multiform_flag); }
-std::string&	HttpRequest::getBoundary() { return (this->_boundary); }
-
 /* ---- SETTERS --- */
 
 void	HttpRequest::setMethod(HttpMethod&	method) { _method = method; }
 void	HttpRequest::setMaxBodySize(size_t size) { _max_body_size = size; }
+void HttpRequest::setErrorCode(short code) { _error_code = code; }
 void	HttpRequest::setBody(std::string body)
 {
 	_body.assign(body.begin(), body.end());
 	_body_str = body;
 }
 
-void HttpRequest::setErrorCode(short code)
-{
-	_error_code = code;
-};
 void	HttpRequest::setHeader(std::string &header_name, std::string &value)
 {
 	static const char* spaces = " \t";
@@ -128,10 +125,7 @@ void        HttpRequest::_handle_headers()
     {
         size_t pos = _request_headers["content-type"].find("boundary=", 0);
         if (pos != std::string::npos)
-        {
 			this->_boundary = _request_headers["content-type"].substr(pos + 9, _request_headers["content-type"].size());
-			std::cout << "TEST _boundary has been setted : " << _boundary << std::endl;
-		}		
 		this->_multiform_flag = true;
     }
 
@@ -147,6 +141,14 @@ bool    isTokenChar(uint8_t ch)
        (ch >= 'a' && ch <= 'z') || ch == '|')
         return (true);
     return (false);
+}
+
+bool	allowedCharURI(uint8_t ch)
+{
+	if ((ch >= '#' && ch <= ';') || (ch >= '?' && ch <= '[') || (ch >= 'a' && ch <= 'z') ||
+	ch == '!' || ch == '=' || ch == ']' || ch == '_' || ch == '~')
+		return (true);
+	return (false);
 }
 
 /*
@@ -178,20 +180,11 @@ bool	checkUriPos(const std::string& path)
 	return false;
 }
 
-bool	allowedCharURI(uint8_t ch)
-{
-	if ((ch >= '#' && ch <= ';') || (ch >= '?' && ch <= '[') || (ch >= 'a' && ch <= 'z') ||
-	ch == '!' || ch == '=' || ch == ']' || ch == '_' || ch == '~')
-		return (true);
-	return (false);
-}
-
 void HttpRequest::feed(char *data, size_t size)
 {
 	uint8_t character;
 	static std::stringstream s;
 
-	// int j = 0;
 	std::ofstream debugFile("debug_output.txt", std::ios::app);  // for debug log
 
 	for (size_t i = 0; i < size; ++i)
@@ -509,7 +502,7 @@ void HttpRequest::feed(char *data, size_t size)
 					_storage.clear();
 					_fields_done_flag = true;
 					_handle_headers();
-					// if no body then parsing is completed.
+					
 					if (_body_flag == true)
 					{
 						if (_chunked_flag == true)
@@ -519,7 +512,7 @@ void HttpRequest::feed(char *data, size_t size)
 							_state = Message_Body;
 						}
 					}
-					else
+					else // if no body then parsing is completed.
 					{
 						_state = Parsing_Done;
 						complete_flag = true;
@@ -726,8 +719,6 @@ void HttpRequest::feed(char *data, size_t size)
 		} // end of switch
 		_storage += character;
 
-		// debugFile << "_storage_: \n" << _storage << "\n"; // for debug
-		
 	}
 	if (_state == Parsing_Done)
 	{
@@ -754,7 +745,7 @@ void    HttpRequest::clear()
 	_state = Request_Line;
 	_body_length = 0;
 	_error_code = 0;
-	_chunk_length = 0x0; //why 0x0 ??
+	_chunk_length = 0x0; // in hexadecimal
 	_storage.clear();
 	_key_storage.clear();
 	_method_index = 1;
@@ -769,5 +760,3 @@ void    HttpRequest::clear()
 	_chunked_flag = false;
 	_multiform_flag = false;
 }
-
-short HttpRequest::getErrorCode() { return (_error_code); }
