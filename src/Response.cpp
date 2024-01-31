@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/28 19:41:33 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/29 17:30:21 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -480,7 +480,9 @@ bool Response::_reqError()
     if(request.getErrorCode())
 	{
 		_status_code = request.getErrorCode();
+		cout << "error triggered\n";
 		return (1);
+
 	}
 	return (0);
 }
@@ -598,8 +600,9 @@ void	Response::buildResponse()
 	//debugPrint("[Response::buildResponse()] setting status line and headers.", GREEN);
     _setStatusLine();
     _setHeaders(); // + body test content if it works
-    if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
-        _response_content.append(_response_body_str);
+	if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
+		_response_content.append(_response_body_str);
+	Log::Msg(DEBUG, FUNC + "_response_content: " + _response_content);
 }
 
 // void Response::setErrorResponse(short code)

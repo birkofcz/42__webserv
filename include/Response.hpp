@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/28 17:45:05 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/29 17:26:28 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,9 @@ class Response
 	
 		HttpRequest request;
 		std::string _response_content; //zmenit oznaceni bez _
+		bool _cgi_flag;
+
+		friend std::ostream& operator<<(std::ostream& os, const Response& response);
 
 	private:
 		std::string	_location_key;
@@ -80,7 +83,7 @@ class Response
 		std::string _location; //for Header
 		short _status_code; //  200(for a successful response).
 		// // // char *_res; co to je?
-		bool _cgi_flag;
+		
 		// int _cgi_fd[2]; smazat
 		size_t _cgi_response_length;
 		bool _auto_index; //automatic generation of directory listings when a client requests a directory that does not contain an index file 
@@ -113,5 +116,25 @@ class Response
 
 		string _buildAutoindex(string &path);
 };
+
+inline std::ostream& operator<<(std::ostream& os, const Response& response) {
+    // Output private attributes of the Response object
+    os << "Location Key: " << response._location_key << std::endl;
+    os << "MIME: " << response._mime << std::endl;
+    os << "Target File: " << response._target_file << std::endl;
+    os << "Body Length: " << response._body_length << std::endl;
+    os << "Response Body String: " << response._response_body_str << std::endl;
+    os << "Location: " << response._location << std::endl;
+    os << "Status Code: " << response._status_code << std::endl;
+    os << "CGI Response Length: " << response._cgi_response_length << std::endl;
+    os << "Auto Index: " << response._auto_index << std::endl;
+	os << "Response Content: " << response._response_content << std::endl; // Added
+    os << "CGI Flag: " << response._cgi_flag << std::endl;
+    // Output other private attributes as needed...
+
+    return os;
+    
+    return os;
+}
 
 #endif
