@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:11:50 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:24:00 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,9 +316,6 @@ void Parser::parseFile(const string& path)
 	std::ifstream file(path.c_str());
 	string line;
 
-	// ---------
-	/// !!!! ADD MORE ROBUST ERROR HANDLING AND DEFAULT CONFIG FILE !!!! ///
-	// --- --- 
 	if (!file.good())
 	{
 		Log::Msg(ERROR, "Error opening config file: " + path);
@@ -343,7 +340,6 @@ void Parser::parseFile(const string& path)
 		Log::Msg(ERROR, "Error opening parser log file");
 		return;
 	}
-	//set strings for coloring
 
 
 	//cout << YELLOW << "\n[PARSING CONFIG FILE ... ]" << RESET << endl << endl;
@@ -572,6 +568,8 @@ Parser::getServers() const
 
 
 //////// --- PRINTERS --- ////////
+
+/* Prints the parsed servers and their location configurations */
 void
 Parser::printServers()
 {

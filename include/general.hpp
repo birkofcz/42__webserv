@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/28 15:48:52 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:38:27 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,17 @@ I would include this in all adjacent code */
 #include <map>
 
 #include <cstdlib>
+
 //sockets
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
-//namespace snippets to use
+/*
+namespace snippets to use - to avoid writing std:: all the time, 
+and is a good practice in C++ because of the possible name collisions
+*/
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -66,19 +70,21 @@ using std::string;
 
 #define NONECOLOR	""
 
-//function identifiers - this is used to print the function name in the debug messages,
-//so that we know where the message is coming from. __FUNCTION__ is a macro that is
-//replaced by the name of the function where it is used.
+/* 
+function identifier - this is used to print the function name in the debug messages,
+so that we know where the message is coming from. __FUNCTION__ is a macro that is
+replaced by the name of the function where it is used. It is unconfortable to write
+the whole thing every time, so we use this shortened macro. 
+*/
 #define FUNC "[" + toString(__FUNCTION__) + "]: "
 
 //Logging
 #include "Log.hpp"
 
-//macros
-#define CLIENT_MAX_BODY_SIZE_LIMIT 10485760 // 10 megabytes (in bytes) as limit - used in NGINX
+//default client max body size limit - based on 10 megabytes limit used by NGINX
+#define CLIENT_MAX_BODY_SIZE_LIMIT 10485760
 
 //templates
-
 /* toString - converts whatever to string:) */
 template <typename T>
 string toString(const T& value)
@@ -100,14 +106,14 @@ enum HttpMethod
 };
 
 
-/* Standalone utilities */
+/* 
+Standalone utilities 
+*/
 
 void print(string message, string color = NONECOLOR, int output = 1); //print with optional arguments set to default values
 void parseFile(const string& path); //parse file with path
-std::vector<string>	CppSplit(std::string str, char delimiter);
-bool isNumeric(string str);
+std::vector<string>	CppSplit(std::string str, char delimiter); //split string on delimiter, puts strings in vector
+bool isNumeric(string str);	//checks if input is numeric
 
-/* For printing debug messages using a global "debug" switch */
-//void debugPrint(string message, string color = NONECOLOR); -- DEPRECATED for logging
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:13:05 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:39:37 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,7 @@ void Server::setupServer(void)
 	_server_address.sin_addr.s_addr = _host;
 	//print the host in readable format..
 	Log::Msg(DEBUG, FUNC + "Host: " + toString(inet_ntoa(_server_address.sin_addr)));
-	_server_address.sin_port = htons(_port); //!! needs to be only one !!!
+	_server_address.sin_port = htons(_port);
 	Log::Msg(DEBUG, FUNC + "Port " + toString(_port));
 
 	//cout << htons(_ports[0]) << " " << _ports[0] << " "  << _host << " " << _socket_fd << endl; // test

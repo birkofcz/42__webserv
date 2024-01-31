@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 15:48:25 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/16 16:49:04 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:19:54 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@ enum LogType
 	DEBUG
 };
 
+/* 
+Class to handle the logging of the server, defined as static, so it can be used anywhere
+in the code without the need to create an instance of the class
+ */
 class Log
 {
 	private:

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:09:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/28 18:39:33 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:20:33 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ using std::vector;
 
 class ServerManager
 {
-	public:                 
+	public:	
 		ServerManager();
 		~ServerManager();
 
