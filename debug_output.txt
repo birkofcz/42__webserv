@@ -1,0 +1,534 @@
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /testloc1/ HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+Sec-Purpose: prefetch;prerender
+Purpose: prefetch
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /testloc1/
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+connection: keep-alive
+host: localhost:8000
+purpose: prefetch
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+sec-purpose: prefetch;prerender
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 2330
+Connection: keep-alive
+Server: [TS]erver
+Date: Wed, 31 Jan 2024 14:21:39 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		form {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>/location1/index.html</h1>
+		<div class="path">./content/www/location1/index.html</div>
+		
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
+		
+		
+		<!-- Form for POST CGI BASH script -->
+		
+		<h2>Enter Your Name for POST Cgi bash script:</h2>
+	   		 <form action="http://localhost:8000/cgi-bin/post_cgi.sh" method="post">
+				<label for="name">Name:</label><br>
+				<input type="text" id="name" name="name"><br><br>
+				<input type="submit" value="Submit">
+			 </form>
+			
+		<!-- Form for chunked POST request 
+		<form action="http://localhost:8000/cgi-bin/upload_cgi.sh" method="post" enctype="multipart/form-data">
+			<label for="fileChunk">File Chunk:</label><br>
+			<input type="file" id="fileChunk" name="fileChunk" required><br><br>
+			<input type="submit" value="Send Chunked POST Request">
+		</form>
+		-->
+
+
+		<form id="deleteForm">
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+			
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = "uploads/";
+				var filename = document.getElementById("filename").value.trim();
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						alert("DELETE request successful");
+						// Clear the input field after successful request
+						document.getElementById("filename").value = "";
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
+		
+		
+    </div>
+</body>
+</html>
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /favicon.ico HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+sec-ch-ua-platform: "Linux"
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Dest: image
+Referer: http://localhost:8000/testloc1/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /favicon.ico
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+connection: keep-alive
+host: localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: image
+sec-fetch-mode: no-cors
+sec-fetch-site: same-origin
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 101
+Connection: keep-alive
+Server: [TS]erver
+Date: Wed, 31 Jan 2024 14:21:42 GMT
+
+<html>
+<head><title>404 Not Found </title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+
+__body_str after PARSING DONE: 
+name=xx
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+Content-Length: 7
+Cache-Control: max-age=0
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:8000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:8000/testloc1/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+name=xx
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+cache-control: max-age=0
+connection: keep-alive
+content-length: 7
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+_boundary:
+Body str: name=xx
+Body vector: n a m e = x x 
+
+__body_str after PARSING DONE: 
+
+
+BUFFER BEFORE feed: 
+GET /testloc1/ HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+Cache-Control: max-age=0
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+
+PRESENTING REQUEST data: 
+Method: GET
+Path: /testloc1/
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+cache-control: max-age=0
+connection: keep-alive
+host: localhost:8000
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: none
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+_boundary:
+Body str: 
+Body vector: 
+
+SENDING RESPONSE data: 
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 2330
+Connection: keep-alive
+Server: [TS]erver
+Date: Wed, 31 Jan 2024 14:23:09 GMT
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		form {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>/location1/index.html</h1>
+		<div class="path">./content/www/location1/index.html</div>
+		
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
+		
+		
+		<!-- Form for POST CGI BASH script -->
+		
+		<h2>Enter Your Name for POST Cgi bash script:</h2>
+	   		 <form action="http://localhost:8000/cgi-bin/post_cgi.sh" method="post">
+				<label for="name">Name:</label><br>
+				<input type="text" id="name" name="name"><br><br>
+				<input type="submit" value="Submit">
+			 </form>
+			
+		<!-- Form for chunked POST request 
+		<form action="http://localhost:8000/cgi-bin/upload_cgi.sh" method="post" enctype="multipart/form-data">
+			<label for="fileChunk">File Chunk:</label><br>
+			<input type="file" id="fileChunk" name="fileChunk" required><br><br>
+			<input type="submit" value="Send Chunked POST Request">
+		</form>
+		-->
+
+
+		<form id="deleteForm">
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+			
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = "uploads/";
+				var filename = document.getElementById("filename").value.trim();
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						alert("DELETE request successful");
+						// Clear the input field after successful request
+						document.getElementById("filename").value = "";
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
+		
+		
+    </div>
+</body>
+</html>
+
+__body_str after PARSING DONE: 
+name=xx
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+Content-Length: 7
+Cache-Control: max-age=0
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:8000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:8000/testloc1/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+name=xx
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+cache-control: max-age=0
+connection: keep-alive
+content-length: 7
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+_boundary:
+Body str: name=xx
+Body vector: n a m e = x x 
+
+__body_str after PARSING DONE: 
+name=xx
+
+BUFFER BEFORE feed: 
+POST /cgi-bin/post_cgi.sh HTTP/1.1
+Host: localhost:8000
+Connection: keep-alive
+Content-Length: 7
+Cache-Control: max-age=0
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+Upgrade-Insecure-Requests: 1
+Origin: http://localhost:8000
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: http://localhost:8000/testloc1/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9
+
+name=xx
+PRESENTING REQUEST data: 
+Method: POST
+Path: /cgi-bin/post_cgi.sh
+Query: 
+_ver_major: 1
+_ver_minor: 1
+Headers:
+accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding: gzip, deflate, br
+accept-language: en-US,en;q=0.9
+cache-control: max-age=0
+connection: keep-alive
+content-length: 7
+content-type: application/x-www-form-urlencoded
+host: localhost:8000
+origin: http://localhost:8000
+referer: http://localhost:8000/testloc1/
+sec-ch-ua: "Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"
+sec-ch-ua-mobile: ?0
+sec-ch-ua-platform: "Linux"
+sec-fetch-dest: document
+sec-fetch-mode: navigate
+sec-fetch-site: same-origin
+sec-fetch-user: ?1
+upgrade-insecure-requests: 1
+user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+_boundary:
+Body str: name=xx
+Body vector: n a m e = x x 
+
+
+BUFFER BEFORE feed: 
+
