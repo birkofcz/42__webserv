@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:51:31 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/06 13:04:28 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:21:36 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ MIME stands for Multipurpose Internet Mail Extensions. It is a standard
 that indicates the nature and format of a document, file, or assortment of bytes.
 It is maintained by the Internet Assigned Numbers Authority (IANA).
 More: https://www.iana.org/assignments/media-types/media-types.xhtml
-
 */
 
 class Mime

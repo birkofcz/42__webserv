@@ -6,11 +6,16 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:28:05 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/27 16:12:19 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:19:06 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Log.hpp"
+
+/* 
+Sets the flags for the log output = options for output to console and/or file
+also sets the flags for the log type = options for output of info, warning, error, debug
+ */
 
 bool Log::out_console = true;
 bool Log::out_file = true;
@@ -20,7 +25,12 @@ bool Log::type_warning = true;
 bool Log::type_error = true;
 bool Log::type_debug = false;
 
-void Log::Msg(LogType type, string msg)
+ 
+/*
+Msg function to print the message to console and/or file, based on the flags set
+*/
+void 
+Log::Msg(LogType type, string msg)
 {
 	string message("");
 
@@ -83,6 +93,7 @@ Log::_DetermineColor(LogType type)
 	}
 }
 
+// Helper function to time stamp the log message
 string
 Log::TimeStamp()
 {
