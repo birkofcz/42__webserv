@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/28 16:44:57 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:13:05 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 Server::Server()
 {
 	_name = "";
-	_ports = std::vector<int>();
+	_port = -1;
 	_server_names = std::vector<string>();
 	_root = "";
 	_index = std::vector<string>();
@@ -38,10 +38,10 @@ void Server::setName(string name)
 	_name = name;
 }
 
-void Server::setPorts(std::vector<int> ports)
+void Server::setPort(int port)
 
 {
-	_ports = ports;
+	_port = port;
 }
 
 
@@ -128,10 +128,10 @@ Server::getName() const
 	return _name;
 }
 
-std::vector<int>
-Server::getPorts() const
+int
+Server::getPort() const
 {
-	return _ports;
+	return _port;
 }
 
 std::vector<string>
@@ -233,8 +233,8 @@ void Server::setupServer(void)
 	_server_address.sin_addr.s_addr = _host;
 	//print the host in readable format..
 	Log::Msg(DEBUG, FUNC + "Host: " + toString(inet_ntoa(_server_address.sin_addr)));
-	_server_address.sin_port = htons(_ports[0]); //!! needs to be only one !!!
-	Log::Msg(DEBUG, FUNC + "Port " + toString(_ports[0]));
+	_server_address.sin_port = htons(_port); //!! needs to be only one !!!
+	Log::Msg(DEBUG, FUNC + "Port " + toString(_port));
 
 	//cout << htons(_ports[0]) << " " << _ports[0] << " "  << _host << " " << _socket_fd << endl; // test
 

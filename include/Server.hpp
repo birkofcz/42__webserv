@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 15:58:39 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/28 16:21:36 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:10:26 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ class Server
 {
 	private:
 		string						_name;
-		std::vector<int>			_ports;
+		int							_port;
 		in_addr_t					_host; 
 		std::vector<string>			_server_names;
 		string						_root;
@@ -87,7 +87,7 @@ class Server
   
 		//setters
 		void						setName(string name);
-		void						setPorts(std::vector<int> ports);
+		void						setPort(int port);
 		void						setServerNames(std::vector<string> server_names);
 		void						setRoot(string root);
 		void						setIndex(std::vector<string> index);
@@ -103,7 +103,7 @@ class Server
 		
 		//getters
 		string						getName() const;
-		std::vector<int>			getPorts() const;
+		int							getPort() const;
 		std::vector<string>			getServerNames() const;
 		string						getRoot() const;
 		std::vector<string>			getIndex() const;
@@ -127,10 +127,9 @@ inline std::ostream& operator<<(std::ostream& os, const Server& server) {
     os << "\nServer Information:\n"
        << "Name: " << server.getName() << "\n"
        << "Ports: ";
-    std::vector<int> ports = server.getPorts();
-    for (size_t i = 0; i < ports.size(); ++i) {
-        os << ports[i] << " ";
-    }
+   int port = server.getPort();
+   os << port << " ";
+
     os << "\nServer Names: ";
     std::vector<std::string> serverNames = server.getServerNames();
     for (size_t i = 0; i < serverNames.size(); ++i) {

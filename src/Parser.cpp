@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/28 16:39:07 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:11:50 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,28 @@ Parser::~Parser()
 //////// --- METHODS - parsing the lines one by one helper parsers (2. level)--- ////////
 
 /* Get port numbers from a line */
-std::vector<int> 
-Parser::parsePorts(const string& line)
+int
+Parser::parsePort(const string& line)
 {
 	std::vector<string> split = CppSplit(line, ' ');
-	std::vector<int> port;
+	int port = -1;
 	if (split[1].empty())
 	{
 		print("getPort: port not specified", RED, 2);
 		return port;
 	}
 	//cleans the string(s) from the semicolon and pushes them to the vector
-	for (size_t i = 1; i < split.size(); i++)
+	if (split[1].find(';') != string::npos)
+		split[1].erase(split[1].find(';'));
+	///test if everything is number
+	if (isNumeric(split[1]))
+		return atoi(split[1].c_str());
+	else
 	{
-		if (split[i].find(';') != string::npos)
-			split[i].erase(split[i].find(';'));
-		port.push_back(atoi(split[i].c_str()));
+		print("getPort: port not numeric", RED, 2);
+		return port;
+
 	}
-	return port;
 }
 
 /* Helper function to check the formal validity of IPv4 address format - uses inet_pton designed
@@ -412,8 +416,8 @@ void Parser::parseFile(const string& path)
 				{
 					//print("config[server]: Found listen directive", GREEN);
 					plog << "config[server]: Found listen directive" << endl;
-					std::vector<int> ports = parsePorts(line);
-					currentServer.setPorts(ports);
+					int port = parsePort(line);
+					currentServer.setPort(port);
 				}
 				else if (line.find("host") != string::npos)
 				{
@@ -579,16 +583,12 @@ cout << endl << YELLOW << "[ CONFIGURATION SUMMARY ]" << RESET << endl << endl;
 		cout << BOLD << "-------------------------------------" << endl;
 		cout << GREEN << "Name: " << _servers[i].getName() << RESET << endl;
 		cout << BOLD << "-------------------------------------" << RESET << endl << endl;
-		cout << "Ports: ";
-		if (_servers[i].getPorts().empty())
-		{
-			cout << "not set";
-		}
+		cout << "Port: ";
+		if (_servers[i].getPort() == -1)
+			cout << "not set or error format";
 		else
-		{
-			for (size_t j = 0; j < _servers[i].getPorts().size(); j++)
-				cout << _servers[i].getPorts()[j] << " ";
-		}
+			cout << _servers[i].getPort();
+
 		cout << endl;
 		cout << "Server names: ";
 		if (_servers[i].getServerNames().empty())
