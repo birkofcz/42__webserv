@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:24:00 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/01 16:29:49 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ int
 Parser::parsePort(const string& line)
 {
 	std::vector<string> split = CppSplit(line, ' ');
-	int port = -1;
-	if (split[1].empty())
+	//int port = -1;
+	if (split[1].empty() || split[1] == ";")
 	{
-		print("getPort: port not specified", RED, 2);
-		return port;
+		//print("getPort: port not specified", RED, 2);
+		return (-1);
 	}
 	//cleans the string(s) from the semicolon and pushes them to the vector
 	if (split[1].find(';') != string::npos)
@@ -45,9 +45,8 @@ Parser::parsePort(const string& line)
 		return atoi(split[1].c_str());
 	else
 	{
-		print("getPort: port not numeric", RED, 2);
-		return port;
-
+		//print("getPort: port not numeric", RED, 2);
+		return (-1);
 	}
 }
 
@@ -413,6 +412,11 @@ void Parser::parseFile(const string& path)
 					//print("config[server]: Found listen directive", GREEN);
 					plog << "config[server]: Found listen directive" << endl;
 					int port = parsePort(line);
+					if (port == -1)
+					{
+						Log::Msg(ERROR, "Invalid port number in config file");
+						exit(1);
+					}
 					currentServer.setPort(port);
 				}
 				else if (line.find("host") != string::npos)
