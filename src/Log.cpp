@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:28:05 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/27 16:12:19 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/01 16:16:01 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ void Log::Msg(LogType type, string msg)
 	// Print to console if enabled
 	if (out_console && !message.empty())
 	{
-		print(message, _DetermineColor(type));
+		if (type == ERROR)
+			print(message, _DetermineColor(type), 2);
+		else
+			print(message, _DetermineColor(type));
 	}
 
 	// Log to file if enabled
