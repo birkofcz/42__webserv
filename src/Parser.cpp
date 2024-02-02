@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/01 16:29:49 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/02 15:31:11 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ Parser::parseHost(const std::string& line)
 
 	if (split.size() < 2) 
 	{
-		print("parseHost: Invalid configuration line. Host not specified.", RED, 2);
+		Log::Msg(DEBUG, FUNC + "Host not specified.");
+		//print("parseHost: Invalid configuration line. Host not specified.", RED, 2);
 		return INADDR_NONE; // INDDR_NONE is -1, indicating an error
 	}
 
@@ -89,7 +90,8 @@ Parser::parseHost(const std::string& line)
 	}
 	else
 	{
-		print("parseHost: Invalid IP address or hostname.", RED, 2);
+		Log::Msg(DEBUG, FUNC + "inet_pton: Host is not an ip address");
+		//print("parseHost: Invalid IP address or hostname.", RED, 2);
 		return INADDR_NONE;
 	}
 }
@@ -424,6 +426,11 @@ void Parser::parseFile(const string& path)
 					//print("config[server]: Found host directive", GREEN);
 					plog << "config[server]: Found host directive" << endl;
 					in_addr_t host = parseHost(line);
+					if (host == INADDR_NONE)
+					{
+						Log::Msg(ERROR, "Invalid host in config file");
+						exit(1);
+					}	
 					currentServer.setHost(host);
 				}
 				else if (line.find("server_name") != string::npos)
