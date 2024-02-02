@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/02 15:31:11 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/02 16:42:47 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ Parser::parseAllowedMethods(const string& line)
 	std::vector<int> allowed_methods;
 	if (split[1].empty())
 	{
-		print("getAllowedMethods: allowed methods not specified", RED, 2);
+		print("parseAllowedMethods: allowed methods not specified", RED, 2);
 		return allowed_methods;
 	}
 	//cleans the string(s) from the semicolon and pushes them to the vector
@@ -192,7 +192,7 @@ Parser::parseAllowedMethods(const string& line)
 			allowed_methods.push_back(3);
 		else
 		{
-			print("getAllowedMethods: unknown method", RED, 2);
+			print("parseAllowedMethods: unknown method", RED, 2);
 			return allowed_methods;
 		}
 	}
@@ -250,12 +250,12 @@ Parser::parseClientMaxBodySize(const string& line)
 	std::vector<string> split = CppSplit(line, ' ');
 	if (split[1].empty())
 	{
-		print("getClientMaxBodySize: client_max_body_size not specified", RED, 2);
+		print("parseClientMaxBodySize: client_max_body_size not specified", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 	if (atoi(split[1].c_str()) < 0)
 	{
-		print("getClientMaxBodySize: client_max_body_size out of range", RED, 2);
+		print("parseClientMaxBodySize: client_max_body_size out of range", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 	if (split[1].find(';') != string::npos)
@@ -264,7 +264,7 @@ Parser::parseClientMaxBodySize(const string& line)
 		return atoi(split[1].c_str());
 	else
 	{
-		print("getClientMaxBodySize: client_max_body_size not numeric", RED, 2);
+		print("parseClientMaxBodySize: client_max_body_size not numeric", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 }
