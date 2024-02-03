@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabtan <gabtan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/01 16:13:09 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/03 15:52:59 by gabtan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ printStartInfo function to print the header graphics and start info of the serve
  */
 void	printStartInfo(std::vector<string> config_and_interface)
 {
-	// std::system("clear"); //clears the terminal
+	//std::system("clear"); //clears the terminal
 
 	cout << GREEN << endl;
 	cout << "    _____________________                    " << endl;

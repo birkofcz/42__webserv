@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:24:00 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/02 16:42:47 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ int
 Parser::parsePort(const string& line)
 {
 	std::vector<string> split = CppSplit(line, ' ');
-	int port = -1;
-	if (split[1].empty())
+	//int port = -1;
+	if (split[1].empty() || split[1] == ";")
 	{
-		print("getPort: port not specified", RED, 2);
-		return port;
+		//print("getPort: port not specified", RED, 2);
+		return (-1);
 	}
 	//cleans the string(s) from the semicolon and pushes them to the vector
 	if (split[1].find(';') != string::npos)
@@ -45,9 +45,8 @@ Parser::parsePort(const string& line)
 		return atoi(split[1].c_str());
 	else
 	{
-		print("getPort: port not numeric", RED, 2);
-		return port;
-
+		//print("getPort: port not numeric", RED, 2);
+		return (-1);
 	}
 }
 
@@ -68,7 +67,8 @@ Parser::parseHost(const std::string& line)
 
 	if (split.size() < 2) 
 	{
-		print("parseHost: Invalid configuration line. Host not specified.", RED, 2);
+		Log::Msg(DEBUG, FUNC + "Host not specified.");
+		//print("parseHost: Invalid configuration line. Host not specified.", RED, 2);
 		return INADDR_NONE; // INDDR_NONE is -1, indicating an error
 	}
 
@@ -90,7 +90,8 @@ Parser::parseHost(const std::string& line)
 	}
 	else
 	{
-		print("parseHost: Invalid IP address or hostname.", RED, 2);
+		Log::Msg(DEBUG, FUNC + "inet_pton: Host is not an ip address");
+		//print("parseHost: Invalid IP address or hostname.", RED, 2);
 		return INADDR_NONE;
 	}
 }
@@ -173,7 +174,7 @@ Parser::parseAllowedMethods(const string& line)
 	std::vector<int> allowed_methods;
 	if (split[1].empty())
 	{
-		print("getAllowedMethods: allowed methods not specified", RED, 2);
+		print("parseAllowedMethods: allowed methods not specified", RED, 2);
 		return allowed_methods;
 	}
 	//cleans the string(s) from the semicolon and pushes them to the vector
@@ -191,7 +192,7 @@ Parser::parseAllowedMethods(const string& line)
 			allowed_methods.push_back(3);
 		else
 		{
-			print("getAllowedMethods: unknown method", RED, 2);
+			print("parseAllowedMethods: unknown method", RED, 2);
 			return allowed_methods;
 		}
 	}
@@ -249,12 +250,12 @@ Parser::parseClientMaxBodySize(const string& line)
 	std::vector<string> split = CppSplit(line, ' ');
 	if (split[1].empty())
 	{
-		print("getClientMaxBodySize: client_max_body_size not specified", RED, 2);
+		print("parseClientMaxBodySize: client_max_body_size not specified", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 	if (atoi(split[1].c_str()) < 0)
 	{
-		print("getClientMaxBodySize: client_max_body_size out of range", RED, 2);
+		print("parseClientMaxBodySize: client_max_body_size out of range", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 	if (split[1].find(';') != string::npos)
@@ -263,7 +264,7 @@ Parser::parseClientMaxBodySize(const string& line)
 		return atoi(split[1].c_str());
 	else
 	{
-		print("getClientMaxBodySize: client_max_body_size not numeric", RED, 2);
+		print("parseClientMaxBodySize: client_max_body_size not numeric", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 }
@@ -413,6 +414,11 @@ void Parser::parseFile(const string& path)
 					//print("config[server]: Found listen directive", GREEN);
 					plog << "config[server]: Found listen directive" << endl;
 					int port = parsePort(line);
+					if (port == -1)
+					{
+						Log::Msg(ERROR, "Invalid port number in config file");
+						exit(1);
+					}
 					currentServer.setPort(port);
 				}
 				else if (line.find("host") != string::npos)
@@ -420,6 +426,11 @@ void Parser::parseFile(const string& path)
 					//print("config[server]: Found host directive", GREEN);
 					plog << "config[server]: Found host directive" << endl;
 					in_addr_t host = parseHost(line);
+					if (host == INADDR_NONE)
+					{
+						Log::Msg(ERROR, "Invalid host in config file");
+						exit(1);
+					}	
 					currentServer.setHost(host);
 				}
 				else if (line.find("server_name") != string::npos)

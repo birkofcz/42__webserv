@@ -3,13 +3,13 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
+#    By: gabtan <gabtan@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/08 11:05:29 by sbenes            #+#    #+#              #
-
-#    Updated: 2024/01/29 16:28:34 by tkajanek         ###   ########.fr        #
+#    Updated: 2024/02/03 15:44:23 by gabtan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 
 #color and formatting definitions:
 BOLD =	\033[1m
