@@ -1,9 +1,7 @@
-HTTP/1.1 502 Bad Gateway
+HTTP/1.1 200 OK
+Content-Length: 21
 Content-Type: text/html
-Content-Length: 105
 
-<html>
-<head><title>502 Bad Gateway </title></head>
-<body>
-<center><h1>502 Bad Gateway</h1></center>
+<h1>Hello, ddd!</h1>
+
 
