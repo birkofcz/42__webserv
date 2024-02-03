@@ -7,3 +7,4 @@
 # logs
 data/request_temp.txt
 data/response_temp.txt
+debug_output.txt
