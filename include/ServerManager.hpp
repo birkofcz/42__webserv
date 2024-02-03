@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:09:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/01 16:58:10 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/03 17:19:05 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ class ServerManager
 		// fd_set     _write_fd_pool; spojene se select() -> vymazat
 		// int        _biggest_fd; spojene se select() -> vymazat
 
-		void acceptNewConnection(Server &);
+		void _acceptNewConnection(Server &);
 		//void checkTimeout();
 		//void initializeSets(); spojene se select() -> vymazat
 		void readRequest(const int&, Client &);
@@ -52,7 +52,7 @@ class ServerManager
 		//void handleReqBody(Client &);
 		void	sendResponse(const int&, Client&);
 		void	_sendCgiBody(Client&);
-		int		_addCgiPipe(int pipe_fd, int events_flag);
+		void	_addToEpoll(int fd, int events_flag);
 
 		//void sendCgiBody(Client &, CgiHandler &);
 		//void readCgiResponse(Client &, CgiHandler &);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabtan <gabtan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/03 15:52:23 by gabtan           ###   ########.fr       */
+/*   Updated: 2024/02/03 19:49:46 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,15 @@ ServerManager::ServerManager()
 	_epoll_fd = epoll_create1(0);
 	if (_epoll_fd == -1)
 	{
-		perror("epoll_create1");
+		Log::Msg(ERROR, FUNC + "epoll_create1: " + toString(strerror(errno)));
 		exit(EXIT_FAILURE);
 	}
 }
 ServerManager::~ServerManager() {}
 
 void ServerManager::initServers(vector<Server> servers)
-{
-	//cout << endl;
-	//print("ServerManager -- Initializing  Servers...", GREEN);
-	
+{	
 	_servers = servers;
-	// char buf[INET_ADDRSTRLEN];
-	// This constant represents the maximum length, in characters, of the string representation of an IPv4 address
-	// "xxx.xxx.xxx.xxx" plus the null terminator.
 	bool serverDouble; // to track whether a server is a duplicate.
 	for (vector<Server>::iterator it = _servers.begin(); it != _servers.end(); it++)
 	{
@@ -62,12 +56,30 @@ void ServerManager::initServers(vector<Server> servers)
 			it->setupServer(); // creates a socket and binds it with servers address
 			// std::cout << *it;
 		}
-		// print( "Server Created: ServerName[%s] Host[%s] Port[%d]",it->getServerName().c_str(),
-		//         inet_ntop(AF_INET, &it->getHost(), buf, INET_ADDRSTRLEN), it->getPort());
+		
+		char buf[INET_ADDRSTRLEN] = {0};
+		// This constant represents the maximum length, in characters, of the string representation of an IPv4 address
+		// "xxx.xxx.xxx.xxx" plus the null terminator.
+		Log::Msg(INFO, "Server Created: ServerName[" + it->getName() + "] Host[" + 
+			inet_ntop(AF_INET, &it->getHost(), buf, INET_ADDRSTRLEN) + "] Port[" + 
+			toString(it->getPort()) + "]");
 	}
 }
 
+void	ServerManager::_addToEpoll(int fd, int event_flag)
+{
+	struct epoll_event event;
+	event.events = event_flag;  // Set the events flag (EPOLLIN, EPOLLOUT ...)
+	event.data.fd = fd;     // The file descriptor to monitor
 
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, fd, &event) == -1)
+	{
+		Log::Msg(ERROR, FUNC + "epoll_ctl: " + toString(strerror(errno)));
+		// Handle error if needed
+		return;
+	}
+	Log::Msg(DEBUG, FUNC + "fd added to epoll: " + toString(fd));
+}
 
 /*
 Traditional mechanisms like select and poll suffer from performance
@@ -103,48 +115,41 @@ allowing the program to take appropriate actions.
 */
 void ServerManager::runServers()
 {
-	
-
-	struct epoll_event serverEvent;
-	serverEvent.events = EPOLLIN | EPOLLOUT; // Edge-triggered mode
+	// let servers listen and put them to epoll structure.
 	for (vector<Server>::iterator it = _servers.begin(); it != _servers.end(); ++it)
 	{
 		if (listen(it->getFd(), 512) == -1)
 		{
-			print("webserv: listen error:", RED);
+			Log::Msg(ERROR, FUNC + "listen error: " + toString(strerror(errno)));
 			exit(EXIT_FAILURE);
 		}
 		if (fcntl(it->getFd(), F_SETFL, O_NONBLOCK) < 0)
 		// F_SETFL: This is a command to fcntl indicating that you want to set the file status flags.
 		// O_NONBLOCK: This flag specifies non-blocking mode.
 		{
-			print("webserv: fclt error:", RED);
+			Log::Msg(ERROR, FUNC + "fclt error: " + toString(strerror(errno)));
 			exit(EXIT_FAILURE);
 		}
-		serverEvent.data.fd = it->getFd();
-		if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, it->getFd(), &serverEvent) == -1)
-		{
-			perror("epoll_ctl");
-			exit(EXIT_FAILURE);
-		}
+		_addToEpoll(it->getFd(), EPOLLIN | EPOLLOUT);
 		_servers_map.insert(std::make_pair(it->getFd(), *it));
 	}
 
+	// run epoll_wait to recognize events on epoll structure.
 	while (!terminateFlag)
 	{
 		struct epoll_event triggeredEvents[MAX_EVENTS];
 		int numEvents = epoll_wait(_epoll_fd, triggeredEvents, MAX_EVENTS, 1000); // 1 second timeout
 		if (numEvents == -1)
 		{
-			perror("epoll_wait");
-			exit(EXIT_FAILURE);
+			Log::Msg(ERROR, FUNC + "epoll_wait. " + toString(strerror(errno)));
+			terminateFlag = true;
+			// exit(EXIT_FAILURE);
 		}
-		if (numEvents == 0) //not sure
-		{
-			// No events occurred within the timeout, continue the loop
-			continue;
-		}
-		// cout << "epoll wait iteration" << endl;
+		// if (numEvents == 0) //not sure
+		// {
+		// 	// No events occurred within the timeout, continue the loop
+		// 	continue;
+		// }
 		for (int i = 0; i < numEvents; ++i)
 		{
 			// There is incoming data from a client or a pipe.
@@ -152,70 +157,44 @@ void ServerManager::runServers()
 			if (triggeredEvents[i].events & (EPOLLIN | EPOLLHUP | EPOLLERR))
 			{
 				int fd = triggeredEvents[i].data.fd;
-				Log::Msg(DEBUG, FUNC + "fd triggered : " + toString(fd));
+				Log::Msg(DEBUG, FUNC + "EPOLLIN fd triggered : " + toString(fd));
 				if (_servers_map.count(fd))
-					acceptNewConnection(_servers_map.find(fd)->second);
+					_acceptNewConnection(_servers_map.find(fd)->second);
 				else if (_clients_map.count(fd))
 				{
 					readRequest(fd, _clients_map[fd]);
 					if (_clients_map[fd].response.getCgiFlag())
 					{
-						// Add pipe_out[0] (read end of the pipe) to the epoll interest list
-						struct epoll_event cgi_event_out;
-						cgi_event_out.events = EPOLLIN;  // EPOLLIN for read events
-						cgi_event_out.data.fd = _clients_map[fd].response.cgi_object.cgi_pipe_out_read_end;  // The file descriptor to monitor
-
-						if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, &cgi_event_out) == -1)
-						{
-							perror("epoll_ctl");
-							// close(pipe_stdin);
-							// close(pipe_out[0]);
-							// close(pipe_out[1]);
-							// error_code = 500;
-							return ;
-						}
-
-						struct epoll_event cgi_event_in;
-						cgi_event_in.events = EPOLLOUT;  // EPOLLIN for read events
-						cgi_event_in.data.fd = _clients_map[fd].response.cgi_object.cgi_pipe_in_write_end;  // The file descriptor to monitor
-
-						if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _clients_map[fd].response.cgi_object.cgi_pipe_in_write_end, &cgi_event_in) == -1)
-						{
-							perror("epoll_ctl");
-							// Handle error
-							return ;
-						}
+						// Add cgi pipe_in[1] (write end of the pipe) to the epoll interest list
+						_addToEpoll(_clients_map[fd].response.cgi_object.cgi_pipe_in_write_end, EPOLLOUT);
+						// Add cgi pipe_out[0] (read end of the pipe) to the epoll interest list
+						_addToEpoll(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, EPOLLIN);
+				
 						Log::Msg(DEBUG, FUNC + "write end of CGI pipe in added to epoll interest list: " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_in_write_end));
-
-
+						Log::Msg(DEBUG, FUNC + "read end of CGI pipe in added to epoll interest list: " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end));
 						Log::Msg(DEBUG, FUNC + "pipe fd added to client fd map : " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end));
 						Log::Msg(DEBUG, FUNC + "pipe fd added to client fd map : " + toString(_clients_map[fd].response.cgi_object.cgi_pipe_in_write_end));
 
 						_cgi_pipe_to_client_map.insert(std::make_pair(_clients_map[fd].response.cgi_object.cgi_pipe_out_read_end, fd));
 						_cgi_pipe_to_client_map.insert(std::make_pair(_clients_map[fd].response.cgi_object.cgi_pipe_in_write_end, fd));
 					
-						std::map<int, int>::const_iterator it;
-						for (it = _cgi_pipe_to_client_map.begin(); it != _cgi_pipe_to_client_map.end(); ++it)
-						{
-						int key = it->first;
-						int value = it->second;
-						std::cout << "Key: " << toString(key) << ", Value: " << toString(value) << std::endl;
-   						}
-						
-					}
-
+						// std::map<int, int>::const_iterator it;
+						// for (it = _cgi_pipe_to_client_map.begin(); it != _cgi_pipe_to_client_map.end(); ++it)
+						// {
+						// int key = it->first;
+						// int value = it->second;
+						// std::cout << "Key: " << toString(key) << ", Value: " << toString(value) << std::endl;
+   					}
 				}
-				else if (_cgi_pipe_to_client_map.count(fd))
+				else if (_cgi_pipe_to_client_map.count(fd)) // Handle EPOLLIN on CGI pipe. Reading CGI script output and appending it to the response.
 				{
-					// Handle EPOLLIN on CGI pipe
-					Log::Msg(DEBUG, FUNC + "cgi out pipe triggered");
 					int fd_client = _cgi_pipe_to_client_map[fd];
-					Log::Msg(DEBUG, FUNC + "fd_client: " + toString(fd_client));
+					Log::Msg(DEBUG, FUNC + "EPOLLIN on cgi out pipe triggered. Fd_client: " + toString(fd_client));
 					int status;
 					pid_t pid = waitpid(_clients_map[fd_client].response.cgi_object.getCgiPid(), &status, 0); // Wait for child process to terminate
 					if (pid == -1)
 					{
-						perror("waitpid = -1");
+						Log::Msg(ERROR, FUNC + "waitpid = -1. " + toString(strerror(errno)));
 						_clients_map[fd_client].response._response_content.append(Error::instantErrorPage(500));
 						close(_clients_map[fd_client].response.cgi_object.cgi_pipe_out_read_end);
 						_cgi_pipe_to_client_map.erase(fd);
@@ -223,13 +202,10 @@ void ServerManager::runServers()
 					}
 					if(WEXITSTATUS(status) != 0)
 					{
-						std::cerr << "cgi terminated with an error\n";
+						Log::Msg(ERROR, FUNC + "CGI script terminated with an error status: " + toString(WEXITSTATUS(status)));
 						_clients_map[fd_client].response._response_content.append(Error::instantErrorPage(502));
-						// _clients_map[fd_client].response.setStatusCode(502);
 						close(_clients_map[fd_client].response.cgi_object.cgi_pipe_out_read_end);
 						_cgi_pipe_to_client_map.erase(fd);
-						//uzavrit read out pipe, jako v readcgi
-						// _clients_map[fd_client].response.setErrorResponse(502); //
 					}
 					else if (WIFEXITED(status))
 					{
@@ -237,25 +213,16 @@ void ServerManager::runServers()
 						_clients_map[fd_client].response.setStatusCode(200);
 						_clients_map[fd_client].response._response_content.insert(0, _clients_map[fd_client].response.getStatusLineCgi());
 						_cgi_pipe_to_client_map.erase(fd);
-						printf("Child process terminated normally with status: %d\n", WEXITSTATUS(status));
 					}
 					else if (WIFSIGNALED(status))
 					{
-						printf("ChildXXXX process terminated by signal: %d\n", WTERMSIG(status));
-						_clients_map[fd_client].response._response_content.append(Error::instantErrorPage(502));
-						// _clients_map[fd_client].response.clear();
-						// _clients_map[fd_client].request.setErrorCode(502);
-						// cout << _clients_map[fd_client].response ;
-						// _clients_map[fd_client].response.buildResponse();
-						
+						Log::Msg(ERROR, FUNC + "Child process running CGI script terminated by signal: " + toString(WTERMSIG(status)));
+						_clients_map[fd_client].response._response_content.append(Error::instantErrorPage(502));						
 						close(_clients_map[fd_client].response.cgi_object.cgi_pipe_out_read_end);
 						_cgi_pipe_to_client_map.erase(fd);
 					}
-
 				}
 			}
-			
-
 			// The socket's send buffer is ready to accept data, and we can write to it without blocking.
 			// Example: After processing the request, the server may generate an HTTP response.
 			if (triggeredEvents[i].events & (EPOLLOUT | EPOLLHUP | EPOLLERR))
@@ -263,42 +230,37 @@ void ServerManager::runServers()
 				int fd = triggeredEvents[i].data.fd;
 				if (_clients_map.count(fd) && !_clients_map[fd].response._response_content.empty())
 				{
-					Log::Msg(DEBUG, FUNC + "sending response.");
+					Log::Msg(DEBUG, FUNC + "EPOLLOUT fd of client triggered : " + toString(fd));
 					sendResponse(fd, _clients_map[fd]);
 				}
 				else if (_cgi_pipe_to_client_map.count(fd))
 				{
-					Log::Msg(DEBUG, FUNC + "cgi in pipe triggered");
 					int fd_client = _cgi_pipe_to_client_map[fd];
-					Log::Msg(DEBUG, FUNC + "fd_client: " + toString(fd_client));
+					Log::Msg(DEBUG, FUNC + "EPOLLOUT cgi_in pipe triggered. fd_client: " + toString(fd_client));
 					_sendCgiBody(_clients_map[fd_client]);
 					_cgi_pipe_to_client_map.erase(fd);
 				}	
 			}
 		}
-		//checkTimeout(); not necessary because epoll wait already has timeout
 	}
 	this->clear();
 }
-
 
 void ServerManager::clear()
 {
  	if ( ServerManager::getEpollFd() != -1)
 		close (getEpollFd());
-	for (std::map<int, Server>::iterator it = _servers_map.begin(); it != _servers_map.end(); ++it)
+	for (std::map<int, Server>::iterator it = _servers_map.begin(); it != _servers_map.end();)
 	{
 		int fd = it->first;
 		if (close(fd) == -1)
 			Log::Msg(ERROR, "Failed to close file descriptor " + toString(fd));
-		_servers_map.erase(it);
+		_servers_map.erase(it++);
 	}
 }
 
 void ServerManager::sendResponse(const int& fd, Client& c)
 {
-	cout << endl << "SENDING RESPONSE data: \n" << c.response._response_content << endl;
-	
 	//----
 	//write the response to the text file in data/response_temp.txt - in truncate mode - for debugging and showcase purposes
 	std::ofstream responseFile("data/response_temp.txt", std::ios::out | std::ios::trunc); // Opens the file in write/truncate mode
@@ -306,40 +268,42 @@ void ServerManager::sendResponse(const int& fd, Client& c)
 	responseFile.close();
 	//----
 	
-	std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
-    debugFile << "SENDING RESPONSE data: \n" << c.response._response_content << "\n";
-    debugFile.close();
+	// std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
+    // debugFile << "SENDING RESPONSE data: \n" << c.response._response_content << "\n";
+    // debugFile.close();
 
     ssize_t bytes_written = send(fd, c.response._response_content.c_str(), c.response._response_content.size(), MSG_DONTWAIT);
     if (bytes_written < 0)
     {
-        perror("write");
+        Log::Msg(ERROR, FUNC + "Send error");
         // Handle error as needed
     }
     else
     {
+		// if (c.request.keepAlive() == false)
+		// 	_closeConnection(c.getSocket());
 		c.clearClient();
-        std::cout << "Successful SEND RESPONSE \n";
-    }
+		Log::Msg(DEBUG, FUNC + "Succesfully sent response to fd: " + toString(c.getSocket()));	
+	}
 }
 
 
 
-void ServerManager::acceptNewConnection(Server &serv)
+void ServerManager::_acceptNewConnection(Server &serv)
 {
 	struct sockaddr_in client_address;
 	socklen_t client_address_size = sizeof(client_address);
 	int client_sock = accept(serv.getFd(), (struct sockaddr *)&client_address, &client_address_size);
 	if (client_sock == -1)
 	{
-		perror("accept");
+		Log::Msg(ERROR, FUNC + "accept: " + toString(strerror(errno)));
 		return;
 	}
-
+	
 	// Set the accepted socket to non-blocking
 	if (fcntl(client_sock, F_SETFL, O_NONBLOCK) < 0)
 	{
-		perror("fcntl");
+		Log::Msg(ERROR, FUNC + "fcntl: " + toString(strerror(errno)));
 		close(client_sock);
 		return;
 	}
@@ -348,19 +312,14 @@ void ServerManager::acceptNewConnection(Server &serv)
 	Client new_client(serv);
 	new_client.setSocket(client_sock);
 
+
 	// add client to epoll structure
-	struct epoll_event client_event;
-    client_event.events = EPOLLIN | EPOLLOUT; // Edge-triggered mode
-    client_event.data.fd = client_sock;
-    if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_sock, &client_event) == -1)
-    {
-        perror("client_epoll_ctl");
-        exit(EXIT_FAILURE);
-    }
+	_addToEpoll(client_sock, EPOLLIN | EPOLLOUT);
 
 	// Add the client to the clients map
 	if (_clients_map.count(client_sock) != 0)
 		_clients_map.erase(client_sock);
+		
 	// to handle scenarios where a client disconnects and then reconnects
 	// with the same socket. If the socket is reused, it ensures that the old entry
 	// in the _clients_map is removed before adding a new entry for the reconnected client.
@@ -378,10 +337,7 @@ void    ServerManager::_closeConnection(const int fd)
     event.data.fd = fd;
 
     if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &event) == -1)
-	{
-        // Handle error if epoll_ctl fails
-        perror("Error removing fd from epoll");
-    }
+		Log::Msg(ERROR, FUNC + "epol_ctl: " + toString(strerror(errno)));
 	close(fd);
     _clients_map.erase(fd);
 }
@@ -405,22 +361,18 @@ void ServerManager::readRequest(const int& fd, Client& c)
 
 	if (bytes_read == 0)
 	{
-		// Client closed the connection
-		// Logger::logMsg(YELLOW, CONSOLE_OUTPUT, "webserv: Client %d Closed Connection", fd);
+		Log::Msg(DEBUG, FUNC + "Bytes read = 0. Client closed the connection.");
 		_closeConnection(fd);
 		return;
 	}
 	else if (bytes_read < 0)
 	{
-		// Read error occurred
-		// Logger::logMsg(RED, CONSOLE_OUTPUT, "webserv: fd %d read error %s", fd, strerror(errno));
+		Log::Msg(ERROR, FUNC + "Read error occurred.");
 		_closeConnection(fd);
 		return;
 	}
-	else if (bytes_read != 0)
+	else if (bytes_read != 0) // data were successfully read.
 	{
-		// data were successfully read.
-		// c.updateTime();
 		c.request.feed(buffer, bytes_read);
 		memset(buffer, 0, sizeof(buffer));
 	}
@@ -428,25 +380,12 @@ void ServerManager::readRequest(const int& fd, Client& c)
     debugFile << "PRESENTING REQUEST data: \n" << c.request << "\n";
     debugFile.close();
 
-	// assignServer(c);
 	if (c.request.complete_flag || c.request.getErrorCode())
 	{
 		Log::Msg(DEBUG, FUNC + "Parsing completed or Error code setted");
 		c.clientBuildResponse();
 	}
-
-
-
-	// if (c.request.parsingCompleted() || c.request.errorCode()) {
-	// 		assignServer(c);
 	// 		Logger::logMsg(CYAN, CONSOLE_OUTPUT, "Request Received From Socket %d, Method=<%s>  URI=<%s>",
-	// 					fd, c.request.getMethodStr().c_str(), c.request.getPath().c_str());
-	// 		c.buildResponse();
-	// 		if (c.response.getCgiState()) {
-	// 			handleReqBody(c);
-	// 			// Add logic to wait for pipe events if needed
-	// 		}
-	// 	}
 }
 
 void    ServerManager::_sendCgiBody(Client &c)
@@ -454,7 +393,7 @@ void    ServerManager::_sendCgiBody(Client &c)
 		ssize_t bytes_written = write(c.response.cgi_object.cgi_pipe_in_write_end, c.request.getBody().c_str(), c.request.getBodyLen());
 		if (bytes_written == -1)
 		{
-			perror("write to CGI stdin");
+			Log::Msg(ERROR, FUNC + "bytes_written = -1");
 			close(c.response.cgi_object.cgi_pipe_in_write_end);
 			// c.response._status_code = 500; upravit pak na setter
 			return ;
@@ -462,8 +401,7 @@ void    ServerManager::_sendCgiBody(Client &c)
 		}
 		else if (bytes_written < static_cast<ssize_t>(c.request.getBodyLen()))
 		{
-			perror("pipe for stdin CGI full");
-				// Handle the case where not all data could be written
+			Log::Msg(ERROR, FUNC + "pipe for stdin CGI full");
 				// This may happen if the pipe is full, and you need to handle it accordingly
 		}
 		close(c.response.cgi_object.cgi_pipe_in_write_end);
@@ -473,34 +411,18 @@ void    ServerManager::_readCgiResponse(Client &c)
 {
     char    buffer[MESSAGE_BUFFER];
     int     bytes_read = 0;
-	Log::Msg(DEBUG, FUNC + "before reading from pipe");
     bytes_read = read(c.response.cgi_object.cgi_pipe_out_read_end, buffer, MESSAGE_BUFFER);
 	Log::Msg(DEBUG, FUNC + "bytes read from cgi pipe: " + toString(bytes_read));
     if (bytes_read == 0)
     {
-        // removeFromSet(cgi.pipe_out[0], _recv_fd_pool);
-        // close(cgi.pipe_in[0]);
-        // close(cgi.pipe_out[0]);
-		// int status;
-		// waitpid(cgi.getCgiPid(), &status, 0);
-		// if(WEXITSTATUS(status) != 0)
-		// {
-		// 	c.response.setErrorResponse(502);
-		// }
-        // c.response.setCgiState(2);
-        // if (c.response._response_content.find("HTTP/1.1") == std::string::npos)
-		//     c.response._response_content.insert(0, "HTTP/1.1 200 OK\r\n");
+		Log::Msg(DEBUG, FUNC + "Read 0 bytes from CGI pipe indicating the end of the stream has been reached"); 
 		close(c.response.cgi_object.cgi_pipe_out_read_end);
         return ;
     }
     else if (bytes_read < 0)
     {
-        // Logger::logMsg(RED, CONSOLE_OUTPUT, "readCgiResponse() Error Reading From CGI Script: ", strerror(errno));
-        // removeFromSet(cgi.pipe_out[0], _recv_fd_pool);
-        // close(cgi.pipe_in[0]);
-        // close(cgi.pipe_out[0]);
-        // c.response.setCgiState(2);
-        // c.response.setErrorResponse(500);
+		Log::Msg(ERROR, FUNC + "Error reading from CGI pipe");
+		c.response._response_content.append(Error::instantErrorPage(500)); //?
 		close(c.response.cgi_object.cgi_pipe_out_read_end);
         return ;
     }
@@ -513,7 +435,7 @@ void    ServerManager::_readCgiResponse(Client &c)
 		c.response._response_content.append(toString(cont_len));
 		c.response._response_content.append("\r\n");
 		c.response._response_content.append(buffer, bytes_read);
-		Log::Msg(DEBUG, FUNC + "buffer: " + buffer);
+		Log::Msg(DEBUG, FUNC + "CGI buffer:\n" + buffer);
 		memset(buffer, 0, sizeof(buffer));
     }
 }
@@ -530,30 +452,13 @@ size_t ServerManager::_calcContLenCgi(const char* buffer, size_t size)
         contentStart += 4; // Move to the start of content after "\r\n\r\n"
         contentLength = buffer_str.size() - contentStart;
     }
-
-    std::cout << "contentLength = " << contentLength << " and content: " << endl;
-    if (contentStart != std::string::npos)
-    {
-        std::cout << buffer_str.substr(contentStart, contentLength);
-    }
-    std::cout << std::endl;
+	
+    // std::cout << "contentLength = " << contentLength << " and content: " << endl;
+    // if (contentStart != std::string::npos)
+    // {
+    //     std::cout << buffer_str.substr(contentStart, contentLength);
+    // }
+    // std::cout << std::endl;
 
     return contentLength;
 }
-
-/* Assigen server_block configuration to a client based on Host Header in request and server_name*/
-// void	ServerManager::assignServer(Client& c)
-// {
-//     for (vector<Server>::iterator it = _servers.begin(); it != _servers.end(); ++it)
-//     {
-//         if (c.server.getHost() == it->getHost() &&
-//             c.server.getPort() == it->getPort() &&
-//             c.request.getServerName() == it->getServerName())
-//         {
-//             c.setServer(*it);
-//             return ;
-//         }
-//     }
-// }
-
-	//

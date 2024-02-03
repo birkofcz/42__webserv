@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabtan <gabtan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/03 15:52:59 by gabtan           ###   ########.fr       */
+/*   Updated: 2024/02/03 18:13:36 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
-	printStartInfo(config_and_interface); //smaze predchozi hlasky?
+	printStartInfo(config_and_interface);
 
 	Parser parser(config_and_interface[0]);
 	parser.parseFile(config_and_interface[0]);

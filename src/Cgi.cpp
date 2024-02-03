@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 16:03:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/31 15:39:16 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/03 19:42:49 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,69 +108,6 @@ const pid_t &Cgi::getCgiPid() const
 //     return (this->_cgi_path);
 // }
 
-// void Cgi::initEnvCgi(HttpRequest& req, const std::vector<Location>::iterator it_loc)
-// {
-// 	string cgi_exec = ("cgi-bin/" + it_loc->getCgiPath(_cgi_extension)); //it_loc->getCgiPath(_cgi_extension)).c_str()
-// 	char*	cwd = getcwd(NULL, 0);
-// 	if(_cgi_path[0] != '/') //if cgi path is not absolute -> creates absolute path with cwd
-// 	{
-// 		std::string tmp(cwd);
-// 		tmp.append("/");
-// 		if(_cgi_path.length() > 0)
-// 			_cgi_path.insert(0, tmp);
-// 	}
-// 	if(req.getMethod() == POST)
-// 	{
-// 		std::stringstream ss;
-// 		ss << req.getBody().length();
-// 		this->_environment["CONTENT_LENGTH"] = ss.str();
-// 		this->_environment["CONTENT_TYPE"] = req.getHeader("content-type");
-// 	}
-
-//     this->_environment["GATEWAY_INTERFACE"] = std::string("CGI/1.1");
-// 	this->_environment["SCRIPT_NAME"] = cgi_exec;//
-//     this->_environment["SCRIPT_FILENAME"] = this->_cgi_path;
-//     this->_environment["PATH_INFO"] = this->_cgi_path;//
-//     this->_environment["PATH_TRANSLATED"] = this->_cgi_path;
-// 	// The translated version of PATH_INFO into an absolute path on the server's file system.
-// 	// It's the result of combining SCRIPT_FILENAME with PATH_INFO.
-//     this->_environment["REQUEST_URI"] = this->_cgi_path;
-// 	// Represents the full original request URI sent by the client.
-// 	// It includes SCRIPT_NAME and QUERY_STRING (if present).
-//     this->_environment["SERVER_NAME"] = req.getHeader("host"); //does it contain port?
-//     this->_environment["SERVER_PORT"] = reg.getServerPort();
-//     this->_environment["REQUEST_METHOD"] = req.getMethodStr();
-//     this->_environment["SERVER_PROTOCOL"] = "HTTP/1.1"; //redo with req variables?
-//     this->_environment["REDIRECT_STATUS"] = "200"; //??
-// 	this->_environment["SERVER_SOFTWARE"] = "[GTS]erver";
-
-// 	std::map<std::string, std::string> request_headers = req.getHeaders();
-// 	for(std::map<std::string, std::string>::iterator it = request_headers.begin();
-// 		it != request_headers.end(); ++it)
-// 	{
-// 		std::string name = it->first;
-// 		std::transform(name.begin(), name.end(), name.begin(), ::toupper);
-// 		std::string key = "HTTP_" + name;
-// 		_env[key] = it->second;
-// 	}
-// 	this->_char_environment = (char **)calloc(sizeof(char *), this->_environment.size() + 1);
-// 	std::map<std::string, std::string>::const_iterator it = this->_environment.begin();
-// 	for (int i = 0; it != this->_environment.end(); it++, i++)
-// 	{
-// 		std::string tmp = it->first + "=" + it->second;
-// 		Log::Msg(DEBUG, FUNC + "during allocating loop ENV: " + tmp);
-// 		this->_char_environment[i] = strdup(tmp.c_str());
-// 	}
-
-// 	Log::Msg(DEBUG, FUNC + "cgi_exec: " + cgi_exec);
-// 	Log::Msg(DEBUG, FUNC + "cgi_exec: " + _cgi_path);
-
-// 	this->_arguments_for_execve = (char **)malloc(sizeof(char *) * 3);
-// 	this->_arguments_for_execve[0] = strdup(cgi_exec.c_str()); // cgi-bin/script.cgi
-// 	this->_arguments_for_execve[1] = strdup(this->_cgi_path.c_str()); // /var/www/html/cgi-bin/script.cgi
-// 	this->_arguments_for_execve[2] = NULL;
-// }
-
 // static int findStart(const std::string path, const std::string delim)
 // {
 // 	if (path.empty())
@@ -187,13 +124,11 @@ const pid_t &Cgi::getCgiPid() const
 void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc)
 {
 	size_t			poz;
-	// std::string extension;
 	std::string executable_path = it_loc->getCgiPath(_cgi_extension);
 	Log::Msg(DEBUG, FUNC + "_cgi_path: " + _cgi_path);
 	Log::Msg(DEBUG, FUNC + "executable_path: " + executable_path);
 	if (executable_path.empty())
 		return; //??
-
 	// extension = this->_cgi_path.substr(this->_cgi_path.find("."));
 	// std::map<std::string, std::string>::iterator it_path = it_loc->_executable_path.find(extension);
     // if (it_path == it_loc->_executable_path.end())
@@ -254,26 +189,26 @@ int Cgi::execute(short& error_code)
 	int cgi_stdin[2];
 	if (this->_arguments_for_execve[0] == NULL || this->_arguments_for_execve[1] == NULL)
 	{
+		Log::Msg(ERROR, "No executable or arguments for CGI script");
 		error_code = 500;
 		return 1;
 	}
 
     if (pipe(cgi_stdin) == -1)
     {
+		Log::Msg(ERROR, "Failed pipe: " + toString(strerror(errno)));
         error_code = 500;
         return 1;
     }
 	
 	if (pipe(cgi_stdout) < 0)
 	{
-        // Logger::logMsg(RED, CONSOLE_OUTPUT, "pipe() failed");
+       	Log::Msg(ERROR, "Failed pipe: " + toString(strerror(errno)));
 		close(cgi_stdin[0]);
 		close(cgi_stdin[1]);
 		error_code = 500;
 		return 1;
 	}
-	//	set cgi_in
-	Log::Msg(DEBUG, FUNC + "before forking");
 
 	this->_cgi_pid = fork();
 	if (this->_cgi_pid == 0)
@@ -288,24 +223,23 @@ int Cgi::execute(short& error_code)
 		close(cgi_stdin[1]);
 		close(cgi_stdout[0]);
 		close(cgi_stdout[1]);
-		std::cerr << "cgi after dups and before execve\n";
+
 		this->_exit_code = execve(this->_arguments_for_execve[0], this->_arguments_for_execve, this->_char_environment);
-		exit(this->_exit_code); //kdyz selze execve?
+		exit(this->_exit_code);
 	}
 	else if (this->_cgi_pid > 0)
 	{
-		cgi_pipe_in_write_end = cgi_stdin[1];	
+		cgi_pipe_in_write_end = cgi_stdin[1];	// write end for pipe to input a data to script	
 		close (cgi_stdin[0]);
-		cgi_pipe_out_read_end = cgi_stdout[0];
+		cgi_pipe_out_read_end = cgi_stdout[0]; // the output of script to be read
 		close(cgi_stdout[1]);
-		Log::Msg(DEBUG, FUNC + "parent after forking");
 		return 0;
 	}
 	else
 	{
 		close (cgi_stdin[0]);
 		close(cgi_stdout[1]);
-        std::cout << "Fork failed" << std::endl;
+        Log::Msg(ERROR, "Fork failed: " + toString(strerror(errno)));
 		error_code = 500;
 		return 1;
 	}
@@ -383,6 +317,7 @@ void	Cgi::setCgiClientFd(int client_fd)
 {
 	this->_client_fd = client_fd;
 }
+
 void	Cgi::clear()
 {
 	this->_cgi_pid = -1;
@@ -395,46 +330,3 @@ void	Cgi::clear()
 	this->_environment.clear();
 	this->_cgi_extension.clear();
 }
-
-
-
-
-
-/* looped script!
-#include <signal.h>
-#include <unistd.h>
-
-// Define a global flag to indicate if the timeout occurred
-volatile sig_atomic_t timeout_flag = 0;
-
-// Signal handler for SIGALRM
-void handle_alarm(int signum) {
-    timeout_flag = 1;  // Set the timeout flag
-}
-
-// Function to execute the CGI script with a timeout
-void Cgi::executeWithTimeout(short& error_code, int pipe_stdin, int timeout_seconds) {
-    // Set the signal handler for SIGALRM
-    signal(SIGALRM, handle_alarm);
-
-    // Set the alarm for the specified timeout
-    alarm(timeout_seconds);
-
-    // Execute the CGI script as usual
-    execute(error_code, pipe_stdin);
-
-    // Check if the timeout flag is set
-    if (timeout_flag) {
-        // Handle the timeout (e.g., log, cleanup, set error code)
-        error_code = 504; // Gateway Timeout
-    }
-
-    // Disable the alarm
-    alarm(0);
-}
-
-// Function to execute the CGI script (original function)
-void Cgi::execute(short& error_code, int pipe_stdin) {
-    // Your existing code for executing the CGI script goes here
-}
-*/
