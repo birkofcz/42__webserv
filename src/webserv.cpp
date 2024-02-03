@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:31:02 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/01 16:31:02 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ printStartInfo function to print the header graphics and start info of the serve
  */
 void	printStartInfo(std::vector<string> config_and_interface)
 {
-	std::system("clear"); //clears the terminal
+	//std::system("clear"); //clears the terminal
 
 	cout << GREEN << endl;
 	cout << "    _____________________                    " << endl;

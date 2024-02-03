@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/31 14:36:30 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:27:22 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void ServerManager::initServers(vector<Server> servers)
 		serverDouble = false;
 		for (vector<Server>::iterator it2 = _servers.begin(); it2 != it; ++it2)
 		{
-			if (it2->getHost() == it->getHost() && it2->getPorts()[0] == it->getPorts()[0])
+			if (it2->getHost() == it->getHost() && it2->getPort() == it->getPort())
 			{
 				it->setFd(it2->getFd());
 				serverDouble = true;
