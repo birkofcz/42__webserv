@@ -4,3 +4,6 @@
 # objectfiles
 *.o
 
+# logs
+data/request_temp.txt
+data/response_temp.txt
