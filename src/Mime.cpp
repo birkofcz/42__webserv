@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:55:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/14 10:16:02 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:21:12 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ Mime::getMime() const
 	as it will be displayed as text in browser, but not executed. 
 	It prevets browser from misinterpreting the content. But if the status 
 	code is not 200 - so there is an error and we need the content-type to be set to text/html 
-	to properly encode errorbody to html format. The is no risk as in case of error, there is no content 
+	to properly encode errorbody to html format. There is no risk as in case of error, there is no content 
 	read, only error response body is internally constructed*/
 	Log::Msg(DEBUG, FUNC + "no match, setting text/plain.");
 	return "text/plain";

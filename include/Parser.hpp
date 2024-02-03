@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 14:29:08 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/28 15:45:11 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 16:05:14 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class Parser
 		
 		//parser helper methods - second level
 		string						parseLocationPath(const string& line);
-		std::vector<int>			parsePorts(const string& line);
+		int							parsePort(const string& line);
 		in_addr_t					parseHost(const string& line);
 		std::vector<string>			parseServerNames(const string& line);
 		string						parseRoot(const string& line);

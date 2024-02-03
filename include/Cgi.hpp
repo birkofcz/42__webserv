@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 14:33:11 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/28 16:40:28 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:37:55 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ class Cgi
 		// void	setCgiStdin(int stdinWriteEnd);
 		void	setCgiClientFd(int client_fd);
 
-		void	execute(short &error_code);
+		int		execute(short &error_code);
 		// int		getPipeOutReadEnd() const; //pipe out is public so mazbe not necessary
 		///to be continued...14.1.2024
 

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/28 19:41:33 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/01/31 15:37:40 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ bool Response::_isDirectory(std::string path)
 	// if (path[0] != '.')
 	// 	path.insert(path.begin(), '.');
     if (stat(path.c_str(), &file_stat) != 0)
-		return false; // napr. file doesnt exist
+		return false; // example: file doesnt exist
     return (S_ISDIR(file_stat.st_mode));
 }
 
@@ -272,15 +272,8 @@ int        Response::handleCgi(std::string &location_key)
 	cgi_object.setExtension(exten);
     cgi_object.setCgiPath("content/www/" + path); //nutno predelat
     _cgi_flag = true;
-	// cgi_object.setCgiStdin(cgi_stdin[1]);
-    // if (pipe(_cgi_fd) == -1)
-    // {
-    //     _status_code = 500;
-    //     return (1);
-    // }
     cgi_object.initEnv(request, _server.getLocationKey(location_key)); // + URI
-	cgi_object.execute(this->_status_code);
-    return (0);
+	return(cgi_object.execute(this->_status_code));
 }
 
 
@@ -481,6 +474,7 @@ bool Response::_reqError()
 	{
 		_status_code = request.getErrorCode();
 		return (1);
+
 	}
 	return (0);
 }
@@ -598,8 +592,9 @@ void	Response::buildResponse()
 	//debugPrint("[Response::buildResponse()] setting status line and headers.", GREEN);
     _setStatusLine();
     _setHeaders(); // + body test content if it works
-    if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
-        _response_content.append(_response_body_str);
+	if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
+		_response_content.append(_response_body_str);
+	Log::Msg(DEBUG, FUNC + "_response_content: " + _response_content);
 }
 
 // void Response::setErrorResponse(short code)

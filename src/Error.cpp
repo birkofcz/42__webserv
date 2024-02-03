@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Error.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 16:20:36 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/29 16:05:03 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 15:56:59 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,19 +357,32 @@ Error::instantErrorPage(short error_code)
 		else
 			description = error_description[error_code];
 
-		error_page += "<html>\r\n<head><title>";
+		string body("");
+		body += "<html>\r\n<head><title>";
+		body += ecode;
+		body += " ";
+		body += description;
+		body += " </title></head>\r\n";
+		body += "<body>\r\n";
+		body += "<center><h1>";
+		body += ecode;
+		body += " ";
+		body += description;
+		body += "</h1></center>\r\n";
+
+		string length = toString(body.length());
+
+		error_page += "HTTP/1.1 ";
 		error_page += ecode;
 		error_page += " ";
 		error_page += description;
-		error_page += " </title></head>\r\n";
-		error_page += "<body>\r\n";
-		error_page += "<center><h1>";
-		error_page += ecode;
-		error_page += " ";
-		error_page += description;
-		error_page += "</h1></center>\r\n";
+		error_page += "\r\n";
+		error_page += "Content-Type: text/html\r\n";
+		error_page += "Content-Length: " + length + "\r\n";
+		error_page += "\r\n";
+		error_page += body;
+
 
 		Log::Msg(DEBUG, FUNC + "Instant error page created");
 		return error_page;
 }
-
