@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserv.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: gabtan <gabtan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:11:06 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/01 16:31:02 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/03 15:52:59 by gabtan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cerrno> // for errno
+#include <cstring> // for strerror
 
+bool terminateFlag = false;
 /* 
 setLogInterface function to set the flags for the log output = options for output to console and/or file
 Also sets the flags for the log type = options for output of info, warning, error, debug
@@ -131,10 +134,40 @@ also a command to print the servers configuration or the log file from the parse
 the user can only interact with it via the UNIX signals. The server is started and stopped by sending a signal to it.
 
  */
+// void ctrlc_handler(int signal)
+// {
+//     Log::Msg(DEBUG, "Ctrl+C (SIGINT) received. Clean EXIT executed.\n");
+
+// 	if ( ServerManager::getEpollFd() != -1)
+// 		close (getEpollFd());
+// 	 for (std::map<int, Server>::iterator it = _servers_map.begin(); it != _servers_map.end(); ++it) {
+// 		int fd = it->second.fd;
+// 		if (close(fd) == -1) {
+// 				Log::Msg(ERROR, "Failed to close file descriptor " + toString(fd));
+// 				// Handle error if needed
+// 			}
+
+// 			// Erase the element from the map
+// 			_servers_map.erase(it);
+// 		}
+// }
+
+void signal_handler(int signal)
+{
+	if (signal == SIGINT)
+	{
+		Log::Msg(DEBUG, "Ctrl+C (SIGINT) received. Clean EXIT executed.\n");
+ 		terminateFlag = true;
+	}
+}
+
+
 int main(int argc, char **argv)
 {
 	std::vector<string> config_and_interface = setLogInterface(argc, argv);
-	
+
+	signal(SIGINT, signal_handler);
+
 	// INTERFACE ON CASE
 	if (config_and_interface[1] == "interface")
 	{
@@ -149,8 +182,8 @@ int main(int argc, char **argv)
 
 		return 0;
 	}
-	
-	printStartInfo(config_and_interface);
+
+	printStartInfo(config_and_interface); //smaze predchozi hlasky?
 
 	Parser parser(config_and_interface[0]);
 	parser.parseFile(config_and_interface[0]);
@@ -163,6 +196,8 @@ int main(int argc, char **argv)
 	return 0;
 
 }
+
+// Log::Msg(ERROR, "Failed to open: " + toString(strerror(errno)));
 
 //pri ukonceni nutno close fd_epoll a fd of servers.
 //Asi iterovat skrze server map...

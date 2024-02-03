@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:38:27 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/01/31 19:42:40 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,11 @@ enum HttpMethod
 	HEAD,
 	NONE
 };
+
+# ifndef GLOBAL_VARIABLE_H
+#  define GLOBAL_VARIABLE_H
+extern bool terminateFlag; // Declare global variable
+# endif
 
 
 /* 

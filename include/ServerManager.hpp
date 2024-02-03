@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:09:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/31 16:20:33 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/01 16:58:10 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ class ServerManager
 
 		void	initServers(std::vector<Server>);
 		void	runServers();
+		int		getEpollFd() {return this->_epoll_fd;};
+		void	clear();
 			
 	private:
 		vector<Server>		_servers;
@@ -50,6 +52,7 @@ class ServerManager
 		//void handleReqBody(Client &);
 		void	sendResponse(const int&, Client&);
 		void	_sendCgiBody(Client&);
+		int		_addCgiPipe(int pipe_fd, int events_flag);
 
 		//void sendCgiBody(Client &, CgiHandler &);
 		//void readCgiResponse(Client &, CgiHandler &);
