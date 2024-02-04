@@ -1,0 +1,30 @@
+HTTP request with a chunked body:
+
+POST /upload HTTP/1.1
+Host: example.com
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+7\r\n
+Chunked\r\n
+6\r\n
+Encoding\r\n
+0\r\n
+\r\n
+
+In this example:
+
+    Transfer-Encoding: chunked indicates that the body is chunked.
+    Each chunk starts with the size of the chunk in hexadecimal followed by \r\n.
+    After the chunk size, there is a \r\n separator.
+    The chunk data follows.
+    The last chunk has a size of 0, indicating the end of the message.
+    After the last chunk, there is an additional \r\n to indicate the end of the body.
+
+So, the request body in this example consists of two chunks:
+
+    Chunk size 7 (hex) followed by \r\n, then the chunk data "Chunked", followed by \r\n.
+    Chunk size 6 (hex) followed by \r\n, then the chunk data "Encoding", followed by \r\n.
+    The last chunk size 0 (hex) indicates the end of the message, followed by \r\n.
+
+The entire body is followed by an empty line (\r\n\r\n) to indicate the end of the request.

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/04 17:50:53 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/04 18:48:57 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,25 +62,25 @@ void   Response::_contentType()
 	_response_content.append(_mime);
 
 	// _response_content.append(_mime.getMime()); //suggested by CoPilot
-    _response_content.append("\r\n");
+	_response_content.append("\r\n");
 }
 
 void   Response::_contentLength()
 {
-    _response_content.append("Content-Length: ");
-    _response_content.append(toString(_response_body_str.length()));
-    _response_content.append("\r\n");
+	_response_content.append("Content-Length: ");
+	_response_content.append(toString(_response_body_str.length()));
+	_response_content.append("\r\n");
 }
 
 void   Response::_connection()
 {
-    if(request.getHeader("connection") == "keep-alive")
-        _response_content.append("Connection: keep-alive\r\n");
+	if(request.getHeader("connection") == "keep-alive")
+		_response_content.append("Connection: keep-alive\r\n");
 }
 
 void   Response::_serverHeader()
 {
-    _response_content.append("Server: [TS]erver\r\n");
+	_response_content.append("Server: [TS]erver\r\n");
 }
 
 /*
@@ -91,10 +91,10 @@ void   Response::_serverHeader()
 */
 void    Response::_locationHeader()
 {
-    if (_location.length())
+	if (_location.length())
 	{
-		cout << "_location exists: " << _location << endl;
-        _response_content.append("Location: "+ _location +"\r\n");
+		Log::Msg(DEBUG, FUNC + "_location exists: " + _location);
+		_response_content.append("Location: "+ _location +"\r\n");
 	}
 }
 
@@ -181,12 +181,6 @@ std::string Response::_combinePaths(std::string p1, std::string p2, std::string 
 
 	return res;
 }
-
-
-// // static void replaceAlias(Location &location, HttpRequest &request, std::string &target_file)
-// // {
-// //     target_file = combinePaths(location.getAlias(), request.getPath().substr(location.getPath().length()), "");
-// // }
 
 void Response::_appendRoot(Location &location, HttpRequest &request)
 {
@@ -285,8 +279,7 @@ bool Response::_isAllowedMethod(HttpMethod& method, Location& location, short& c
 
  	if (std::find(methods.begin(), methods.end(), method) == methods.end())
     {
-        // 'method' is not allowed, set 'code' to 405 and return true
-        Log::Msg(DEBUG, FUNC + "method not allowed");
+        Log::Msg(ERROR, FUNC + "method not allowed");
 		code = 405;
         return false;
     }
@@ -351,18 +344,7 @@ int    Response::_handleTarget()
 		{
 			return (handleCgi(_location_key));
 		}
-
-        // if (!target_location.getAlias().empty())
-        // {
-        //     replaceAlias(target_location, request, _target_file);
-        // }
-        // else
-        //     appendRoot(target_location, request, _target_file);
-		// cout << GREEN << "TEST: _target_file before appendRoot: " << _target_file << RESET << endl;
 		 _appendRoot(target_location, request); //assignes _target_file
-		// cout << GREEN << "TEST: _target_file after appendRoot: " << _target_file << RESET << endl;
-
-
         // if (!target_location.getCgiExtension().empty())
         // {
 
@@ -405,7 +387,6 @@ int    Response::_handleTarget()
 					Log::Msg(DEBUG, FUNC + "autoindex is on.");
                     _target_file.erase(_target_file.find_last_of('/') + 1);
                     _auto_index = true;
-					Log::Msg(DEBUG, FUNC + "autoindex turned on in Response: " + toString(_auto_index));
                     return (0);
                 }
                 else
@@ -586,9 +567,8 @@ void	Response::buildResponse()
     }
 	
 	Log::Msg(DEBUG, FUNC + "setting status line and headers.");
-	//debugPrint("[Response::buildResponse()] setting status line and headers.", GREEN);
     _setStatusLine();
-    _setHeaders(); // + body test content if it works
+    _setHeaders();
 	if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
 		_response_content.append(_response_body_str);
 	Log::Msg(DEBUG, FUNC + "_response_content: " + _response_content);
@@ -634,8 +614,6 @@ string	Response::getStatusLineCgi()
 
 	return (status_line);
 }
-
-
 
 int    Response::_buildBody()
 {
@@ -702,7 +680,7 @@ int    Response::_buildBody()
 			{
 				// No filename provided in the request body
 				_status_code = 400; // Bad Request
-				Log::Msg(ERROR, FUNC + "No filename provided for upload.");
+				Log::Msg(ERROR, FUNC + "No filename for upload provided.");
 				return (1);
 			}
 		}
