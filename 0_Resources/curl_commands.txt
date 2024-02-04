@@ -1,0 +1,8 @@
+curl -X GET http://localhost:8000/testloc1
+curl -L -X GET http://localhost:8000/testloc1
+
+curl -X POST http://localhost:8000/testloc1 -d "key1=value1&key2=value2"
+#multipart/form-data
+curl -X POST http://localhost:8000/testloc1/ -F "file=@/nfs/homes/tkajanek/Downloads/monster.png" 
+
+curl -X DELETE http://localhost:8000/testloc1/uploads/default.file
