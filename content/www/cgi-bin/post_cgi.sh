@@ -8,16 +8,16 @@ echo ""
 while true; do
 
 	# Read form data from standard input
-	read -n $CONTENT_LENGTH POST_DATA
+	IFS='' read -r POST_DATA
 
 	# Parse form data
 	name=$(echo "$POST_DATA" | grep -oP 'name=\K\S+')
 
 	# Check if 'name' field is present in form data
 	if [ -n "$name" ]; then
-		echo -e "<h1>Hello, $name!</h1>\r\n"
+	    echo -e "<h1>Hello, $name!</h1>\r\n"
 	else
-		echo -e "<h1>Hello, anonymous!</h1>\r\n"
+	    echo -e "<h1>Hello, anonymous!</h1>\r\n"
 	fi
 
-#done  # This closes the while loop
+done  # This closes the while loop

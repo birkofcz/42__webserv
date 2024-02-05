@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequest.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gabriela <gabriela@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/05 15:25:54 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/05 16:45:36 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -658,7 +658,7 @@ void HttpRequest::feed(char *data, size_t size)
 				else
 				{
 					_error_code = 400;
-					Log::Msg(ERROR, "Bad Character (Chunked_Data_CR)");
+					Log::Msg(ERROR, "Bad Character (Chunked_Data_sCR)");
 					return;
 				}
 				continue;
@@ -715,6 +715,7 @@ void HttpRequest::feed(char *data, size_t size)
 			{
 				debugFile << "PARSING DONE! \n"<< "\n";
 				debugFile.close(); 
+				
 				return;
 			}
 		} // end of switch
@@ -723,10 +724,8 @@ void HttpRequest::feed(char *data, size_t size)
 	}
 	if (_state == Parsing_Done)
 	{
-
-		std::cout << "TEST:FOR LOOP of request parser is done _bodz in bytes are appended." << std::endl;
-
 		_body_str.append((char *)_body.data(), _body.size());
+		_body_length = _body.size();
 		debugFile << "__body_str after PARSING DONE: \n" << _body_str << "\n";
 		//complete_flag = true;
 		// vypada ze nikdy nenastane, zceknout a pripadne dat do case

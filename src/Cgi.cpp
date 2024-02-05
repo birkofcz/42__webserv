@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 16:03:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/03 19:42:49 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/05 16:49:31 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc
     //     return ;
     
 	this->_environment["AUTH_TYPE"] = "Basic"; //podle requestu ..
-	this->_environment["CONTENT_LENGTH"] = req.getHeader("content-length");
+	this->_environment["CONTENT_LENGTH"] = req.getBodyLen();
 	this->_environment["CONTENT_TYPE"] = req.getHeader("content-type");
     this->_environment["GATEWAY_INTERFACE"] = "CGI/1.1";
 
@@ -246,8 +246,6 @@ int Cgi::execute(short& error_code)
 }
 
 
-
-
 // /* Translation of parameters for QUERY_STRING environment variable */
 // std::string Cgi::decode(std::string &path)
 // {
@@ -272,46 +270,9 @@ std::string Cgi::getPathInfo() const
 		// Extract the path info following the script name
 		return _cgi_path.substr(lastSlashPos + 1);
 	}
-	else
-	{
-		// If no additional path info, return an empty string
+	else // If no additional path info, return an empty string
 		return "";
-	}
 }
-
-// /* Isolation PATH_INFO environment variable */
-// std::string Cgi::getPathInfo(std::string& path, std::vector<std::string> extensions)
-// {
-// 	std::string tmp;
-// 	size_t start, end;
-
-// 	for (std::vector<std::string>::iterator it_ext = extensions.begin(); it_ext != extensions.end(); it_ext++)
-// 	{
-// 		start = path.find(*it_ext);
-// 		if (start != std::string::npos)
-// 			break ;
-// 	}
-// 	if (start == std::string::npos)
-// 		return "";
-// 	if (start + 3 >= path.size())
-// 		return "";
-// 	tmp = path.substr(start + 3, path.size());
-// 	if (!tmp[0] || tmp[0] != '/')
-// 		return "";
-// 	end = tmp.find("?");
-// 	return (end == std::string::npos ? tmp : tmp.substr(0, end));
-// }
-
-
-// int		Cgi::getPipeOutReadEnd()	const
-// {	
-// 	return pipe_out[0];
-// }
-
-// void	Cgi::setCgiStdin(int stdinWriteEnd)
-// {
-// 	pipe_in[1] = stdinWriteEnd;
-// }
 
 void	Cgi::setCgiClientFd(int client_fd)
 {
