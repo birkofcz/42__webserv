@@ -75,7 +75,7 @@
 				xhr.open("DELETE", url, true);
 		
 				xhr.onload = function () {
-					if (xhr.status == 200) {
+					if (xhr.status == 204) {
 						alert("DELETE request successful");
 						// Clear the input field after successful request
 						document.getElementById("filename").value = "";

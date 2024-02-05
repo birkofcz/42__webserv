@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/31 15:37:40 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/04 18:48:57 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,25 +62,25 @@ void   Response::_contentType()
 	_response_content.append(_mime);
 
 	// _response_content.append(_mime.getMime()); //suggested by CoPilot
-    _response_content.append("\r\n");
+	_response_content.append("\r\n");
 }
 
 void   Response::_contentLength()
 {
-    _response_content.append("Content-Length: ");
-    _response_content.append(toString(_response_body_str.length()));
-    _response_content.append("\r\n");
+	_response_content.append("Content-Length: ");
+	_response_content.append(toString(_response_body_str.length()));
+	_response_content.append("\r\n");
 }
 
 void   Response::_connection()
 {
-    if(request.getHeader("connection") == "keep-alive")
-        _response_content.append("Connection: keep-alive\r\n");
+	if(request.getHeader("connection") == "keep-alive")
+		_response_content.append("Connection: keep-alive\r\n");
 }
 
 void   Response::_serverHeader()
 {
-    _response_content.append("Server: [TS]erver\r\n");
+	_response_content.append("Server: [TS]erver\r\n");
 }
 
 /*
@@ -91,10 +91,10 @@ void   Response::_serverHeader()
 */
 void    Response::_locationHeader()
 {
-    if (_location.length())
+	if (_location.length())
 	{
-		cout << "_location exists: " << _location << endl;
-        _response_content.append("Location: "+ _location +"\r\n");
+		Log::Msg(DEBUG, FUNC + "_location exists: " + _location);
+		_response_content.append("Location: "+ _location +"\r\n");
 	}
 }
 
@@ -143,10 +143,7 @@ bool Response::_isDirectory(std::string path)
 	Log::Msg(DEBUG, FUNC + "path: " + path);
 	
     struct stat file_stat;
- 	// if (path[path.length() - 1] != '/')
-	// 	path += '/';
-	// if (path[0] != '.')
-	// 	path.insert(path.begin(), '.');
+
     if (stat(path.c_str(), &file_stat) != 0)
 		return false; // example: file doesnt exist
     return (S_ISDIR(file_stat.st_mode));
@@ -184,12 +181,6 @@ std::string Response::_combinePaths(std::string p1, std::string p2, std::string 
 
 	return res;
 }
-
-
-// // static void replaceAlias(Location &location, HttpRequest &request, std::string &target_file)
-// // {
-// //     target_file = combinePaths(location.getAlias(), request.getPath().substr(location.getPath().length()), "");
-// // }
 
 void Response::_appendRoot(Location &location, HttpRequest &request)
 {
@@ -288,8 +279,7 @@ bool Response::_isAllowedMethod(HttpMethod& method, Location& location, short& c
 
  	if (std::find(methods.begin(), methods.end(), method) == methods.end())
     {
-        // 'method' is not allowed, set 'code' to 405 and return true
-        Log::Msg(DEBUG, FUNC + "method not allowed");
+        Log::Msg(ERROR, FUNC + "method not allowed");
 		code = 405;
         return false;
     }
@@ -354,18 +344,7 @@ int    Response::_handleTarget()
 		{
 			return (handleCgi(_location_key));
 		}
-
-        // if (!target_location.getAlias().empty())
-        // {
-        //     replaceAlias(target_location, request, _target_file);
-        // }
-        // else
-        //     appendRoot(target_location, request, _target_file);
-		// cout << GREEN << "TEST: _target_file before appendRoot: " << _target_file << RESET << endl;
 		 _appendRoot(target_location, request); //assignes _target_file
-		// cout << GREEN << "TEST: _target_file after appendRoot: " << _target_file << RESET << endl;
-
-
         // if (!target_location.getCgiExtension().empty())
         // {
 
@@ -408,7 +387,6 @@ int    Response::_handleTarget()
 					Log::Msg(DEBUG, FUNC + "autoindex is on.");
                     _target_file.erase(_target_file.find_last_of('/') + 1);
                     _auto_index = true;
-					Log::Msg(DEBUG, FUNC + "autoindex turned on in Response: " + toString(_auto_index));
                     return (0);
                 }
                 else
@@ -589,9 +567,8 @@ void	Response::buildResponse()
     }
 	
 	Log::Msg(DEBUG, FUNC + "setting status line and headers.");
-	//debugPrint("[Response::buildResponse()] setting status line and headers.", GREEN);
     _setStatusLine();
-    _setHeaders(); // + body test content if it works
+    _setHeaders();
 	if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
 		_response_content.append(_response_body_str);
 	Log::Msg(DEBUG, FUNC + "_response_content: " + _response_content);
@@ -624,7 +601,6 @@ void	Response::buildResponse()
 void	Response::_setStatusLine()
 {
     _response_content.append("HTTP/1.1 " + toString(_status_code) + " ");
-    // _response_content.append(statusCodeString(_status_code));
 	_response_content.append(Error::getErrorDescription(_status_code));
     _response_content.append("\r\n");
 }
@@ -633,115 +609,139 @@ string	Response::getStatusLineCgi()
 {
 	string	status_line = "";
     status_line.append("HTTP/1.1 " + toString(_status_code) + " ");
-    // _response_content.append(statusCodeString(_status_code));
 	status_line.append(Error::getErrorDescription(_status_code));
     status_line.append("\r\n");
 
 	return (status_line);
 }
 
-
-
 int    Response::_buildBody()
 {
-    if (request.getBody().length() > static_cast<size_t>(_server.getClientMaxBodySize())) //predelat na size_t
-    {
-        _status_code = 413;
-        return (1);
-    }
-	Log::Msg(DEBUG, FUNC + "before _handle target");
-    if ( _handleTarget() )
-        return (1);
-    if (_cgi_flag || _auto_index)
-        return (0);
-    if (_status_code)
+	if (request.getBody().length() > _server.getClientMaxBodySize())
+	{
+		Log::Msg(ERROR, FUNC + "Max body exceeded.");
+		_status_code = 413;
+		return (1);
+	}
+	if ( _handleTarget() )
+		return (1);
+	if (_cgi_flag || _auto_index)
+		return (0);
+	if (_status_code)
 		return (0);
 	Log::Msg(DEBUG, FUNC + _target_file);
-    if (request.getMethod() == GET || request.getMethod() == HEAD)
-    {
-        if (_readFile())
-            return (1);
-    }
-    else if (request.getMethod() == POST )//|| request.getMethod() == PUT)
-    {
-		cout << "TEST POST method detected." << endl;
+
+	if (request.getMethod() == GET || request.getMethod() == HEAD)
+	{
+		if (_readFile())
+			return (1);
+		_status_code = 200;
+		return (0);
+	}
+	else if (request.getMethod() == POST ) //|| request.getMethod() == PUT)
+	{
+		std::string	filename = "";
 		string	upload_file_path = "";
-		cout << "TEST METHOD request_path = " << request.getPath() << endl;
-    	cout << "TEST METHOD location_key:" << _location_key << endl;
+		std::ofstream file;
+		
 		if (_location_key.length() > 0)
 			upload_file_path = _server.getLocationKey(_location_key)->getUploadPath();
 		if (upload_file_path.empty())
 			upload_file_path = _server.getUploadPath();
 		upload_file_path += "/";
-		cout << "TEST METHOD upload_file_path:" << upload_file_path << endl;
-		std::ofstream file;
+		
+		Log::Msg(DEBUG, FUNC + "POST upload_file_path: " + upload_file_path);
+		
 		if (request.getMultiformFlag())
-        {
+		{
 			std::string body = request.getBody();
-			std::string filename = "";
 			body = removeBoundary(body, request.getBoundary(), filename);
 			if (!filename.empty())
 			{
 				upload_file_path += filename;
 				if (_fileExists(upload_file_path) && request.getMethod() == POST)
 				{
-				_status_code = 204;
-				cout << "TEST POST there is no content to send in the response body." <<  endl;
-				//Server has successfully processed the request,
-				//and there is no content to send in the response body.
-				return (0);
+					// Server has successfully processed the request,
+					// and there is no content to send in the response body
+					// because the file to be uploaded already exists.
+					_status_code = 204;
+					return (0);
 				}
-
-				cout << "TEST METHOD upload_file_path with filename:" << upload_file_path << endl;
 				file.open(upload_file_path.c_str(), std::ios::binary);
 				if (file.fail())
 				{
 					_status_code = 500;
-					std::cerr << "Error opening file for writing." << std::endl;
+					Log::Msg(ERROR, FUNC + "Failed to open or create file for writing.");
 					return (1);
 				}
+				file.write(body.c_str(), body.length());
 			}
-			file.write(body.c_str(), body.length());
+			else
+			{
+				// No filename provided in the request body
+				_status_code = 400; // Bad Request
+				Log::Msg(ERROR, FUNC + "No filename for upload provided.");
+				return (1);
+			}
 		}
 		else
-        {
-            file.write(request.getBody().c_str(), request.getBody().length());
-			std::cout << "Not Multiform: File successfully uploaded." << std::endl;
-        }
-    }
-    else if (request.getMethod() == DELETE)
-    {
-		Log::Msg(DEBUG, FUNC + " file at: " + _target_file);
-        if (!_fileExists(_target_file))
-        {
-			Log::Msg(DEBUG, FUNC + " file doesnt exist at: " + _target_file);
-            _status_code = 404;
-            return (1);
-        }
+		{
+			filename = "default.file";
+			upload_file_path += filename;
+			file.open(upload_file_path.c_str(), std::ios::binary);
+			if (file.fail())
+			{
+				_status_code = 500;
+				Log::Msg(ERROR, FUNC + "Failed to open or create file for writing.");
+				return (1);
+			}
+			file.write(request.getBody().c_str(), request.getBody().length());
+			Log::Msg(DEBUG, FUNC + "Not Multiform: File successfully uploaded.");
+		}
+	}
+	else if (request.getMethod() == DELETE)
+	{
+		Log::Msg(DEBUG, FUNC + "file at: " + _target_file);
+		if (!_fileExists(_target_file))
+		{
+			Log::Msg(ERROR, FUNC + "file doesnt exist at: " + _target_file);
+			_status_code = 404;
+			return (1);
+		}
 
-        if (remove(_target_file.c_str()) != 0 )
-        {
-            _status_code = 500;
-            return (1);
-        }
-    }
-    _status_code = 200; //If the DELETE request has been successful, the server should respond with a 204 No Content status code.
-    return (0);
+		if (remove(_target_file.c_str()) != 0 )
+		{
+			Log::Msg(ERROR, FUNC + "remove: " + toString(strerror(errno)));
+			_status_code = 500;
+			return (1);
+		}
+	}
+	_status_code = 204; // No Content.
+	return (0);
 }
 
 int Response::_readFile()
 {
-    std::ifstream file(_target_file.c_str());
-    if (file.fail())
-    {
-        _status_code = 404;
-        return (1);
-    }
+	std::ifstream file(_target_file.c_str());
+	if (!file.is_open())
+	{
+		if (errno == ENOENT)
+		{
+			Log::Msg(ERROR, FUNC + "Website file not found");
+			_status_code = 404; // Not Found
+		}
+		else
+		{
+			Log::Msg(ERROR, FUNC + "Permission denied when trying to access website file");
+			_status_code = 403; // Forbidden
+		}
+		return (1);
+	}
 
-    std::ostringstream ss;
+	std::ostringstream ss;
 	ss << file.rdbuf();
-    _response_body_str = ss.str();
-    return (0);
+	_response_body_str = ss.str();
+	return (0);
 }
 
 void 	Response::setServer(Server& server)
@@ -755,10 +755,77 @@ void	Response::setRequest(HttpRequest& req)
 }
 
 
-// void        Response::cutRes(size_t i)
-// {
-//     _response_content = _response_content.substr(i);
-// }
+/*
+Process a body of data containing a multipart/form-data payload
+and remove the boundary lines, leaving only the actual content.
+It also extracts the filename associated with each part of the payload.
+*/
+std::string Response::removeBoundary(std::string& body, std::string& boundary, std::string& filename) //proc je public??
+{
+	std::string buffer;
+	std::string new_body;
+	bool is_boundary = false;
+	bool is_content = false;
+
+	if (body.find("--" + boundary) != std::string::npos && body.find("--" + boundary + "--") != std::string::npos)
+	{
+		for (size_t i = 0; i < body.size(); i++)
+		{
+			buffer.clear();
+			while(body[i] != '\n')
+			{
+				buffer += body[i];
+				i++;
+					
+			}
+			if (!buffer.compare(("--" + boundary + "--\r"))) // end of boundary
+			{
+					is_content = true;
+					is_boundary = false;
+			}
+			if (!buffer.compare(("--" + boundary + "\r"))) // beginning of boundary
+				is_boundary = true;
+			if (is_boundary) // we are inside a boundary, after beginning bound was found
+			{
+				if (!buffer.compare(0, 31, "Content-Disposition: form-data;"))
+				{
+					size_t start = buffer.find("filename=\"");
+					if (start != std::string::npos)
+					{
+						size_t end = buffer.find("\"", start + 10);
+						if (end != std::string::npos)
+						{
+							filename = buffer.substr(start + 10, end - start - 10);
+							Log::Msg(DEBUG, FUNC + "Filename of file transcoded in multiform setted: " + filename);
+						}
+					}	
+				}
+				else if (!buffer.compare(0, 1, "\r") && !filename.empty())
+				{
+						//an empty line (r) is encountered, and a filename is already set.
+						is_content = true;
+						is_boundary = false;
+				}
+			}
+			else if (is_content)
+			{
+					if (!buffer.compare(("--" + boundary + "\r")))
+						is_boundary = true;
+					else if (!buffer.compare(("--" + boundary + "--\r")))
+					{
+						// last boundary
+						new_body.erase(new_body.end() - 1);
+						break ;
+					}
+					else
+						new_body += (buffer + "\n");
+			}
+		}
+	}
+	// Log::Msg(DEBUG, FUNC + "new body after boundary removal at the end: " + new_body);
+	body.clear();
+	return (new_body);
+}
 
 void   Response::clear()
 {
@@ -773,110 +840,6 @@ void   Response::clear()
     _cgi_response_length = 0;
     _auto_index = 0;
 }
-
-// int      Response::getCode() const
-// {
-//     return (_code);
-// }
-
-// int    Response::getCgiState()
-// {
-//     return (_cgi);
-// }
-
-
-/*
-Process a body of data containing a multipart/form-data payload
-and remove the boundary lines, leaving only the actual content.
-It also extracts the filename associated with each part of the payload.
-*/
-std::string Response::removeBoundary(std::string& body, std::string& boundary, std::string& filename) //proc je public??
-{
-    std::string buffer;
-    std::string new_body;
-    bool is_boundary = false;
-    bool is_content = false;
-
-    if (body.find("--" + boundary) != std::string::npos && body.find("--" + boundary + "--") != std::string::npos)
-    {
-        for (size_t i = 0; i < body.size(); i++)
-        {
-            buffer.clear();
-            while(body[i] != '\n')
-            {
-                buffer += body[i];
-                i++;
-				
-            }
-			// cout << "0: buffer: " <<  buffer << endl;
-            if (!buffer.compare(("--" + boundary + "--\r"))) // end of boundary
-            {
-				// cout << "1: end of boundary." << endl;
-                is_content = true;
-                is_boundary = false;
-            }
-            if (!buffer.compare(("--" + boundary + "\r"))) // beginning of boundary
-            {
-                is_boundary = true;
-				// cout << "2: beginning of boundary." << endl;
-            }
-            if (is_boundary) // we are inside a boundary, after beginning bound was found
-            {
-				// cout << "3a: we are inside a boundary,." << endl;
-                if (!buffer.compare(0, 31, "Content-Disposition: form-data;"))
-                {
-					
-                    size_t start = buffer.find("filename=\"");
-                    if (start != std::string::npos)
-                    {
-                        size_t end = buffer.find("\"", start + 10);
-                        if (end != std::string::npos)
-                            filename = buffer.substr(start + 10, end - start - 10);
-						cout << "3aa: filename setted: " <<  filename << endl;
-
-                    }
-					
-                }
-                else if (!buffer.compare(0, 1, "\r") && !filename.empty())
-                {
-					//cout << "3ab: an empty line (r) is encountered, and a filename is already set, it sets is_boundary to false and is_content to true. "<< endl;
-                    is_content = true;
-					is_boundary = false;
-                }
-
-            }
-            else if (is_content)
-            {
-				// cout << "3b: ontent is true." << endl;
-                if (!buffer.compare(("--" + boundary + "\r")))
-                {
-                    is_boundary = true;
-					// cout << "3ba: content is true and first boundary." << endl;
-                }
-                else if (!buffer.compare(("--" + boundary + "--\r")))
-                {
-					// cout << "3bb: content is true and last boundary boundary." << endl;
-                    new_body.erase(new_body.end() - 1);
-                    break ;
-                }
-                else
-                    {
-						new_body += (buffer + "\n");
-						// cout << "3bc: new body: " << new_body << endl;
-					}
-            }
-
-        }
-    }
-	cout << "new body at the end: " << new_body << endl;
-    body.clear();
-    return (new_body);
-}
-
-// void      Response::setCgiState(int state)
-// {
-//     _cgi_flag = state;
-// }
 
 void Response::setStatusCode(short code)
 {
