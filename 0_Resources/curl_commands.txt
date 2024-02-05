@@ -15,7 +15,7 @@ curl -X DELETE http://localhost:8000/testloc1/uploads/default.file
 curl -X UNKNOWN http://localhost:8000
 
 
-telnet localhost 8000
+
 
 POST /testloc1 HTTP/1.1
 Host: localhost:8000
@@ -27,5 +27,3 @@ Chunked
 6
 Encoding
 0
-
-

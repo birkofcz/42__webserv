@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/04 19:58:52 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:25:54 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -658,7 +658,7 @@ void HttpRequest::feed(char *data, size_t size)
 				else
 				{
 					_error_code = 400;
-					std::cout << "Bad Character (Chunked_Data_CR)" << std::endl;
+					std::cout << "Bad Character (Chunked_Data_CR) and i: " << i << std::endl;
 					return;
 				}
 				continue;
