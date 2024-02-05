@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/03 19:49:46 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/04 17:43:11 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,6 +272,7 @@ void ServerManager::sendResponse(const int& fd, Client& c)
     // debugFile << "SENDING RESPONSE data: \n" << c.response._response_content << "\n";
     // debugFile.close();
 
+	cerr << "before sending\n" ;
     ssize_t bytes_written = send(fd, c.response._response_content.c_str(), c.response._response_content.size(), MSG_DONTWAIT);
     if (bytes_written < 0)
     {
@@ -280,6 +281,7 @@ void ServerManager::sendResponse(const int& fd, Client& c)
     }
     else
     {
+		cerr << "bytes sent: " << bytes_written << endl;
 		// if (c.request.keepAlive() == false)
 		// 	_closeConnection(c.getSocket());
 		c.clearClient();
