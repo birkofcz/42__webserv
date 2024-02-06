@@ -1,0 +1,95 @@
+/<!DOCTYPE html>
+<html>
+<head>
+	<title>Index</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		.content {
+			transform: translateY(-50%);
+		}
+		
+		.path {
+			margin-top: 20px;
+			font-style: italic;
+		}
+
+		form {
+            margin-top: 20px;
+        }
+	</style>
+</head>
+<body>
+	<div class="content">
+		<h1>/location1/index.html</h1>
+		<div class="path">./content/www/location1/index.html</div>
+		
+		<!-- Form for POST request -->
+		<form method="post" enctype="multipart/form-data">
+			<label for="file">File:</label>
+			<input type="file" id="file" name="file" required>
+			<button type="submit">Submit POST</button>
+		</form>
+		
+		
+		<!-- Form for POST CGI BASH script -->
+		
+		<h2>Enter Your Name for POST Cgi bash script:</h2>
+	   		 <form action="http://localhost:8000/cgi-bin/post_cgi.sh" method="post">
+				<label for="name">Name:</label><br>
+				<input type="text" id="name" name="name"><br><br>
+				<input type="submit" value="Submit">
+			 </form>
+			
+		<!-- Form for chunked POST request 
+		<form action="http://localhost:8000/cgi-bin/upload_cgi.sh" method="post" enctype="multipart/form-data">
+			<label for="fileChunk">File Chunk:</label><br>
+			<input type="file" id="fileChunk" name="fileChunk" required><br><br>
+			<input type="submit" value="Send Chunked POST Request">
+		</form>
+		-->
+
+
+		<form id="deleteForm">
+			<label for="filename">Filename:</label>
+			<input type="text" id="filename" name="filename" placeholder="Enter filename">
+			
+			<input type="button" value="Send DELETE Request" onclick="sendDeleteRequest()">
+		</form>
+		
+		<script>
+			function sendDeleteRequest() {
+				var directory = "uploads/";
+				var filename = document.getElementById("filename").value.trim();
+				var url = directory + filename;
+		
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", url, true);
+		
+				xhr.onload = function () {
+					if (xhr.status == 204) {
+						alert("DELETE request successful");
+						// Clear the input field after successful request
+						document.getElementById("filename").value = "";
+					} else {
+						alert("DELETE request failed. Status: " + xhr.status);
+					}
+				};
+		
+				xhr.send();
+			}
+		</script>
+		
+		
+		
+    </div>
+</body>
+</html>
