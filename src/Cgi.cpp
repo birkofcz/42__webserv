@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 16:03:12 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/05 16:49:31 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:18:17 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,42 +83,13 @@ Cgi& Cgi::operator=(const Cgi &rhs)
 	return (*this);
 }
 
-// /*Set functions */
-// void Cgi::setCgiPid(pid_t cgi_pid)
-// {
-//     this->_cgi_pid = cgi_pid;
-// }
-
 void	Cgi::setCgiPath(const string& cgi_path) {this->_cgi_path = cgi_path;}
 void	Cgi::setExtension(const string& ext) {this->_cgi_extension = ext;}
-
-// /* Get functions */
-// const std::map<std::string, std::string> &Cgi::getEnv() const
-// {
-//     return (this->_environment);
-// }
 
 const pid_t &Cgi::getCgiPid() const
 {
 	return (this->_cgi_pid);
 }
-
-// const std::string &Cgi::getCgiPath() const
-// {
-//     return (this->_cgi_path);
-// }
-
-// static int findStart(const std::string path, const std::string delim)
-// {
-// 	if (path.empty())
-// 		return (-1);
-// 	size_t poz = path.find(delim);
-// 	if (poz != std::string::npos)
-// 		return (poz);
-// 	else
-// 		return (-1);
-// }
-
 
 // /* initialization environment variable */
 void Cgi::initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc)

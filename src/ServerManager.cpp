@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/04 17:43:11 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:26:11 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <fcntl.h>
 #include <arpa/inet.h>
 #include <cstddef> //for size_t
-
 
 using std::vector;
 #define MAX_EVENTS 64
@@ -34,7 +33,9 @@ ServerManager::ServerManager()
 }
 ServerManager::~ServerManager() {}
 
-void ServerManager::initServers(vector<Server> servers)
+int		ServerManager::getEpollFd() {return this->_epoll_fd;};
+
+void	ServerManager::initServers(vector<Server> servers)
 {	
 	_servers = servers;
 	bool serverDouble; // to track whether a server is a duplicate.
@@ -118,7 +119,7 @@ void ServerManager::runServers()
 	// let servers listen and put them to epoll structure.
 	for (vector<Server>::iterator it = _servers.begin(); it != _servers.end(); ++it)
 	{
-		if (listen(it->getFd(), 512) == -1)
+		if (listen(it->getFd(), 512) == -1) //512 pending connections before rejecting new connection attempts.
 		{
 			Log::Msg(ERROR, FUNC + "listen error: " + toString(strerror(errno)));
 			exit(EXIT_FAILURE);
@@ -145,11 +146,6 @@ void ServerManager::runServers()
 			terminateFlag = true;
 			// exit(EXIT_FAILURE);
 		}
-		// if (numEvents == 0) //not sure
-		// {
-		// 	// No events occurred within the timeout, continue the loop
-		// 	continue;
-		// }
 		for (int i = 0; i < numEvents; ++i)
 		{
 			// There is incoming data from a client or a pipe.
@@ -162,7 +158,7 @@ void ServerManager::runServers()
 					_acceptNewConnection(_servers_map.find(fd)->second);
 				else if (_clients_map.count(fd))
 				{
-					readRequest(fd, _clients_map[fd]);
+					_readRequest(fd, _clients_map[fd]);
 					if (_clients_map[fd].response.getCgiFlag())
 					{
 						// Add cgi pipe_in[1] (write end of the pipe) to the epoll interest list
@@ -231,7 +227,7 @@ void ServerManager::runServers()
 				if (_clients_map.count(fd) && !_clients_map[fd].response._response_content.empty())
 				{
 					Log::Msg(DEBUG, FUNC + "EPOLLOUT fd of client triggered : " + toString(fd));
-					sendResponse(fd, _clients_map[fd]);
+					_sendResponse(fd, _clients_map[fd]);
 				}
 				else if (_cgi_pipe_to_client_map.count(fd))
 				{
@@ -259,7 +255,7 @@ void ServerManager::clear()
 	}
 }
 
-void ServerManager::sendResponse(const int& fd, Client& c)
+void ServerManager::_sendResponse(const int& fd, Client& c)
 {
 	//----
 	//write the response to the text file in data/response_temp.txt - in truncate mode - for debugging and showcase purposes
@@ -328,7 +324,6 @@ void ServerManager::_acceptNewConnection(Server &serv)
 	_clients_map.insert(std::pair<int, Client>(client_sock, new_client));
 	// Output information about the new connection
 	char buf[INET_ADDRSTRLEN];
-	
 	Log::Msg(INFO, "New Connection From " + toString(inet_ntop(AF_INET, &client_address.sin_addr, buf, INET_ADDRSTRLEN)) + ", Assigned Socket " + toString(client_sock));
 }
 
@@ -344,7 +339,7 @@ void    ServerManager::_closeConnection(const int fd)
     _clients_map.erase(fd);
 }
 
-void ServerManager::readRequest(const int& fd, Client& c)
+void ServerManager::_readRequest(const int& fd, Client& c)
 {
 	char buffer[MESSAGE_BUFFER];
 	int bytes_read = 0;
@@ -387,7 +382,7 @@ void ServerManager::readRequest(const int& fd, Client& c)
 		Log::Msg(DEBUG, FUNC + "Parsing completed or Error code setted");
 		c.clientBuildResponse();
 	}
-	// 		Logger::logMsg(CYAN, CONSOLE_OUTPUT, "Request Received From Socket %d, Method=<%s>  URI=<%s>",
+	// 		Msg(DEBUG, "Request Received From Socket %d, Method=<%s>  URI=<%s>",
 }
 
 void    ServerManager::_sendCgiBody(Client &c)
