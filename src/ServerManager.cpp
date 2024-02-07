@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/04 17:43:11 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:38:34 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,8 +379,8 @@ void ServerManager::readRequest(const int& fd, Client& c)
 		memset(buffer, 0, sizeof(buffer));
 	}
 
-    debugFile << "PRESENTING REQUEST data: \n" << c.request << "\n";
-    debugFile.close();
+    // debugFile << "PRESENTING REQUEST data: \n" << c.request << "\n";
+    // debugFile.close();
 
 	if (c.request.complete_flag || c.request.getErrorCode())
 	{

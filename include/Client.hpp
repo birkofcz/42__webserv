@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:00:09 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/05 16:49:27 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:38:40 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ class Client
 		void	setServer(Server& serv);
 		void	clientBuildResponse();
 
-		void	clearClient();
-		Response response;
+		void		clearClient();
+		Response	response;
 		HttpRequest request;
 
 	private:

@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/05 16:47:20 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:38:38 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,6 +309,11 @@ void    Response::_getLocationMatch(std::string& path, std::vector<Location> loc
                }
         }
     }
+}
+
+bool	Response::getCgiFlag ()
+{
+	return (this->_cgi_flag);
 }
 
 int    Response::_handleTarget()

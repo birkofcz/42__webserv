@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:49:47 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/01/31 15:28:50 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:38:39 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,98 +86,96 @@ class HttpRequest
 		size_t 										getBodyLen();
 		bool										getMultiformFlag();
 
-		void setMethod(HttpMethod&);
-		void setMaxBodySize(size_t);
-		void setBody(std::string name);
-		void setHeader(std::string&, std::string&);
+		void	setMethod(HttpMethod&);
+		void	setMaxBodySize(size_t);
+		void	setBody(std::string name);
+		void	setHeader(std::string&, std::string&);
+		void	setErrorCode(short);
 
-		void feed(char* data, size_t size);
-		// bool parsingCompleted();
-		// void printMessage();
-		void clear();
-		short getErrorCode();
-		void setErrorCode(short);
+		short	getErrorCode();
+
+		void	feed(char* data, size_t size);
+		void	clear();
 		// bool keepAlive();
 		// void cutReqBody(int bytes);
-		bool complete_flag;
 		
-		int client_socket;
+		bool	complete_flag;
+		int		client_socket;
 
 	private:
-		std::string _path;
-		std::string _query;
-		// // std::string _fragment; //on the client side
-		map<std::string, std::string> _request_headers;
-		std::vector<uint8_t> _body; //message stored in bytes, usually not part of GET
-		std::string _boundary; //associated with multipart/form-data requests. MIMe, POST method
-		HttpMethod _method;
-		map<uint8_t, std::string> _method_str;
-		ParsingState _state;
-		size_t _max_body_size;
-		size_t _body_length;
-		short _error_code;
-		size_t _chunk_length;
-		std::string _storage; // temporary buffer
-		std::string _key_storage; // temp buffer for key in the map
-		short _method_index;
-		uint8_t _ver_major; //HTTP/(1).1
-		uint8_t _ver_minor; //HTTP/1.(1)
-		std::string _server_name;
-		std::string _server_port;
-		std::string _body_str;
+		std::string						_path;
+		std::string						_query;
+		// // std::string				_fragment; //on the client side
+		map<std::string, std::string>	_request_headers;
+		std::vector<uint8_t>			_body; //message stored in bytes, usually not part of GET
+		std::string 					_boundary; //associated with multipart/form-data requests. POST method
+		HttpMethod						_method;
+		map<uint8_t, std::string>		_method_str;
+		ParsingState					_state;
+		size_t							_max_body_size;
+		size_t							_body_length;
+		short							_error_code;
+		size_t							_chunk_length;
+		std::string						_storage; // temporary buffer
+		std::string						_key_storage; // temp buffer for key in the map
+		short							_method_index;
+		uint8_t							_ver_major; //HTTP/(1).1
+		uint8_t							_ver_minor; //HTTP/1.(1)
+		std::string						_server_name;
+		std::string						_server_port;
+		std::string						_body_str;
 
 		/* flags */
 		bool _fields_done_flag; //all headers done
 		bool _body_flag; //the request contains body
 		bool _body_done_flag;
-		
 		bool _chunked_flag;
 		bool _multiform_flag;
 
 		void _handle_headers();
 
-		friend std::ostream& operator<<(std::ostream& os, const HttpRequest& request);
+		// friend std::ostream& operator<<(std::ostream& os, const HttpRequest& request);
 };
 
-inline std::ostream& operator<<(std::ostream& os, const HttpMethod& method) {
-    switch (method) {
-        case GET:
-            os << "GET";
-            break;
-        case POST:
-            os << "POST";
-            break;
-        case DELETE:
-            os << "DELETE";
-            break;
-        default:
-            os << "NONE";
-            break;
-    }
-    return os;
-}
+// inline std::ostream& operator<<(std::ostream& os, const HttpMethod& method) {
+//     switch (method) {
+//         case GET:
+//             os << "GET";
+//             break;
+//         case POST:
+//             os << "POST";
+//             break;
+//         case DELETE:
+//             os << "DELETE";
+//             break;
+//         default:
+//             os << "NONE";
+//             break;
+//     }
+//     return os;
+// }
 
-inline std::ostream& operator<<(std::ostream& os, const HttpRequest& request) {
-    os << "Method: " << request._method << std::endl;
-    os << "Path: " << request._path << std::endl;
-    os << "Query: " << request._query << std::endl;
-	os << "_ver_major: " << request._ver_major << std::endl;
-	os << "_ver_minor: " << request._ver_minor << std::endl;
-    os << "Headers:" << std::endl;
-    const map<std::string, std::string>& headers = request._request_headers;
-    for (map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
-        os << it->first << ": " << it->second << std::endl;
-    }
-	os << "_boundary:" << request._boundary << std::endl;
-    os << "Body str: " << request._body_str << std::endl;
-	os << "Body vector: ";
-  	for (std::vector<uint8_t>::const_iterator it = request._body.begin(); it != request._body.end(); ++it) {
-    uint8_t byte = *it;
-    os << static_cast<char>(byte) << " ";
-}
-    os << std::endl;
+// inline std::ostream& operator<<(std::ostream& os, const HttpRequest& request) {
+//     os << "Method: " << request._method << std::endl;
+//     os << "Path: " << request._path << std::endl;
+//     os << "Query: " << request._query << std::endl;
+// 	os << "_ver_major: " << request._ver_major << std::endl;
+// 	os << "_ver_minor: " << request._ver_minor << std::endl;
+//     os << "Headers:" << std::endl;
+//     const map<std::string, std::string>& headers = request._request_headers;
+//     for (map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+//         os << it->first << ": " << it->second << std::endl;
+//     }
+// 	os << "_boundary:" << request._boundary << std::endl;
+//     os << "Body str: " << request._body_str << std::endl;
+// 	os << "Body vector: ";
+//   	for (std::vector<uint8_t>::const_iterator it = request._body.begin(); it != request._body.end(); ++it) {
+//     uint8_t byte = *it;
+//     os << static_cast<char>(byte) << " ";
+// }
+//     os << std::endl;
 
-    return os;
-}
+//     return os;
+// }
 
 #endif
