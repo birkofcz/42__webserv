@@ -1,0 +1,4 @@
+[07.02.2024][17:39:20] [INFO] Config file parsed successfully
+[07.02.2024][17:39:20] [INFO] Server Created: ServerName[server1] Host[127.0.0.1] Port[8000]
+[07.02.2024][17:39:20] [INFO] Server Created: ServerName[server2] Host[127.0.0.1] Port[9000]
+[07.02.2024][17:39:20] [INFO] Server(s) started

@@ -277,6 +277,11 @@ void    Response::_getLocationMatch(std::string& path, std::vector<Location> loc
     }
 }
 
+bool	Response::getCgiFlag ()
+{
+	return (this->_cgi_flag);
+}
+
 int    Response::_handleTarget()
 {
     _getLocationMatch(request.getPath(), _server.getLocations(), _location_key);

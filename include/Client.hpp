@@ -41,8 +41,8 @@ class Client
 		void	setAddress(sockaddr_in& Add);
 		void	setServer(Server& serv);
 		void	clientBuildResponse();
-
 		void	clearClient();
+  
 		Response response; //contains also the server connected to this client
 		HttpRequest request;
 

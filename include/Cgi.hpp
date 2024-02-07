@@ -33,9 +33,6 @@ class Cgi
 		int									_client_fd;
 
 	public:
-		int									cgi_pipe_out_read_end;
-		int									cgi_pipe_in_write_end;
-	
 		Cgi();
 		Cgi(string cgi_path);
 		~Cgi();
@@ -48,13 +45,15 @@ class Cgi
 		void	setCgiClientFd(int client_fd);
 
 		int		execute(short &error_code);
-
 		void initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc);
 		void clear();
 		const pid_t &getCgiPid() const;
 		std::string getPathInfo() const;
 		// int	countCookies(const std::string& str);
 		// std::string decode(std::string &path);
+
+		int									cgi_pipe_out_read_end;
+		int									cgi_pipe_in_write_end;
 };
 
 #endif

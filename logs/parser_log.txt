@@ -1,0 +1,33 @@
+
+[07.02.2024][17:39:20]
+PARSING CONFIG FILE: config/www.conf
+
+Found server { at depth 1
+config[server]: Found listen directive
+config[server]: Found host directive
+config[server]: Found server_name directive
+config[server]: Found root directive
+config[server]: Found index directive
+config[server]: Found client_max_body_size directive
+	Found location { at depth 2
+	config[location]: Found allowed_methods directive
+	config[location]: Found upload_path directive
+	Found } at depth 2 - ending location block ^
+	Found location { at depth 2
+	config[location]: Found allowed_methods directive
+	config[location]: Found autoindex directive
+	Found } at depth 2 - ending location block ^
+	Found location { at depth 2
+	config[location]: Found cgi directive
+	config[location]: Found allowed_methods directive
+	config[location]: Found index directive
+	config[location]: Found cgi directive
+	Found } at depth 2 - ending location block ^
+Found } at depth 1 - ending server block ^
+Found server { at depth 1
+config[server]: Found listen directive
+config[server]: Found host directive
+config[server]: Found server_name directive
+config[server]: Found root directive
+config[server]: Found index directive
+Found } at depth 1 - ending server block ^
