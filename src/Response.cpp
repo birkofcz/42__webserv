@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
 /*   Updated: 2024/02/07 17:11:48 by tkajanek         ###   ########.fr       */
@@ -291,6 +291,16 @@ int    Response::_handleTarget()
     {
         Location target_location = *_server.getLocationKey(_location_key);
 			Log::Msg(DEBUG, FUNC + "target_location found: " + target_location.getPath());
+		
+		
+		//Easter egg fun: hardcoded 418 I'm a teapot (location is "/coffee")
+		if (target_location.getPath() == "/coffee")
+		{
+			_status_code = 418;
+			return (1);
+		}
+		//End of easter egg fun
+
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
         {
             std::cout << "METHOD NOT ALLOWED \n";

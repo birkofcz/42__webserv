@@ -16,7 +16,8 @@
 Server::Server()
 {
 	_name = "";
-	_port = -1;
+	_host = inet_addr("127.0.0.1");
+	_port = 8000;
 	_server_names = std::vector<string>();
 	_root = "";
 	_index = std::vector<string>();

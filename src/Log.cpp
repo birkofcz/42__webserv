@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:28:05 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/01 16:20:17 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/06 17:06:48 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ Log::Msg(LogType type, string msg)
 	// Log to file if enabled
 	if (out_file && !message.empty())
 	{
-		string filename = "logs/log" + TimeStamp() + ".txt";
+		string filename = "logs/log.txt";
 		const char *filepath = filename.c_str();
 		std::ofstream logFile(filepath, std::ios::app); // Open in append mode
 		if (logFile.is_open())
