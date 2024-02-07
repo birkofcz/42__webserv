@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 14:33:11 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/07 17:38:42 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/06 16:11:48 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,11 @@ class Cgi
 		void	setCgiClientFd(int client_fd);
 
 		int		execute(short &error_code);
-		void	initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc);
-		void	clear();
-		// std::string setCookie(const std::string& str);
-
-		// const std::map<std::string, std::string> &getEnv() const;
+		void initEnv(HttpRequest& req, const std::vector<Location>::iterator it_loc);
+		void clear();
 		const pid_t &getCgiPid() const;
-		// const std::string &getCgiPath() const;
 		std::string getPathInfo() const;
+		// int	countCookies(const std::string& str);
 		// std::string decode(std::string &path);
 
 		int									cgi_pipe_out_read_end;

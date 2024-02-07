@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/07 17:38:38 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:11:48 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 Response::Response()
 {
-	std::cout << "RESPONSE was defaultly constructed" << std::endl;
 	_location_key = "";
 	_target_file = "";
 	_body_bytes.clear();
@@ -36,7 +35,6 @@ Response::~Response() {}
 
 Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
 {
-	std::cout << "RESPONSE was constructed from a response" << std::endl;
 	_location_key = "";
     _target_file = "";
     _body_bytes.clear();
@@ -149,21 +147,6 @@ bool Response::_isDirectory(std::string path)
     return (S_ISDIR(file_stat.st_mode));
 }
 
-
-
-// static bool    checkReturn(Location &loc, short &code, std::string &location)
-// {
-//     if (!loc.getReturn().empty())
-//     {
-//         code = 301;
-//         location = loc.getReturn();
-//         if (location[0] != '/')
-//             location.insert(location.begin(), '/');
-//         return (1);
-//     }
-//     return (0);
-// }
-
 std::string Response::_combinePaths(std::string p1, std::string p2, std::string p3) // predelat na const &?
 {
 	std::string res = p1;
@@ -196,23 +179,6 @@ void Response::_appendRoot(Location &location, HttpRequest &request)
 		root = location.getRoot();
    _target_file = _combinePaths(root, request.getPath(), "");
 }
-
-// // int Response::handleCgiTemp(std::string &location_key)
-// // {
-// //     std::string path;
-// //     path = _target_file;
-// //     _cgi_obj.clear();
-// //     _cgi_obj.setCgiPath(path);
-// //     _cgi_flag = 1;
-// //     if (pipe(_cgi_fd) < 0)
-// //     {
-// //         _code = 500;
-// //         return (1);
-// //     }
-// //     _cgi_obj.initEnvCgi(request, _server.getLocationKey(location_key)); // + URI
-// //     _cgi_obj.execute(this->_code);
-// //     return (0);
-// // }
 
 /* check a file for CGI (the extension is supported, the file exists and is executable) and run the CGI */
 int        Response::handleCgi(std::string &location_key)
@@ -330,6 +296,16 @@ int    Response::_handleTarget()
     {
         Location target_location = *_server.getLocationKey(_location_key);
 			Log::Msg(DEBUG, FUNC + "target_location found: " + target_location.getPath());
+		
+		
+		//Easter egg fun: hardcoded 418 I'm a teapot (location is "/coffee")
+		if (target_location.getPath() == "/coffee")
+		{
+			_status_code = 418;
+			return (1);
+		}
+		//End of easter egg fun
+
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
         {
             std::cout << "METHOD NOT ALLOWED \n";
