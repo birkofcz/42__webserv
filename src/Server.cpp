@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:39:37 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/07 17:06:15 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 Server::Server()
 {
 	_name = "";
-	_port = -1;
+	_host = inet_addr("127.0.0.1");
+	_port = 8000;
 	_server_names = std::vector<string>();
 	_root = "";
 	_index = std::vector<string>();

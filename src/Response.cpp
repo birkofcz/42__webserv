@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/07 07:37:27 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/07 16:36:03 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,7 +333,7 @@ int    Response::_handleTarget()
 			_status_code = 418;
 			return (1);
 		}
-		//
+		//End of easter egg fun
 
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
         {
