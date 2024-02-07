@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/02 16:42:47 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/06 16:45:18 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,10 +289,7 @@ Parser::parseCgi(const string& line)
 		{
 			string extension = split[i];
 			if (split[i + 1].empty())
-			{
-				print("getCgi: cgi path not specified", RED, 2);
 				return cgi;
-			}
 			if (split[i + 1].find(';') != string::npos)
 				split[i + 1].erase(split[i + 1].find(';'));
 			string path = split[i + 1];
@@ -300,10 +297,7 @@ Parser::parseCgi(const string& line)
 			i++;
 		}
 		else
-		{
-			print("getCgi: cgi extension not specified", RED, 2);
 			return cgi;
-		}	
 	}
 	return cgi;
 }

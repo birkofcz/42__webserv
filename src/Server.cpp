@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/03 15:41:53 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:39:37 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/06 17:15:53 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ void Server::setupServer(void)
 {
 	if ((_socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
-		print("webserv: socket error, Closing ....", RED, 2);
+		Log::Msg(ERROR, FUNC + "socket: " + toString(strerror(errno)));
 		exit(EXIT_FAILURE);
 	}
 
@@ -224,9 +224,6 @@ void Server::setupServer(void)
 	// are handled properly. Enabling SO_REUSEADDR allows a new socket
 	// to bind to the same address immediately after the old socket
 	// is closed, even if it's still in TIME_WAIT.
-
-
-	//_host = INADDR_ANY; // replace with proper initialization bsd on config
 	
 	memset(&_server_address, 0, sizeof(_server_address));
 	_server_address.sin_family = AF_INET;
@@ -236,11 +233,9 @@ void Server::setupServer(void)
 	_server_address.sin_port = htons(_port);
 	Log::Msg(DEBUG, FUNC + "Port " + toString(_port));
 
-	//cout << htons(_ports[0]) << " " << _ports[0] << " "  << _host << " " << _socket_fd << endl; // test
-
 	if (bind(_socket_fd, (struct sockaddr *)&_server_address, sizeof(_server_address)) == -1)
 	{
-		print("webserv: bind error, Closing ....", RED, 2);
+		Log::Msg(ERROR, FUNC + "bind: " + toString(strerror(errno)));
 		exit(EXIT_FAILURE);
 	}
 }
