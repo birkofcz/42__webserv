@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/06 16:26:11 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/07 17:11:48 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,7 +268,6 @@ void ServerManager::_sendResponse(const int& fd, Client& c)
     // debugFile << "SENDING RESPONSE data: \n" << c.response._response_content << "\n";
     // debugFile.close();
 
-	cerr << "before sending\n" ;
     ssize_t bytes_written = send(fd, c.response._response_content.c_str(), c.response._response_content.size(), MSG_DONTWAIT);
     if (bytes_written < 0)
     {
@@ -277,15 +276,12 @@ void ServerManager::_sendResponse(const int& fd, Client& c)
     }
     else
     {
-		cerr << "bytes sent: " << bytes_written << endl;
 		// if (c.request.keepAlive() == false)
 		// 	_closeConnection(c.getSocket());
 		c.clearClient();
 		Log::Msg(DEBUG, FUNC + "Succesfully sent response to fd: " + toString(c.getSocket()));	
 	}
 }
-
-
 
 void ServerManager::_acceptNewConnection(Server &serv)
 {
@@ -344,10 +340,9 @@ void ServerManager::_readRequest(const int& fd, Client& c)
 	char buffer[MESSAGE_BUFFER];
 	int bytes_read = 0;
 	bytes_read = recv(fd, buffer, MESSAGE_BUFFER, MSG_DONTWAIT);
-	cout << endl << "BUFFER BEFORE feed: "<< endl << buffer << endl;
 
-	std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
-    debugFile << "\nBUFFER BEFORE feed: \n" << buffer << "\n";
+	// std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
+    // debugFile << "\nBUFFER BEFORE feed: \n" << buffer << "\n";
 	
 	//writes the request to the text file in data/request_temp.txt - in truncate mode - for debugging and showcase purposes
 	//----
@@ -374,8 +369,8 @@ void ServerManager::_readRequest(const int& fd, Client& c)
 		memset(buffer, 0, sizeof(buffer));
 	}
 
-    debugFile << "PRESENTING REQUEST data: \n" << c.request << "\n";
-    debugFile.close();
+    // debugFile << "PRESENTING REQUEST data: \n" << c.request << "\n";
+    // debugFile.close();
 
 	if (c.request.complete_flag || c.request.getErrorCode())
 	{
@@ -427,14 +422,18 @@ void    ServerManager::_readCgiResponse(Client &c)
     {
 		close(c.response.cgi_object.cgi_pipe_out_read_end);
 		buffer[bytes_read] = '\0';
-		size_t cont_len = _calcContLenCgi(buffer, bytes_read);
-		c.response._response_content.append("Content-Length: ");
-		c.response._response_content.append(toString(cont_len));
-		c.response._response_content.append("\r\n");
+		bool has_content_length = strstr(buffer, "Content-Length:") != 0;
+		if (!has_content_length)
+		{
+			size_t cont_len = _calcContLenCgi(buffer, bytes_read);
+			c.response._response_content.append("Content-Length: ");
+			c.response._response_content.append(toString(cont_len));
+			c.response._response_content.append("\r\n");
+		}
 		c.response._response_content.append(buffer, bytes_read);
 		Log::Msg(DEBUG, FUNC + "CGI buffer:\n" + buffer);
 		memset(buffer, 0, sizeof(buffer));
-    }
+	}
 }
 
 size_t ServerManager::_calcContLenCgi(const char* buffer, size_t size)
@@ -442,7 +441,6 @@ size_t ServerManager::_calcContLenCgi(const char* buffer, size_t size)
 	std::string buffer_str(buffer, size);
 	size_t contentLength = 0;
     size_t contentStart = buffer_str.find("\n\n");
-	std::cout << "buffer_str = " << buffer_str << " and contentStart: " << contentStart << endl;
 
     if (contentStart != std::string::npos)
     {
