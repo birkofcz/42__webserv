@@ -5,7 +5,7 @@ echo "Content-Type: text/html"
 echo ""
 
 # Infinite loop for error testing
-while true; do
+#while true; do
 
 	# Read form data from standard input
 	IFS='' read -r POST_DATA
@@ -20,4 +20,4 @@ while true; do
 	    echo -e "<h1>Hello, anonymous!</h1>\r\n"
 	fi
 
-done  # This closes the while loop
+#done  # This closes the while loop

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/07 17:11:48 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/08 17:21:22 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -346,11 +346,10 @@ int    Response::_handleTarget()
                 _location = request.getPath() + "/";
                 return (1);
             }
-            if (!target_location.getIndex().empty()) //nechybi tam [0] ?
+            if (!target_location.getIndex().empty())
 			{
                 Log::Msg(DEBUG, FUNC + "target_location has index defined.");
 				_target_file += target_location.getIndex()[0]; //hardcoded index index.html
-				cout << "TEST: LOCATION _target_file after index: " << _target_file << endl;
 			}
             else
             {
@@ -438,41 +437,6 @@ bool Response::_reqError()
 	return (0);
 }
 
-// void Response::setServerDefaultErrorPages()
-// {
-//     _response_body = getErrorPage(_code);
-// }
-
-// void Response::buildErrorBody()
-// {
-//         if( !_server.getErrorPages().count(_code) || _server.getErrorPages().at(_code).empty() ||
-//          request.getMethod() == DELETE || request.getMethod() == POST)
-//         {
-//             setServerDefaultErrorPages();
-//         }
-//         else
-//         {
-//             if(_code >= 400 && _code < 500)
-//             {
-//                 _location = _server.getErrorPages().at(_code);
-//                 if(_location[0] != '/')
-//                     _location.insert(_location.begin(), '/');
-//                 _code = 302;
-//             }
-
-//             _target_file = _server.getRoot() +_server.getErrorPages().at(_code);
-//             short old_code = _code;
-//             if(readFile())
-//             {
-//                 _code = old_code;
-//                 _response_body = getErrorPage(_code);
-//             }
-//         }
-// }
-
-/* string checkDefaulErrorPage(short error_code, string location_key) */
-
-
 /*
 _buildAutoindex() function is used to generate the HTML for the autoindex page.
 It takes the path of the directory to be listed as an argument and returns 
@@ -554,17 +518,6 @@ void	Response::buildResponse()
 		_response_content.append(_response_body_str);
 	Log::Msg(DEBUG, FUNC + "_response_content: " + _response_content);
 }
-
-// void Response::setErrorResponse(short code)
-// {
-//     _response_content = "";
-//     _code = code;
-//     _response_body = "";
-//     buildErrorBody();
-//     setStatusLine();
-//     setHeaders();
-//     _response_content.append(_response_body);
-// }
 
 // // Returns the entire reponse ( Headers + Body )
 // std::string Response::getRes()
@@ -708,12 +661,12 @@ int Response::_readFile()
 	{
 		if (errno == ENOENT)
 		{
-			Log::Msg(ERROR, FUNC + "Website file not found");
+			Log::Msg(ERROR, FUNC + "Website file: " +_target_file + " not found");
 			_status_code = 404; // Not Found
 		}
 		else
 		{
-			Log::Msg(ERROR, FUNC + "Permission denied when trying to access website file");
+			Log::Msg(ERROR, FUNC + "Permission denied when trying to access website file: " +_target_file);
 			_status_code = 403; // Forbidden
 		}
 		return (1);
@@ -820,6 +773,8 @@ void   Response::clear()
     _cgi_flag = 0;
     _cgi_response_length = 0;
     _auto_index = 0;
+	_location_key.clear();
+	_mime.clear();
 }
 
 void Response::setStatusCode(short code)

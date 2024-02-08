@@ -6,7 +6,7 @@
 /*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 14:59:05 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/05 16:45:36 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/08 17:14:55 by tkajanek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ void HttpRequest::feed(char *data, size_t size)
 	uint8_t character;
 	static std::stringstream s;
 
-	std::ofstream debugFile("debug_output.txt", std::ios::app);  // for debug log
+	// std::ofstream debugFile("debug_output.txt", std::ios::app);  // for debug log
 
 	for (size_t i = 0; i < size; ++i)
 	{
@@ -713,12 +713,11 @@ void HttpRequest::feed(char *data, size_t size)
 			}
 			case Parsing_Done:
 			{
-				debugFile << "PARSING DONE! \n"<< "\n";
-				debugFile.close(); 
-				
+				// debugFile << "PARSING DONE! \n"<< "\n";
+				// debugFile.close(); 
 				return;
 			}
-		} // end of switch
+		}
 		_storage += character;
 
 	}
@@ -726,9 +725,8 @@ void HttpRequest::feed(char *data, size_t size)
 	{
 		_body_str.append((char *)_body.data(), _body.size());
 		_body_length = _body.size();
-		debugFile << "__body_str after PARSING DONE: \n" << _body_str << "\n";
+		// debugFile << "__body_str after PARSING DONE: \n" << _body_str << "\n";
 		//complete_flag = true;
-		// vypada ze nikdy nenastane, zceknout a pripadne dat do case
 	}
 }
 
