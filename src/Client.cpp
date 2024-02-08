@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 20:04:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/06 16:38:04 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/08 17:36:40 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ const struct sockaddr_in&	Client::getAddress() const
 void	Client::clientBuildResponse()
 {
 	response.setRequest(this->request);
+	Log::Msg(INFO, request.getMethodStr() + " recieved");
 	response.buildResponse();
 }
 

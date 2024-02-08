@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 15:55:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/01/31 16:21:12 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/08 16:39:51 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Mime::Mime(const short &status_code, const bool &autoindex)
 	string line;
 	if (file.fail())
 	{
-		std::cerr << "Error opening file: " << path << std::endl;
+		Log::Msg(ERROR, FUNC + "Error opening file: " + path);
 		exit(EXIT_FAILURE);
 	}
 	Log::Msg(DEBUG, FUNC + "before reading data file for MIME " + path);

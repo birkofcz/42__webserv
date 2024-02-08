@@ -1,1 +1,0 @@
-[07.02.2024][17:39:40] [ERROR] [runServers]: Child process running CGI script terminated by signal: 14

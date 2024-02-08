@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 14:58:07 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/06 16:45:18 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/08 16:44:16 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ Parser::parseServerNames(const string& line)
 	std::vector<string> server_names;
 	if (split[1].empty())
 	{
-		print("getServerNames: server name not specified", RED, 2);
+		Log::Msg(ERROR, FUNC + "Server name not specified.");
+		//print("getServerNames: server name not specified", RED, 2);
 		return server_names;
 	}
 	//cleans the string(s) from the semicolon and pushes them to the vector
@@ -124,7 +125,8 @@ Parser::parseRoot(const string& line)
 	std::vector<string> split = CppSplit(line, ' ');
 	if (split[1].empty())
 	{
-		print("getRoot: root not specified", RED, 2);
+		Log::Msg(ERROR, FUNC + "Root not specified.");
+		//print("getRoot: root not specified", RED, 2);
 		return "";
 	}
 	if (split[1].find(';') != string::npos)
@@ -140,7 +142,8 @@ Parser::parseIndex(const string& line)
 	std::vector<string> index;
 	if (split[1].empty())
 	{
-		print("getIndex: index not specified", RED, 2);
+		Log::Msg(ERROR, FUNC + "Index not specified.");
+		//print("getIndex: index not specified", RED, 2);
 		return index;
 	}
 	//cleans the string(s) from the semicolon and pushes them to the vector
@@ -160,7 +163,8 @@ Parser::parseLocationPath(const string& line)
 	std::vector<string> split = CppSplit(line, ' ');
 	if (split[1].empty())
 	{
-		print("getLocationPath: path not specified", RED, 2);
+		Log::Msg(ERROR, FUNC + "Location path not specified.");
+		//print("getLocationPath: path not specified", RED, 2);
 		return "";
 	}
 	return split[1];
@@ -174,7 +178,8 @@ Parser::parseAllowedMethods(const string& line)
 	std::vector<int> allowed_methods;
 	if (split[1].empty())
 	{
-		print("parseAllowedMethods: allowed methods not specified", RED, 2);
+		Log::Msg(ERROR, FUNC + "Allowed methods not specified.");
+		//print("parseAllowedMethods: allowed methods not specified", RED, 2);
 		return allowed_methods;
 	}
 	//cleans the string(s) from the semicolon and pushes them to the vector
@@ -192,7 +197,8 @@ Parser::parseAllowedMethods(const string& line)
 			allowed_methods.push_back(3);
 		else
 		{
-			print("parseAllowedMethods: unknown method", RED, 2);
+			Log::Msg(ERROR, FUNC + "Unknown method.");
+			//print("parseAllowedMethods: unknown method", RED, 2);
 			return allowed_methods;
 		}
 	}
@@ -207,7 +213,8 @@ Parser::parseErrorPages(const string& line)
 	std::map<int, string> error_pages;
 	if (split[1].empty())
 	{
-		print("getErrorPages: error pages not specified", RED, 2);
+		Log::Msg(ERROR, FUNC + "Error pages not specified.");
+		//print("getErrorPages: error pages not specified", RED, 2);
 		return error_pages;
 	}
 	//cleans the string(s) from the semicolon and pushes them to the map
@@ -220,12 +227,14 @@ Parser::parseErrorPages(const string& line)
 			int error_code = atoi(split[i].c_str());
 			if (error_code < 100 || error_code > 599)
 			{
-				print("getErrorPages: error code out of range", RED, 2);
+				Log::Msg(ERROR, FUNC + "Error code out of range.");
+				//print("getErrorPages: error code out of range", RED, 2);
 				return error_pages;
 			}
 			if (split[i + 1].empty())
 			{
-				print("getErrorPages: error page path not specified", RED, 2);
+				Log::Msg(ERROR, FUNC + "Error page path not specified.");
+				//print("getErrorPages: error page path not specified", RED, 2);
 				return error_pages;
 			}
 			if (split[i + 1].find(';') != string::npos)
@@ -235,7 +244,8 @@ Parser::parseErrorPages(const string& line)
 		}
 		else
 		{
-			print("getErrorPages: error code not numeric", RED, 2);
+			Log::Msg(ERROR, FUNC + "Error code not numeric.");
+			//print("getErrorPages: error code not numeric", RED, 2);
 			return error_pages;
 		}	
 	}
@@ -250,12 +260,14 @@ Parser::parseClientMaxBodySize(const string& line)
 	std::vector<string> split = CppSplit(line, ' ');
 	if (split[1].empty())
 	{
-		print("parseClientMaxBodySize: client_max_body_size not specified", RED, 2);
+		Log::Msg(ERROR, FUNC + "Client max body size not specified.");
+		//print("parseClientMaxBodySize: client_max_body_size not specified", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 	if (atoi(split[1].c_str()) < 0)
 	{
-		print("parseClientMaxBodySize: client_max_body_size out of range", RED, 2);
+		Log::Msg(ERROR, FUNC + "Client max body size out of range.");
+		//print("parseClientMaxBodySize: client_max_body_size out of range", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 	if (split[1].find(';') != string::npos)
@@ -264,7 +276,8 @@ Parser::parseClientMaxBodySize(const string& line)
 		return atoi(split[1].c_str());
 	else
 	{
-		print("parseClientMaxBodySize: client_max_body_size not numeric", RED, 2);
+		Log::Msg(ERROR, FUNC + "Client max body size not numeric.");
+		//print("parseClientMaxBodySize: client_max_body_size not numeric", RED, 2);
 		return CLIENT_MAX_BODY_SIZE_LIMIT;
 	}
 }
@@ -277,7 +290,8 @@ Parser::parseCgi(const string& line)
 	std::map<string, string> cgi;
 	if (split[1].empty())
 	{
-		print("getCgi: cgi not specified", RED, 2);
+		Log::Msg(ERROR, FUNC + "Cgi not specified.");
+		//print("getCgi: cgi not specified", RED, 2);
 		return cgi;
 	}
 	//cleans the string(s) from the semicolon and pushes them to the map
