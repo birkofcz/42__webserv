@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gabtan <gabtan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:43:11 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/07 17:38:36 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:30:49 by gabtan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ class Response
 		std::string		removeBoundary(std::string& body, std::string& boundary, std::string& filename); //proc public
 	
 		HttpRequest		request;
-		std::string		_response_content; //zmenit oznaceni bez _
+		std::string		response_content;
 		Cgi				cgi_object;
-		bool			_cgi_flag;
+		bool			cgi_flag;
 
 		// friend std::ostream& operator<<(std::ostream& os, const Response& response);
 

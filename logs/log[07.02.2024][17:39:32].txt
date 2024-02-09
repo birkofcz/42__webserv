@@ -1,2 +1,0 @@
-[07.02.2024][17:39:32] [INFO] New Connection From 127.0.0.1, Assigned Socket 6
-[07.02.2024][17:39:32] [ERROR] [_readFile]: Website file not found

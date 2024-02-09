@@ -1,2 +1,0 @@
-[07.02.2024][17:38:58] [ERROR] Error opening config file: config/test.conf
-[07.02.2024][17:38:58] [INFO] Server(s) started
