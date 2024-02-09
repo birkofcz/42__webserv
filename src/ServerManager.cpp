@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
+/*   Updated: 2024/02/08 16:47:11 by sbenes           ###   ########.fr       */
+=======
 /*   By: gabtan <gabtan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
 /*   Updated: 2024/02/09 15:37:41 by gabtan           ###   ########.fr       */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,14 +332,14 @@ void ServerManager::_acceptNewConnection(Server &serv)
 
 void    ServerManager::_closeConnection(const int fd)
 {
-    struct epoll_event event;
-    event.events = 0; // Clear all events
-    event.data.fd = fd;
+	struct epoll_event event;
+	event.events = 0; // Clear all events
+	event.data.fd = fd;
 
-    if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &event) == -1)
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &event) == -1)
 		Log::Msg(ERROR, FUNC + "epol_ctl: " + toString(strerror(errno)));
 	close(fd);
-    _clients_map.erase(fd);
+	_clients_map.erase(fd);
 }
 
 void ServerManager::_readRequest(const int& fd, Client& c)
@@ -401,11 +408,12 @@ void    ServerManager::_sendCgiBody(Client &c)
 
 void    ServerManager::_readCgiResponse(Client &c)
 {
-    char    buffer[MESSAGE_BUFFER];
-    int     bytes_read = 0;
-    bytes_read = read(c.response.cgi_object.cgi_pipe_out_read_end, buffer, MESSAGE_BUFFER);
+	char buffer[MESSAGE_BUFFER];
+	int bytes_read = 0;
+
+	bytes_read = read(c.response.cgi_object.cgi_pipe_out_read_end, buffer, MESSAGE_BUFFER);
 	Log::Msg(DEBUG, FUNC + "bytes read from cgi pipe: " + toString(bytes_read));
-    if (bytes_read == 0)
+	if (bytes_read == 0)
     {
 		Log::Msg(DEBUG, FUNC + "Read 0 bytes from CGI pipe indicating the end of the stream has been reached"); 
 		close(c.response.cgi_object.cgi_pipe_out_read_end);
