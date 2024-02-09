@@ -22,11 +22,11 @@ Response::Response()
 	_target_file = "";
 	_body_bytes.clear();
 	_body_length = 0;
-	_response_content = "";
+	response_content = "";
 	_response_body_str = "";
 	_location = "";
 	_status_code = 0;
-	_cgi_flag = 0;
+	cgi_flag = 0;
 	_cgi_response_length = 0;
 	_auto_index = false;
 }
@@ -39,17 +39,17 @@ Response::Response(HttpRequest& src) : request(src) //proc initializace na 0
     _target_file = "";
     _body_bytes.clear();
     _body_length = 0;
-    _response_content = "";
+    response_content = "";
     _response_body_str = "";
     _location = "";
     _status_code = 0;
-    _cgi_flag = 0;
+    cgi_flag = 0;
     _cgi_response_length = 0;
     _auto_index = false;
 }
 void   Response::_contentType()
 {
-	_response_content.append("Content-Type: ");
+	response_content.append("Content-Type: ");
 	
 	Log::Msg(DEBUG, FUNC + "building \"Content-type\", _status_cod is: " + toString(_status_code));
 	
@@ -57,28 +57,28 @@ void   Response::_contentType()
 	//Mime class handling the content type
 	mime.parseExtension(_target_file);
 	_mime = mime.getMime();
-	_response_content.append(_mime);
+	response_content.append(_mime);
 
-	// _response_content.append(_mime.getMime()); //suggested by CoPilot
-	_response_content.append("\r\n");
+	// response_content.append(_mime.getMime()); //suggested by CoPilot
+	response_content.append("\r\n");
 }
 
 void   Response::_contentLength()
 {
-	_response_content.append("Content-Length: ");
-	_response_content.append(toString(_response_body_str.length()));
-	_response_content.append("\r\n");
+	response_content.append("Content-Length: ");
+	response_content.append(toString(_response_body_str.length()));
+	response_content.append("\r\n");
 }
 
 void   Response::_connection()
 {
 	if(request.getHeader("connection") == "keep-alive")
-		_response_content.append("Connection: keep-alive\r\n");
+		response_content.append("Connection: keep-alive\r\n");
 }
 
 void   Response::_serverHeader()
 {
-	_response_content.append("Server: [TS]erver\r\n");
+	response_content.append("Server: [TS]erver\r\n");
 }
 
 /*
@@ -92,7 +92,7 @@ void    Response::_locationHeader()
 	if (_location.length())
 	{
 		Log::Msg(DEBUG, FUNC + "_location exists: " + _location);
-		_response_content.append("Location: "+ _location +"\r\n");
+		response_content.append("Location: "+ _location +"\r\n");
 	}
 }
 
@@ -107,9 +107,9 @@ void    Response::_date()
 
     strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S %Z", &tm);
 	
-    _response_content.append("Date: ");
-    _response_content.append(date);
-    _response_content.append("\r\n");
+    response_content.append("Date: ");
+    response_content.append(date);
+    response_content.append("\r\n");
 }
 
 // uri ecnoding
@@ -122,7 +122,7 @@ void    Response::_setHeaders()
     _locationHeader();
     _date();
 
-    _response_content.append("\r\n");
+    response_content.append("\r\n");
 }
 
 bool	Response::_fileExists(const std::string& f)
@@ -228,7 +228,7 @@ int        Response::handleCgi(std::string &location_key)
     cgi_object.clear();
 	cgi_object.setExtension(exten);
     cgi_object.setCgiPath("content/www/" + path); //nutno predelat
-    _cgi_flag = true;
+    cgi_flag = true;
     cgi_object.initEnv(request, _server.getLocationKey(location_key)); // + URI
 	return(cgi_object.execute(this->_status_code));
 }
@@ -279,7 +279,7 @@ void    Response::_getLocationMatch(std::string& path, std::vector<Location> loc
 
 bool	Response::getCgiFlag ()
 {
-	return (this->_cgi_flag);
+	return (this->cgi_flag);
 }
 
 int    Response::_handleTarget()
@@ -495,7 +495,7 @@ void	Response::buildResponse()
 {
     if (_reqError() || _buildBody())
         _response_body_str = Error::buildErrorPage(_status_code, _location_key, _server);
-    if (_cgi_flag)
+    if (cgi_flag)
        return ;
 	else if (_auto_index)
     {
@@ -515,28 +515,40 @@ void	Response::buildResponse()
     _setStatusLine();
     _setHeaders();
 	if (request.getMethod() != HEAD && (request.getMethod() == GET || _status_code != 200))
-		_response_content.append(_response_body_str);
-	Log::Msg(DEBUG, FUNC + "_response_content: " + _response_content);
+		response_content.append(_response_body_str);
+	Log::Msg(DEBUG, FUNC + "response_content: " + response_content);
 }
+
+
+// void Response::setErrorResponse(short code)
+// {
+//     response_content = "";
+//     _code = code;
+//     _response_body = "";
+//     buildErrorBody();
+//     setStatusLine();
+//     setHeaders();
+//     response_content.append(_response_body);
+// }
 
 // // Returns the entire reponse ( Headers + Body )
 // std::string Response::getRes()
 // {
-//     return (_response_content);
+//     return (response_content);
 // }
 
 // // Returns the length of entire reponse ( Headers + Body) 
 // size_t Response::getLen() const
 // {
-// 	return (_response_content.length());
+// 	return (response_content.length());
 // }
 
 // Constructs Status line based on status code. //
 void	Response::_setStatusLine()
 {
-    _response_content.append("HTTP/1.1 " + toString(_status_code) + " ");
-	_response_content.append(Error::getErrorDescription(_status_code));
-    _response_content.append("\r\n");
+    response_content.append("HTTP/1.1 " + toString(_status_code) + " ");
+	response_content.append(Error::getErrorDescription(_status_code));
+    response_content.append("\r\n");
 }
 
 string	Response::getStatusLineCgi()
@@ -559,7 +571,7 @@ int    Response::_buildBody()
 	}
 	if ( _handleTarget() )
 		return (1);
-	if (_cgi_flag || _auto_index)
+	if (cgi_flag || _auto_index)
 		return (0);
 	if (_status_code)
 		return (0);
@@ -766,11 +778,11 @@ void   Response::clear()
     _target_file.clear();
     _body_bytes.clear();
     _body_length = 0;
-    _response_content.clear();
+    response_content.clear();
     _response_body_str.clear();
     _location.clear();
     _status_code = 0;
-    _cgi_flag = 0;
+    cgi_flag = 0;
     _cgi_response_length = 0;
     _auto_index = 0;
 	_location_key.clear();

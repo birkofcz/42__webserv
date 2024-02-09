@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ServerManager.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+<<<<<<< HEAD
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/07 17:11:48 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/08 16:47:11 by sbenes           ###   ########.fr       */
+=======
+/*   By: gabtan <gabtan@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/30 16:42:21 by tkajanek          #+#    #+#             */
+/*   Updated: 2024/02/09 15:37:41 by gabtan           ###   ########.fr       */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +198,7 @@ void ServerManager::runServers()
 					if (pid == -1)
 					{
 						Log::Msg(ERROR, FUNC + "waitpid = -1. " + toString(strerror(errno)));
-						_clients_map[fd_client].response._response_content.append(Error::instantErrorPage(500));
+						_clients_map[fd_client].response.response_content.append(Error::instantErrorPage(500));
 						close(_clients_map[fd_client].response.cgi_object.cgi_pipe_out_read_end);
 						_cgi_pipe_to_client_map.erase(fd);
 						// exit(EXIT_FAILURE);
@@ -199,7 +206,7 @@ void ServerManager::runServers()
 					if(WEXITSTATUS(status) != 0)
 					{
 						Log::Msg(ERROR, FUNC + "CGI script terminated with an error status: " + toString(WEXITSTATUS(status)));
-						_clients_map[fd_client].response._response_content.append(Error::instantErrorPage(502));
+						_clients_map[fd_client].response.response_content.append(Error::instantErrorPage(502));
 						close(_clients_map[fd_client].response.cgi_object.cgi_pipe_out_read_end);
 						_cgi_pipe_to_client_map.erase(fd);
 					}
@@ -207,13 +214,13 @@ void ServerManager::runServers()
 					{
 						_readCgiResponse(_clients_map[fd_client]);
 						_clients_map[fd_client].response.setStatusCode(200);
-						_clients_map[fd_client].response._response_content.insert(0, _clients_map[fd_client].response.getStatusLineCgi());
+						_clients_map[fd_client].response.response_content.insert(0, _clients_map[fd_client].response.getStatusLineCgi());
 						_cgi_pipe_to_client_map.erase(fd);
 					}
 					else if (WIFSIGNALED(status))
 					{
 						Log::Msg(ERROR, FUNC + "Child process running CGI script terminated by signal: " + toString(WTERMSIG(status)));
-						_clients_map[fd_client].response._response_content.append(Error::instantErrorPage(502));						
+						_clients_map[fd_client].response.response_content.append(Error::instantErrorPage(502));						
 						close(_clients_map[fd_client].response.cgi_object.cgi_pipe_out_read_end);
 						_cgi_pipe_to_client_map.erase(fd);
 					}
@@ -224,7 +231,7 @@ void ServerManager::runServers()
 			if (triggeredEvents[i].events & (EPOLLOUT | EPOLLHUP | EPOLLERR))
 			{
 				int fd = triggeredEvents[i].data.fd;
-				if (_clients_map.count(fd) && !_clients_map[fd].response._response_content.empty())
+				if (_clients_map.count(fd) && !_clients_map[fd].response.response_content.empty())
 				{
 					Log::Msg(DEBUG, FUNC + "EPOLLOUT fd of client triggered : " + toString(fd));
 					_sendResponse(fd, _clients_map[fd]);
@@ -260,15 +267,15 @@ void ServerManager::_sendResponse(const int& fd, Client& c)
 	//----
 	//write the response to the text file in data/response_temp.txt - in truncate mode - for debugging and showcase purposes
 	std::ofstream responseFile("data/response_temp.txt", std::ios::out | std::ios::trunc); // Opens the file in write/truncate mode
-	responseFile << c.response._response_content << "\n";
+	responseFile << c.response.response_content << "\n";
 	responseFile.close();
 	//----
 	
 	// std::ofstream debugFile("debug_output.txt", std::ios::app); // Opens the file in append mode
-    // debugFile << "SENDING RESPONSE data: \n" << c.response._response_content << "\n";
+    // debugFile << "SENDING RESPONSE data: \n" << c.response.response_content << "\n";
     // debugFile.close();
 
-    ssize_t bytes_written = send(fd, c.response._response_content.c_str(), c.response._response_content.size(), MSG_DONTWAIT);
+    ssize_t bytes_written = send(fd, c.response.response_content.c_str(), c.response.response_content.size(), MSG_DONTWAIT);
     if (bytes_written < 0)
     {
         Log::Msg(ERROR, FUNC + "Send error");
@@ -325,14 +332,14 @@ void ServerManager::_acceptNewConnection(Server &serv)
 
 void    ServerManager::_closeConnection(const int fd)
 {
-    struct epoll_event event;
-    event.events = 0; // Clear all events
-    event.data.fd = fd;
+	struct epoll_event event;
+	event.events = 0; // Clear all events
+	event.data.fd = fd;
 
-    if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &event) == -1)
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &event) == -1)
 		Log::Msg(ERROR, FUNC + "epol_ctl: " + toString(strerror(errno)));
 	close(fd);
-    _clients_map.erase(fd);
+	_clients_map.erase(fd);
 }
 
 void ServerManager::_readRequest(const int& fd, Client& c)
@@ -401,11 +408,12 @@ void    ServerManager::_sendCgiBody(Client &c)
 
 void    ServerManager::_readCgiResponse(Client &c)
 {
-    char    buffer[MESSAGE_BUFFER];
-    int     bytes_read = 0;
-    bytes_read = read(c.response.cgi_object.cgi_pipe_out_read_end, buffer, MESSAGE_BUFFER);
+	char buffer[MESSAGE_BUFFER];
+	int bytes_read = 0;
+
+	bytes_read = read(c.response.cgi_object.cgi_pipe_out_read_end, buffer, MESSAGE_BUFFER);
 	Log::Msg(DEBUG, FUNC + "bytes read from cgi pipe: " + toString(bytes_read));
-    if (bytes_read == 0)
+	if (bytes_read == 0)
     {
 		Log::Msg(DEBUG, FUNC + "Read 0 bytes from CGI pipe indicating the end of the stream has been reached"); 
 		close(c.response.cgi_object.cgi_pipe_out_read_end);
@@ -414,7 +422,7 @@ void    ServerManager::_readCgiResponse(Client &c)
     else if (bytes_read < 0)
     {
 		Log::Msg(ERROR, FUNC + "Error reading from CGI pipe");
-		c.response._response_content.append(Error::instantErrorPage(500)); //?
+		c.response.response_content.append(Error::instantErrorPage(500)); //?
 		close(c.response.cgi_object.cgi_pipe_out_read_end);
         return ;
     }
@@ -426,11 +434,11 @@ void    ServerManager::_readCgiResponse(Client &c)
 		if (!has_content_length)
 		{
 			size_t cont_len = _calcContLenCgi(buffer, bytes_read);
-			c.response._response_content.append("Content-Length: ");
-			c.response._response_content.append(toString(cont_len));
-			c.response._response_content.append("\r\n");
+			c.response.response_content.append("Content-Length: ");
+			c.response.response_content.append(toString(cont_len));
+			c.response.response_content.append("\r\n");
 		}
-		c.response._response_content.append(buffer, bytes_read);
+		c.response.response_content.append(buffer, bytes_read);
 		Log::Msg(DEBUG, FUNC + "CGI buffer:\n" + buffer);
 		memset(buffer, 0, sizeof(buffer));
 	}
