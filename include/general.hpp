@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   general.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:34:46 by sbenes            #+#    #+#             */
-/*   Updated: 2024/02/06 16:18:26 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/10 12:07:46 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ the whole thing every time, so we use this shortened macro.
 //Logging
 #include "Log.hpp"
 
-//default client max body size limit - based on 10 megabytes limit used by NGINX
-#define CLIENT_MAX_BODY_SIZE_LIMIT 10485760
+//default client max body size limit - 10 megabytes limit is used by NGINX
+#define CLIENT_MAX_BODY_SIZE_LIMIT 50485760 
 
 //templates
 /* toString - converts whatever to string:) */

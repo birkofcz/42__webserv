@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tkajanek <tkajanek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/08 17:21:22 by tkajanek         ###   ########.fr       */
+/*   Updated: 2024/02/10 12:15:26 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,7 +308,7 @@ int    Response::_handleTarget()
 
         if (!_isAllowedMethod(request.getMethod(), target_location, _status_code))
         {
-            std::cout << "METHOD NOT ALLOWED \n";
+            Log::Msg(ERROR, FUNC + "method not allowed");
             return (1);
         }
 			Log::Msg(DEBUG, FUNC + "method allowed: " + toString(request.getMethod()));

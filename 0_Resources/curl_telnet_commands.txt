@@ -3,10 +3,10 @@ curl -L -X GET http://localhost:8000/testloc1 # -L follows redirection
 curl -O http://localhost:8000/testloc1/uploads/monster.png
 #to retrieve uloaded file, -O to write the output to a local file with the same name as the remote file.
 
-curl -X POST -H "Content-Type: plain/text" --data "Short body" http://localhost:8000/testloc1
-curl -X POST -H "Content-Type: plain/text" --data "Long body exceeding the limit" http://localhost:8000/testloc1
+curl -X POST -H "Content-Type: plain/text" --data "Short body" http://localhost:8000/testloc1/
+curl -X POST -H "Content-Type: plain/text" --data "Long body exceeding the limit" http://localhost:8000/testloc1/
 
-curl -X POST http://localhost:8000/testloc1 -d "key1=value1&key2=value2"
+curl -X POST http://localhost:8000/testloc1/ -d "key1=value1&key2=value2"
 #multipart/form-data
 curl -X POST http://localhost:8000/testloc1/ -F "file=@/nfs/homes/tkajanek/Downloads/monster.png" 
 
