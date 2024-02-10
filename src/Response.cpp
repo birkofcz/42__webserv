@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 20:00:29 by tkajanek          #+#    #+#             */
-/*   Updated: 2024/02/10 12:15:26 by sbenes           ###   ########.fr       */
+/*   Updated: 2024/02/10 14:09:04 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,7 @@ bool	Response::getCgiFlag ()
 
 int    Response::_handleTarget()
 {
+
     _getLocationMatch(request.getPath(), _server.getLocations(), _location_key);
 
 	Log::Msg(DEBUG, FUNC + "_location_key: " + _location_key);
