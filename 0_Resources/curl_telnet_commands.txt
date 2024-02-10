@@ -14,7 +14,8 @@ curl -X DELETE http://localhost:8000/testloc1/uploads/default.file
 
 curl -X UNKNOWN http://localhost:8000
 
-
+curl --resolve blablatest.com:8000:127.0.0.1 http://blablatest.com:8000
+curl --resolve testblabla.com:3000:127.0.0.1 http://testblabla.com:3000/coffee
 
 #cgi request for chunked data
 
